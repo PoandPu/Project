@@ -75,11 +75,7 @@ public class LoginCommand extends Command {
 		User user = userDAO.findByLogin(login);
 		LOG.trace("Found in DB: user --> " + user);
 
-		
-		String key = user.getPasswordKey();
-		String securePassword = PasswordUtils.generateSecurePassword(password, key);
-		
-		if (user == null || !securePassword.equals(user.getPassword())) {
+		if (user == null || !PasswordUtils.generateSecurePassword(password, user.getPasswordKey()).equals(user.getPassword())) {
 			request.getSession().setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, "login_jsp.error.not_found");
 			return Path.COMMAND_VIEW_LOGIN_PAGE;
 		}
