@@ -1,0 +1,134 @@
+<%--=========================================================================== 
+Header (top area). 
+===========================================================================--%>
+
+<%@ page import="ua.epam.pavelchuk.final_project.db.Role"%>
+<%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
+<script>
+	/* When the user clicks on the button, 
+	 toggle between hiding and showing the dropdown content */
+	function myFunction() {
+		document.getElementById("myDropdown").classList.toggle("show");
+	}
+
+	// Close the dropdown if the user clicks outside of it
+	window.onclick = function(e) {
+		if (!e.target.matches('.dropbtn')) {
+			var myDropdown = document.getElementById("myDropdown");
+			if (myDropdown.classList.contains('show')) {
+				myDropdown.classList.remove('show');
+			}
+		}
+	}
+</script>
+
+
+<tr>
+	<td id="header"><c:if test="${not empty user}">
+			<%--=========================================================================== 
+This is the user menu.  
+===========================================================================--%>
+
+			<div id="leftHeader">
+
+				<%--=========================================================================== 
+This way we define the settings anchor.
+===========================================================================--%>
+				<a href="controller?command=viewAllSubjects" class="bot1"><fmt:message
+						key="header_jspf.subjects_list" /></a> &nbsp; <a
+					href="controller?command=userProfile&userId=${sessionScope.id}"
+					class="bot1"><fmt:message key="header_jspf.my_account" /></a>
+				&nbsp; <a href="controller?command=userSettings" class="bot1"><fmt:message
+						key="header_jspf.settings" /></a> &nbsp;
+
+
+				<c:choose>
+
+					<%--=========================================================================== 
+This way we define the ADMIN MENU. 
+===========================================================================--%>
+					<c:when test="${sessionScope.userRole.name == 'admin' }">
+						<a href="controller?command=viewUsersList" class="bot1"><fmt:message
+								key="header_jspf.users_list" /></a>
+					</c:when>
+
+
+					<%--=========================================================================== 
+This way we define the USER MENU.
+===========================================================================--%>
+					<c:when test="${sessionScope.userRole.name == 'client'}">
+
+					</c:when>
+				</c:choose>
+
+			</div>
+
+			<%--=========================================================================== 
+This way we define the menu located at the right of header. 
+===========================================================================--%>
+
+
+			<div id="rightHeader">
+				<div class="navbar">
+					<div class="dropdown">
+						<button class="dropbtn" onclick="myFunction()">
+							Localization <i class="fa fa-caret-down"></i>
+						</button>
+						<div class="dropdown-content" id="myDropdown">	
+							<form action="controller" method="post" >
+								<input type="hidden" name="command" value="switchLocale" /><input
+									type="hidden" name="language" value="ru" /> <input class = "edit" style = "border-radius: 0;"
+									type="submit" name="submit" value="Russian">
+							</form>
+							<form action="controller" method="post">
+								<input type="hidden" name="command" value="switchLocale" /><input
+									type="hidden" name="language" value="en" /> <input class = "edit" style = "padding: 12px 42.2px; border-radius: 0;"
+									type="submit" name="submit" value="English">
+									
+							</form>
+							
+						</div>
+					</div>
+				</div>&nbsp;
+				
+
+
+				<%--=======
+
+<form  action="controller" method="post">
+									<input type="hidden" name="command" value="switchLocale" />  <input
+										 type="submit" name="submit"
+										value="Switch locale">
+								</form>
+
+=====--%>
+
+				<%--=========================================================================== 
+Type user name if the user object is presented in the current session.  
+===========================================================================--%>
+				<label><c:out
+						value="${sessionScope.user.firstName} ${sessionScope.user.lastName}" /></label>
+
+				<%--=========================================================================== 
+Type user role name if the user object is presented in the current session.  
+===========================================================================--%>
+				<c:if test="${not empty sessionScope.userRole}">
+					<label><c:out value="(${sessionScope.userRole.name})" /></label>
+				</c:if>
+
+
+				<%--=========================================================================== 
+Type link to logout  
+===========================================================================--%>
+				<a href="controller?command=logout" class="bot1"><fmt:message
+						key="header_jspf.logout" /></a> &nbsp;
+			</div>
+		</c:if> <c:if test="${empty user and title ne 'Login'}">
+			<div id="rightHeader">
+				<a href="controller?command=login" class="bot1"><fmt:message
+						key="header_jspf.login" /></a>
+			</div>
+		</c:if></td>
+</tr>
+

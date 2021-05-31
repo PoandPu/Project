@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Change the lines below according your RDBMS and DB -->
+
+<Context>
+
+	<Resource name="jdbc/ST4DB"
+		auth="Container" 
+		type="javax.sql.DataSource"
+		maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+		username="root" 
+		password="Alexei2000Semen"
+		driverClassName="com.mysql.cj.jdbc.Driver"
+		defaultTransactionIsolation="READ_COMMITTED"
+		connectionProperties="useUnicode=true;characterEncoding=UTF-8;serverTimezone=UTC"
+		url="jdbc:mysql://localhost:3306/ScreeningDB"/>
+
+</Context>

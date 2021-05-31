@@ -1,0 +1,91 @@
+package ua.epam.pavelchuk.final_project.web.command.common;
+
+import java.io.IOException; 
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import ua.epam.pavelchuk.final_project.Path;
+import ua.epam.pavelchuk.final_project.db.Fields;
+import ua.epam.pavelchuk.final_project.db.Role;
+import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
+import ua.epam.pavelchuk.final_project.db.entity.User;
+import ua.epam.pavelchuk.final_project.db.exception.AppException;
+import ua.epam.pavelchuk.final_project.db.validation.UserValidation;
+import ua.epam.pavelchuk.final_project.web.HttpMethod;
+import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
+import ua.epam.pavelchuk.final_project.web.command.Command;
+import ua.epam.pavelchuk.final_project.web.password_encryption.PasswordUtils;
+
+public class RegistrationCommand extends Command {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6940385928019345652L;
+	private static final Logger LOG = Logger.getLogger(RegistrationCommand.class);
+
+	@Override
+	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
+			throws IOException, ServletException, AppException {
+		LOG.debug("Start executing Command");
+
+		String result = null;
+
+		if (method == HttpMethod.POST) {
+			result = doPost(request);
+		} else {
+			result = doGet();
+		}
+		LOG.debug("Finished executing Command");
+		return result;
+	}
+
+	private String doGet() {
+		return Path.PAGE_CLIENT_REGISRTATION;
+	}
+
+	private String doPost(HttpServletRequest request) throws AppException {
+		String login = request.getParameter(Fields.USER_LOGIN);
+		String password = request.getParameter(Fields.USER_PASSWORD);
+		String confirmPassword = request.getParameter(Fields.USER_CONFIRM_PASSWORD);
+		String email = request.getParameter(Fields.USER_EMAIL);
+		String firstName = request.getParameter(Fields.USER_FIRST_NAME);
+		LOG.debug("FIRST NAME " + firstName);
+		String lastName = request.getParameter(Fields.USER_LAST_NAME);
+		LOG.debug("LAST NAME " + lastName);
+		String language = request.getParameter(Fields.USER_LANGUAGE);
+		LOG.debug("EMAIL " + email);
+		
+		User user = new User();
+
+		if (!UserValidation.validationLogin(login)) {
+			request.getSession().setAttribute(AttributeNames.USER_SETTINGS_ERROR_MESSAGE,
+					"registration_jsp.error.login_not_unique");
+			return Path.COMMAND_VIEW_REGISTRATION_PAGE;
+		}
+		if (!UserValidation.validate(request, firstName, lastName, email, user, password, confirmPassword)) {
+			return Path.COMMAND_VIEW_REGISTRATION_PAGE;
+		}
+		String passwordKey = PasswordUtils.getSalt(30);
+		String mySecurePassword = PasswordUtils.generateSecurePassword(password, passwordKey);
+		
+		user.setLogin(login);
+		user.setPassword(mySecurePassword);
+		user.setPasswordKey(passwordKey);
+		user.setEmail(email);
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setLanguage(language);
+		user.setRoleId(Role.CLIENT.ordinal());
+		
+		UserDAO userDAO = UserDAO.getInstance();
+		userDAO.insert(user); 
+
+		return Path.COMMAND_VIEW_LOGIN_PAGE;
+	}
+
+}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	id="WebApp_ID" version="4.0">
+	<display-name>FinalProjectTesting</display-name>
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
+	
+<!--============================================================
+	Encoding support filter
+=============================================================-->
+	<filter>
+		<filter-name>EncodingFilter</filter-name>
+		<filter-class>ua.epam.pavelchuk.final_project.web.filter.EncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>EncodingFilter</filter-name>
+		<url-pattern>/WEB-INF/jsp/*</url-pattern>
+		<servlet-name>Controller</servlet-name>
+	</filter-mapping>
+	
+<!--============================================================
+	Command access filter
+=============================================================-->
+	<filter>
+		<filter-name>CommandAccessFilter</filter-name>
+		<filter-class>ua.epam.pavelchuk.final_project.web.filter.CommandAccessFilter</filter-class>
+		<init-param>
+			<param-name>admin</param-name>
+			<param-value>editSubject addSubject editTest addTest editTestContent viewUsersList editUser addQuestion deleteQuestion addAnswer deleteAnswer findUser</param-value>
+		</init-param>
+		<init-param>
+			<param-name>client</param-name>
+			<param-value>checkTest</param-value>
+		</init-param>
+		<init-param>
+			<param-name>common</param-name>
+			<param-value>viewAllSubjects viewTestsList viewTest logout userProfile switchLocale userSettings</param-value>
+		</init-param>
+		<init-param>
+			<param-name>no_control</param-name>
+			<param-value>login registration viewErrorPage</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>CommandAccessFilter</filter-name>
+		<servlet-name>Controller</servlet-name>
+	</filter-mapping>
+	
+
+<!--============================================================ 
+		Controller 
+============================================================= -->
+	<servlet>
+		<servlet-name>Controller</servlet-name>
+		<servlet-class>ua.epam.pavelchuk.final_project.web.Controller</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Controller</servlet-name>
+		<url-pattern>/controller</url-pattern>
+	</servlet-mapping>
+	
+<!--============================================================ 
+		Report creator 
+============================================================= -->
+	<servlet>
+		<servlet-name>ReportCreator</servlet-name>
+		<servlet-class>ua.epam.pavelchuk.final_project.web.ReportCreator</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ReportCreator</servlet-name>
+		<url-pattern>/reportCreator</url-pattern>
+	</servlet-mapping>
+	
+	
+<!--============================================================
+	Context listener
+=============================================================-->
+  <listener>
+	<listener-class>ua.epam.pavelchuk.final_project.web.listener.ContextListener</listener-class> 
+   </listener>
+   
+   
+<!--============================================================
+	Error page
+=============================================================-->
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/WEB-INF/jsp/error_page.jsp</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/jsp/error_page.jsp</location>
+	</error-page>
+	
+</web-app>
