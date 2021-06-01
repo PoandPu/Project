@@ -142,6 +142,15 @@ public abstract class AbstractDAO {
 		close(con);
 		
 	}
+	
+	/**
+	 * Closes resources.
+	 */
+	protected void close(Connection con, PreparedStatement pstmt) {
+		close(pstmt);
+		close(con);
+	}
+	
 	/**
 	 * Rollback changes
 	 */

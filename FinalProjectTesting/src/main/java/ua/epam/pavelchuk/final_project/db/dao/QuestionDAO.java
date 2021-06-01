@@ -131,7 +131,6 @@ public class QuestionDAO extends AbstractDAO {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_DELETE_QUESTION_BY_ID);
@@ -143,7 +142,7 @@ public class QuestionDAO extends AbstractDAO {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException();
 		} finally {
-			close(con, pstmt, resultSet);
+			close(con, pstmt);
 		}
 		return result;
 	}
@@ -157,12 +156,12 @@ public class QuestionDAO extends AbstractDAO {
 	 */
 	public boolean update(Question question) throws DBException {
 		boolean result = false;
-
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
 		try {
 			con = getConnection();
+			con.setAutoCommit(false);
+			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(SQL_UPDATE_QUESTION_BY_ID);
 			int k = 1;
 			pstmt.setString(k++, question.getNameRu());
@@ -170,14 +169,16 @@ public class QuestionDAO extends AbstractDAO {
 			pstmt.setInt(k, question.getId());
 
 			if (pstmt.executeUpdate() > 0) {
+				con.commit();
 				LOG.trace("Question with id " + question.getId() + " was updated");
 				result = true;
 			}
 		} catch (SQLException e) {
+			rollback(con);
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException();
 		} finally {
-			close(con, pstmt, resultSet);
+			close(con, pstmt);
 		}
 		return result;
 	}
@@ -189,6 +190,8 @@ public class QuestionDAO extends AbstractDAO {
 		ResultSet resultSet = null;
 		try {
 			con = getConnection();
+			con.setAutoCommit(false);
+			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(SQL_INSERT_QUESTION, Statement.RETURN_GENERATED_KEYS);
 			int k = 1;
 			pstmt.setString(k++, qiestion.getNameRu());
@@ -197,13 +200,15 @@ public class QuestionDAO extends AbstractDAO {
 			if (pstmt.executeUpdate() > 0) {
 				resultSet = pstmt.getGeneratedKeys();
 				if (resultSet.next()) {
+					con.commit();
 					qiestion.setId(resultSet.getInt(1));
 					result = true;
 				}
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException("Cannot find test by theme id", e);
+			rollback(con);
+			LOG.error("Cannot insert question!");
+			throw new DBException("Cannot insert question!", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}

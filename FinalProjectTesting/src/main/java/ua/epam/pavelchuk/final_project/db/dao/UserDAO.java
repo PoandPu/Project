@@ -231,31 +231,14 @@ public class UserDAO extends AbstractDAO {
 			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(SQL_INSERT_USER, Statement.RETURN_GENERATED_KEYS);
 			int k = 1;
-			System.out.println(SQL_INSERT_USER);
 			pstmt.setString(k++, user.getLogin());
-			System.out.println(user.getLogin());
-			
 			pstmt.setString(k++, user.getPassword());
-			System.out.println(user.getPassword());
-			
 			pstmt.setString(k++, user.getPasswordKey());
-			System.out.println(user.getPasswordKey());
-			
 			pstmt.setString(k++, user.getLanguage());
-			System.out.println(user.getLanguage());
-			
 			pstmt.setString(k++, user.getFirstName());
-			System.out.println(user.getFirstName());
-			
 			pstmt.setString(k++, user.getLastName());
-			System.out.println(user.getLastName());
-			
 			pstmt.setString(k++, user.getEmail());
-			System.out.println(user.getEmail());
-			
 			pstmt.setInt(k++, user.getRoleId());
-			System.out.println(user.getRoleId());
-
 			if (pstmt.executeUpdate() > 0) {
 				resultSet = pstmt.getGeneratedKeys();
 				if (resultSet.next()) {

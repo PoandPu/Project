@@ -51,11 +51,16 @@
 								</div>
 								<div class="col-75">
 									<select name="difficultyLevel">
-										<option value="1">Very easy</option>
-										<option value="2">Easy</option>
-										<option value="3">Medium</option>
-										<option value="4">Hard</option>
-										<option value="5">Very hard</option>
+										<option value="1" ${test.difficultyLevel eq 1 ? "selected" : "" }><fmt:message
+											key="admin.edit_test_jsp.difficulty_level.very_easy" /></option>
+										<option value="2" ${test.difficultyLevel eq 2 ? "selected" : "" }><fmt:message
+											key="admin.edit_test_jsp.difficulty_level.easy" /></option>
+										<option value="3" ${test.difficultyLevel eq 3 ? "selected" : "" }><fmt:message
+											key="admin.edit_test_jsp.difficulty_level.medium" /></option>
+										<option value="4" ${test.difficultyLevel eq 4 ? "selected" : "" }><fmt:message
+											key="admin.edit_test_jsp.difficulty_level.hard" /></option>
+										<option value="5" ${test.difficultyLevel eq 5 ? "selected" : "" }><fmt:message
+											key="admin.edit_test_jsp.difficulty_level.very_hard" /></option>
 									</select>
 								</div>
 							</div>
