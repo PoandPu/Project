@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS tests;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS results;
+DROP TABLE IF EXISTS pass_recovery;
 SET @@foreign_key_checks = @old_foreign_key_checks;
 SET @@unique_checks = @old_unique_checks;
 -- -----------------------------------------------------
@@ -54,6 +55,23 @@ CREATE TABLE IF NOT EXISTS `ScreeningDB`.`users` (
     REFERENCES `ScreeningDB`.`roles` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT);
+
+-- -----------------------------------------------------
+-- Table `mydb`.`pass_recovery`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ScreeningDB`.`pass_recovery` (
+  `user_id` INT NOT NULL,
+  `hash` VARCHAR(45) NOT NULL,
+  `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX `fk_pass_restore_users_idx` (`user_id` ASC) VISIBLE,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `fk_pass_restore_users`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `ScreeningDB`.`users` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE RESTRICT);
+
+
 
 -- -----------------------------------------------------
 -- Table `ScreeningDB`.`subjects`
@@ -170,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `ScreeningDB`.`results` (
     ON UPDATE RESTRICT);
 
 
-INSERT INTO `users` (`login`, `password`, `password_key`, `first_name`, `last_name`, `email`, `role_id`) VALUES ("admin","hZZc126QKCHyugLiEAn9ZFGOP1r59CWBQX3kMKUM0is=","KPKaJ153m4I4GpQHPrI0eb8wio0Lji", "Алексей", "Павельчук", "alex80395@mail.ru", 0);
+INSERT INTO `users` (`login`, `password`, `password_key`, `first_name`, `last_name`, `email`, `role_id`) VALUES ("admin","hZZc126QKCHyugLiEAn9ZFGOP1r59CWBQX3kMKUM0is=","KPKaJ153m4I4GpQHPrI0eb8wio0Lji", "Алексей", "Павельчук", "alex80395@gmail.com", 0);
 
 INSERT INTO `users` (`login`, `password`, `password_key`, `first_name`, `last_name`, `email`, `role_id`) VALUES ("student1","AArQDRSpDs+R81ysAa5tbZmcyA5B46SnxIoXAaegY/o=","CafvvpKw4RNDAsF7kZ3RhyIDWN82pO", "Алексей", "Оленич", "student1@mail.ru", 1);
 INSERT INTO `users` (`login`, `password`,`password_key`, `first_name`, `last_name`, `email`, `role_id`) VALUES ("student2","VD61+34xG7psytB/I8gbfAZh2UFiNwvfKoTm9156I2s=", "R4KETSKwS0ocW8uEhxYqUyzkdXn6po","Роман", "Авраменко", "student2@mail.ru", 1);
@@ -504,10 +522,53 @@ INSERT INTO answers (option_ru, option_en, question_id) VALUE ('квадратн
 
 -- INSERT INTO `results` (`mark`, `entrant_id`, `test_id`) VALUES (33.33, 2, 1);
 
+
+
+
+
+
+
+
+
+
+-- INSERT INTO pass_recovery(`hash`, `user_id`) VALUE ('blaBLA231312BLA','1');
+
+
+
+
+-- SELECT users.* FROM pass_recovery JOIN users ON users.id = pass_recovery.user_id WHERE pass_recovery.hash = 'blaBLA231312BLA';
+-- SET GLOBAL event_scheduler = ON;
+
+
+
+-- CREATE EVENT IF NOT EXISTS `delete_hash` ON SCHEDULE EVERY 5 MINUTE
+-- STARTS CURRENT_TIMESTAMP
+-- ENDS CURRENT_TIMESTAMP + INTERVAL 10 MINUTE
+-- DO 
+-- DELETE FROM pass_recovery WHERE `hash` = 'blaBLA231312BLA' and create_time < DATE_SUB(NOW(), INTERVAL 10 MINUTE);
+
+
+-- CREATE EVENT IF NOT EXISTS `delete_hash231`ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE
+-- DO 
+-- DELETE FROM pass_recovery WHERE `hash` = 'blaBLA231312BLA';
+
+
+
+-- SET GLOBAL event_scheduler = OFF;
+
+-- SET SQL_SAFE_UPDATES = 0;
+-- DELETE FROM pass_recovery WHERE `hash` = 'blaBLA231312BLA';
+
+-- SELECT * FROM pass_recovery;
+-- SHOW EVENTS FROM screeningdb;
+
+
+-- SELECT * FROM users WHERE login LIKE "student1";
+-- SELECT users.* FROM users JOIN roles ON users.role_id = roles.id WHERE first_name LIKE student1 OR email LIKE student1 OR login LIKE student1 ;
 -- UPDATE tests SET numb_of_requests = numb_of_requests + 1 WHERE id = 1;
 -- SELECT * FROM tests;
 -- SELECT * FROM questions;
-SELECT * FROM users;
+-- SELECT * FROM users;
 -- SELECT * FROM results WHERE entrant_id = 2;
 -- SELECT results.mark, results.test_date, tests.name_Ru, tests.name_En, subjects.name_Ru, subjects.name_En FROM tests 
 -- 	JOIN results ON tests.id = results.test_id 
