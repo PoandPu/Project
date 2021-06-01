@@ -43,7 +43,7 @@ public class FindUserCommand extends Command {
 		String searchPattern = request.getParameter(ParameterNames.PATTERN);
 		try {
 			UserDAO userDAO = UserDAO.getInstance();
-			List<User> users = userDAO.findUsersOrderBy(searchPattern);
+			List<User> users = userDAO.findUsersLike(searchPattern);
 			request.setAttribute(AttributeNames.USERS, users);
 		} catch (DBException e) {
 			LOG.error("Cannot get a users list from data base");

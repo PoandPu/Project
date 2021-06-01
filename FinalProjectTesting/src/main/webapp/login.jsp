@@ -51,9 +51,14 @@
 
 						</form>
 						<div class="row">
+						<div class = "col-75">
 							<label><fmt:message key="login_jsp.form.not_registred" /></label>
 							<a href="controller?command=registration"><fmt:message
 									key="login_jsp.form.registration" /></a>
+						</div> 
+						<div class = "col-25">
+						<a href="controller?command=forgotPassword">Forgot Password?</a>
+						</div> 
 						</div>
 						<c:if test="${not empty loginErrorMessage}">
 							<label class="validation"><fmt:message

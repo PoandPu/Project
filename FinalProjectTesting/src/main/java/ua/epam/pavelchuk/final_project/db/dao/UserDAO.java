@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 
@@ -41,9 +42,18 @@ public class UserDAO extends AbstractDAO {
 	private static final String SQL_BLOCK_USER_BY_ID = "UPDATE users SET isBlocked = 1 WHERE id=?";
 	private static final String SQL_UNBLOCK_USER_BY_ID = "UPDATE users SET isBlocked = 0 WHERE id=?";
 	private static final String SQL_FIND_USER_BY_EMAIL = "SELECT * FROM users WHERE email=?";
-	
 	private static final String SQL_DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
 
+	private static final String SQL_FIND_USER_LOGIN_MAIL = "SELECT * FROM users WHERE email LIKE ? OR login LIKE ?";
+	private static final String SQL_INSERT_HASH = "INSERT INTO pass_recovery(hash, user_id) VALUE (?,?);";
+	
+	private static final String SQL_CREATE_EVENT = "CREATE EVENT IF NOT EXISTS ";
+	private static final String SQL_EVENT_PROPERTIES = " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 10 MINUTE\n"
+			+ "DO \n"
+			+ "DELETE FROM pass_recovery WHERE `hash` = ?";
+	
+	private static final String SQL_FIND_USER_BY_HASH = "SELECT users.* FROM pass_recovery JOIN users ON users.id = pass_recovery.user_id WHERE pass_recovery.hash = ?";		
+	private static final String SQL_DELETE_HASH = "DELETE FROM pass_recovery WHERE `hash` = ?";
 	/**
 	 * constructor constructor with the option not to use JNDI for Junit
 	 * 
@@ -459,7 +469,7 @@ public class UserDAO extends AbstractDAO {
 	 * @return list of users
 	 * @throws DBException
 	 */
-	public List<User> findUsersOrderBy(String pattern) throws DBException {
+	public List<User> findUsersLike(String pattern) throws DBException {
 		List<User> users = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -486,6 +496,30 @@ public class UserDAO extends AbstractDAO {
 			close(con, pstmt, resultSet);
 		}
 		return users;
+	}
+	
+	public User findUserByLoginMail(String pattern) throws DBException {
+		User user = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		try {
+			con = getConnection();
+			pstmt = con.prepareStatement(SQL_FIND_USER_LOGIN_MAIL);
+			int k = 1;
+			pstmt.setString(k++, pattern);
+			pstmt.setString(k++, pattern);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				user = extract(resultSet);
+			}
+		} catch (SQLException e) {
+			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+		} finally {
+			close(con, pstmt, resultSet);
+		}
+		return user;
 	}
 	
 	/**
@@ -515,5 +549,86 @@ public class UserDAO extends AbstractDAO {
 		}
 		return result;
 	}
+	
+	
+	/**
+	 * Find user by id
+	 * 
+	 * @param id
+	 * @return User
+	 * @throws DBException
+	 */
+	public String createHash(User user) throws DBException {
+		String hash = generateHash(45);
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = getConnection();
+			con.setAutoCommit(false);
+			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+			pstmt = con.prepareStatement(SQL_INSERT_HASH);
+			int k = 1;
+			pstmt.setString(k++, hash);
+			pstmt.setInt(k++, user.getId());
+			pstmt.executeUpdate();
+			close(pstmt);
+			pstmt = con.prepareStatement(SQL_CREATE_EVENT + "delete_hash" + hash + SQL_EVENT_PROPERTIES);
+			k = 1;
+			pstmt.setString(k++, hash);
+			pstmt.execute();
+			con.commit();
+		} catch (SQLException e) {
+			rollback(con);
+			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+		} finally {
+			close(con, pstmt);
+		}
+		return hash;
+	}
+	
+	public User findByHashAndDelete(String hash) throws DBException {
+		User user = null;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		Connection con = null;
 
+		try {
+			con = getConnection();
+			con.setAutoCommit(false);
+			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+			pstmt = con.prepareStatement(SQL_FIND_USER_BY_HASH);
+			pstmt.setString(1, hash);
+			resultSet = pstmt.executeQuery();
+			if (resultSet.next()) {
+				user = extract(resultSet);
+			}
+			close(pstmt);
+			pstmt = con.prepareStatement(SQL_DELETE_HASH);
+			pstmt.setString(1, hash);
+			pstmt.execute();
+
+			con.commit();
+		} catch (SQLException e) {
+			rollback(con);
+			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+		} finally {
+			close(con, pstmt, resultSet);
+		}
+		return user;
+	}
+	
+	
+	
+	
+	
+	public static String generateHash(int len) {
+		String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+				Random rnd = new Random();
+				StringBuilder sb = new StringBuilder(len);
+				for (int i = 0; i < len; i++)
+					sb.append(chars.charAt(rnd.nextInt(chars.length())));
+				return sb.toString();
+	}
 }

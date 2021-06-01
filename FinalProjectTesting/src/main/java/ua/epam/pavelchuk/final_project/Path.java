@@ -16,6 +16,7 @@ public final class Path {
 	// pages
 	public static final String PAGE_LOGIN = "/login.jsp";
 	public static final String PAGE_ERROR = "/WEB-INF/jsp/error_page.jsp";
+	public static final String PAGE_FORGOT_PASSWORD = "/WEB-INF/jsp/forgot_password.jsp";
 	public static final String PAGE_CLIENT_REGISRTATION = "/registration.jsp";
 	public static final String PAGE_ADMIN = "/WEB-INF/jsp/admin/profile/view.jsp";
 	public static final String PAGE_CLIENT = "/WEB-INF/jsp/client/profile/view.jsp";
@@ -57,4 +58,6 @@ public final class Path {
 	public static final String COMMAND_EDIT_TEST = "controller?command=editTest";
 
 	public static final String COMMAND_EDIT_TEST_CONTENT = "controller?command=editTestContent";
+	
+	public static final String COMMAND_FORGOT_PASSWORD = "controller?command=forgotPassword";
 }

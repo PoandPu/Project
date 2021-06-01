@@ -82,10 +82,10 @@ public class UserDAOTest {
 	@Test
 	public void searchUsers() throws DBException {
 		System.out.println("searchUsers");
-		assertFalse(userDAO.findUsersOrderBy(testUser.getFirstName()).isEmpty());
-		assertFalse(userDAO.findUsersOrderBy(testUser.getLastName()).isEmpty());
-		assertFalse(userDAO.findUsersOrderBy(testUser.getEmail()).isEmpty());
-		assertFalse(userDAO.findUsersOrderBy(testUser.getLogin()).isEmpty());
+		assertFalse(userDAO.findUsersLike(testUser.getFirstName()).isEmpty());
+		assertFalse(userDAO.findUsersLike(testUser.getLastName()).isEmpty());
+		assertFalse(userDAO.findUsersLike(testUser.getEmail()).isEmpty());
+		assertFalse(userDAO.findUsersLike(testUser.getLogin()).isEmpty());
 	}
 	
 	@Test

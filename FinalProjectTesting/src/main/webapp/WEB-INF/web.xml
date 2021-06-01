@@ -46,7 +46,7 @@
 		</init-param>
 		<init-param>
 			<param-name>no_control</param-name>
-			<param-value>login registration viewErrorPage</param-value>
+			<param-value>login registration viewErrorPage forgotPassword generatePassword</param-value>
 		</init-param>
 	</filter>
 	

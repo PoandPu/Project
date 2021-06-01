@@ -29,9 +29,7 @@ public class QuestionDAO extends AbstractDAO {
 	private static final Logger LOG = Logger.getLogger(QuestionDAO.class);
 	private static final String GET_QUESTIONS_BY_TEST = "SELECT * FROM questions WHERE test_id = ?";
 	private static final String GET_QUESTION_BY_ID = "SELECT * FROM questions WHERE id = ?";
-
 	private static final String SQL_DELETE_QUESTION_BY_ID = "DELETE FROM questions WHERE id=?";
-
 	private static final String SQL_UPDATE_QUESTION_BY_ID = "UPDATE questions SET title_ru = ?, title_en = ? WHERE id = ?";
 	private static final String SQL_INSERT_QUESTION = "INSERT INTO questions (title_ru, title_en, test_id) VALUE (?, ?, ?)";
 
