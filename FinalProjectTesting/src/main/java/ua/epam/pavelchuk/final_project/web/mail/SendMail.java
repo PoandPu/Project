@@ -16,9 +16,9 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 public class SendMail {
-	
+
 	private SendMail() {
-		
+
 	}
 
 	public static void send(String email) {
@@ -92,7 +92,7 @@ public class SendMail {
 		properties.put("mail.smtp.auth", "true");
 
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-			
+
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication("aleksandrspak856@gmail.com", "testForProject");
 			}
@@ -115,28 +115,32 @@ public class SendMail {
 //					+ "Для того, чтобы продолжить восстановление пароля, необходимо перейти по данной ссылке, скопировав её в адресную строку своего браузера:/r/n"
 //					+ "http://localhost:8080/FinalProjectTesting/controller?command=login"
 //					);
-			
-			
-			
+
 //			multipart.addBodyPart(textPart);
 //			textPart.setText("http://localhost:8080/FinalProjectTesting/controller?command=login");
 //			multipart.addBodyPart(textPart);
 //			//multipart.addBodyPart(attachmentPart);
 			StringBuilder sb = new StringBuilder();
+			// sb.append("<style>p
+			// {color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px}
+			// </style>");
 			sb.append("<h2>Hello, ");
 			sb.append(login);
 			sb.append("!</h2>");
-			sb.append("<p>In order to continue password recovery, you need to follow this link by copying it into the address bar of your browser: ");
-//			sb.append(System.lineSeparator());
-			//sb.append("<p> http://localhost:8080/FinalProjectTesting/controller?command=login");
-			//sb.append("<p> <a href ='http://localhost:8080/FinalProjectTesting/controller?command=login'>RESTORE</a>");
-			sb.append("<p> <form action=\"http://localhost:8080/FinalProjectTesting/controller\" method=\"post\"> <input type=\"hidden\" name=\"command\" value=\"generatePassword\" required>");
+			sb.append(
+					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \">In order to continue password recovery, you need to follow this link by copying it into the address bar of your browser: ");
+			sb.append(
+					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \"> <form action=\"http://localhost:8080/FinalProjectTesting/controller\" method=\"post\"> <input type=\"hidden\" name=\"command\" value=\"generatePassword\" style = \"background-color:#ededed;border-width:1px;border-style:solid;border-color:#e2e3e7;color:#444444;display:block;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px;padding:10px  \" required>");
 			sb.append("<input type=\"hidden\" name=\"hash\" value='");
 			sb.append(hash);
 			sb.append("' required>");
-			sb.append("<input class=\"form\" type=\"submit\" name=\"submit\" value= Restore />");
+			sb.append("<input class=\"form\" type=\"submit\" name=\"submit\" value= \"Restore\" style = \"background-color: #4e6e6f;");
+			sb.append("  color: white; padding: 12px 40px; border:none;");
+			sb.append(" border-radius: 4px; cursor: pointer;\"  />");
 			sb.append("</form>");
-			sb.append("<p>If this request was initiated by someone else, then you do not need to follow this link!");
+			sb.append("<br>");
+			sb.append(
+					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \">If this request was initiated by someone else, then you do not need to follow this link!");
 			message.setContent(sb.toString(), "text/html; charset=utf-8");
 
 			// Send message
@@ -145,7 +149,7 @@ public class SendMail {
 			mex.printStackTrace();
 		}
 	}
-	
+
 	public static void sendNewPassword(String email, String password) {
 		String to = email;
 		// Sender's email ID needs to be mentioned
@@ -162,7 +166,7 @@ public class SendMail {
 		properties.put("mail.smtp.auth", "true");
 
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-			
+
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication("aleksandrspak856@gmail.com", "testForProject");
 			}
@@ -180,10 +184,13 @@ public class SendMail {
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("<h2>Successfully sent</h2>");
-			sb.append("<p>A new password has been successfully generated. We strongly recommend that you change this temporary password to your personal one in your profile settings immediately after successful authorization on the site.");
-			sb.append("<p>Your new password: ");
+			sb.append(
+					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \">A new password has been successfully generated. We strongly recommend that you change this temporary password to your personal one in your profile settings immediately after successful authorization on the site.");
+			sb.append(
+					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \">Your new password: ");
 			sb.append(password);
-			sb.append("<p>When copying the password, make sure that there are no leading and trailing spaces (there should be no spaces at the edges).");
+			sb.append(
+					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \">When copying the password, make sure that there are no leading and trailing spaces (there should be no spaces at the edges).");
 			message.setContent(sb.toString(), "text/html; charset=utf-8");
 
 			// Send message

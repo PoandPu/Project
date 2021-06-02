@@ -18,7 +18,7 @@ import ua.epam.pavelchuk.final_project.web.command.admin.user.EditUserCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.FindUserCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.ViewUsersListCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.CheckTestCommand;
-import ua.epam.pavelchuk.final_project.web.command.common.ForgotPasswordCommand;
+import ua.epam.pavelchuk.final_project.web.command.common.PasswordRecoveryCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.GeneratePassword;
 import ua.epam.pavelchuk.final_project.web.command.common.LoginCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.LogoutCommand;
@@ -81,7 +81,7 @@ public class CommandContainer {
 		commands.put("login", new LoginCommand());
 		commands.put("registration", new RegistrationCommand());
 		commands.put("viewErrorPage", new ViewErrorCommand());
-		commands.put("forgotPassword", new ForgotPasswordCommand());
+		commands.put("passwordRecovery", new PasswordRecoveryCommand());
 		commands.put("generatePassword", new GeneratePassword());
 		
 		LOG.debug("Command container was successfully initialized");

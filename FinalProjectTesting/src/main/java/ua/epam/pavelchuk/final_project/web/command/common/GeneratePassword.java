@@ -42,21 +42,25 @@ public class GeneratePassword extends Command{
 	}
 	
 	private String doGet(HttpServletRequest request) {
-		String message = request.getParameter("message");
+		String message = request.getParameter(ParameterNames.HASH);
 		LOG.debug(message);
 		if (message != null) {
-		request.setAttribute("message", message);
+		request.setAttribute(ParameterNames.MESSAGE, message);
 		}
-		return Path.PAGE_FORGOT_PASSWORD;
+		return Path.PAGE_PASSWORD_RECOVERY;
 	}
 	
 	private String doPost(HttpServletRequest request) throws AppException {
-		String hash = request.getParameter("hash");
+		String hash = request.getParameter(ParameterNames.HASH);
 		String message = null;
 		UserDAO userDAO = null;
 		try {
 			userDAO = UserDAO.getInstance();
 			User user = userDAO.findByHashAndDelete(hash);
+			
+			if (user == null) {
+				message = "This link to change password is no longer valid";
+			} else {
 			
 			String newPassword = UserDAO.generateHash(10);
 			String passwordKey = user.getPasswordKey();	
@@ -67,10 +71,12 @@ public class GeneratePassword extends Command{
 	
 			SendMail.sendNewPassword(user.getEmail(), newPassword);
 			message = "A new password has been successfully generated and sent to email: " + user.getEmail();
+			}
 		} catch (DBException ex) {
 			LOG.error(ex);
 		}
 		
-		return Path.COMMAND_FORGOT_PASSWORD + "&message=" + message;
+		
+		return Path.COMMAND_PASSWORD_RECOVERY + "&message=" + message;
 	}
 }

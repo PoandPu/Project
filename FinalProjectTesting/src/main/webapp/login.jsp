@@ -57,7 +57,7 @@
 									key="login_jsp.form.registration" /></a>
 						</div> 
 						<div class = "col-25">
-						<a href="controller?command=forgotPassword">Forgot Password?</a>
+						<a href="controller?command=passwordRecovery"><fmt:message key="login_jsp.form.forgot_password"/></a>
 						</div> 
 						</div>
 						<c:if test="${not empty loginErrorMessage}">

@@ -55,5 +55,7 @@ public class ParameterNames {
 	public static final String ADD_ANSWER ="add_answer";
 	
 	public static final String PATTERN ="pattern";
+	public static final String MESSAGE ="message";
+	public static final String HASH ="hash";
 	
 }

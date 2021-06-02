@@ -64,7 +64,6 @@ CREATE TABLE IF NOT EXISTS `ScreeningDB`.`pass_recovery` (
   `hash` VARCHAR(45) NOT NULL,
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX `fk_pass_restore_users_idx` (`user_id` ASC) VISIBLE,
-  PRIMARY KEY (`user_id`),
   CONSTRAINT `fk_pass_restore_users`
     FOREIGN KEY (`user_id`)
     REFERENCES `ScreeningDB`.`users` (`id`)
@@ -548,7 +547,7 @@ INSERT INTO answers (option_ru, option_en, question_id) VALUE ('квадратн
 -- DELETE FROM pass_recovery WHERE `hash` = 'blaBLA231312BLA' and create_time < DATE_SUB(NOW(), INTERVAL 10 MINUTE);
 
 
--- CREATE EVENT IF NOT EXISTS `delete_hash231`ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE
+-- CREATE EVENT IF NOT EXISTS `delete_hashblaBLA231312BLA`ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE
 -- DO 
 -- DELETE FROM pass_recovery WHERE `hash` = 'blaBLA231312BLA';
 

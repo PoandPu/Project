@@ -11,30 +11,27 @@
 		<tr>
 			<td class="content">
 				<div align="center">
-					<div class="container">
+					<div class="container" style = "width: 60%">
 					
 					<c:choose>
-					<c:when test="${not empty message}"> ${message} </c:when>
+					<c:when test="${not empty message}"><p style = "font-family: Helvetica, Arial, sans-serif; font-size:  1.3em"> ${message} </p></c:when>
 					
 					<c:when test= "${empty message}"> 
 						<form action="controller" method="post">
-							<input type="hidden" name="command" value="forgotPassword" required>
+							<input type="hidden" name="command" value="passwordRecovery" required>
 							<div align="center">
 								<h3>
-									<label>Please enter email or login</label>
+									<label style = "font-family: Helvetica, Arial, sans-serif; font-size:  1.3em">Please enter email or login</label>
 								</h3>
 							</div>
-							<div class="row">
-								<div class="col-25">
-									<label><fmt:message key="login_jsp.form.login" /></label>
-								</div>
-								<div class="col-75">
+							<div class="row" style = "padding: 4px 15%">
+								
 									<input type="text" name="pattern"
 										placeholder="<fmt:message key="login_jsp.form.login" />, email"
 										required>
-								</div>
+								
 							</div>
-							<div class="row" style = "content-align: center">
+							<div class="row" style = "content-align: center; padding: 4px 15%">
 								<input class="form" type="submit" name="submit"
 									value=<fmt:message key="login_jsp.form.login"/>>
 							</div>
