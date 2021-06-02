@@ -30,25 +30,18 @@
 						<td>${user.email}</td>
 					</tr>
 					<tr>
-						<td><fmt:message key="profile_jsp.language"/></td>
+						<td><fmt:message key="profile_jsp.language" /></td>
 						<td>${user.language}</td>
 					</tr>
 					<tr>
 						<th colspan="2"></th>
 					</tr>
-				</table> 
-				
-				<c:if test="${Role.getRole(user) eq Role.CLIENT}">
+				</table> <c:if test="${Role.getRole(user) eq Role.CLIENT}">
 					<br>
 					<form action="reportCreator" method="post">
-						<input type="hidden" name="userId" value="${user.id}" />
-						<input type="hidden" name="downloadReport" value = "1"/> <input
-							class="edit" type="submit" name="downloadReport" value="<fmt:message key="profile_jsp.create_report"/>">
-					</form>
-					<form action="reportCreator" method="post">
-						<input type="hidden" name="userId" value="${user.id}" />
-						<input type="hidden" name="sendReportEmail" value = "2"/> <input
-							class="edit" type="submit" name="sendReportEmail" value="Send on Email">
+						<input type="hidden" name="userId" value="${user.id}" /> <input
+							class="edit" type="submit" name="downloadReport"
+							value="<fmt:message key="profile_jsp.create_report"/>">
 					</form>
 					<table id="customers">
 						<tr>
@@ -129,6 +122,6 @@
 				</c:if>
 			</td>
 		</tr>
-
+		<%@ include file="/WEB-INF/jspf/footer.jspf"%>
 	</table>
 </body>

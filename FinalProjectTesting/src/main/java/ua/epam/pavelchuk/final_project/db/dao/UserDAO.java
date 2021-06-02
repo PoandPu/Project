@@ -1,13 +1,12 @@
 package ua.epam.pavelchuk.final_project.db.dao;
 
-import java.sql.Connection;
+import java.sql.Connection; 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
 
@@ -15,6 +14,7 @@ import ua.epam.pavelchuk.final_project.db.Fields;
 import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
+import ua.epam.pavelchuk.final_project.web.password_encryption.PasswordUtils;
 
 /**
  * DAO class for working with MySQL
@@ -48,9 +48,7 @@ public class UserDAO extends AbstractDAO {
 	private static final String SQL_INSERT_HASH = "INSERT INTO pass_recovery(hash, user_id) VALUE (?,?);";
 	
 	private static final String SQL_CREATE_EVENT = "CREATE EVENT IF NOT EXISTS ";
-	private static final String SQL_EVENT_PROPERTIES = " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 10 MINUTE\n"
-			+ "DO \n"
-			+ "DELETE FROM pass_recovery WHERE `hash` = ?";
+	private static final String SQL_EVENT_PROPERTIES = " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 10 MINUTE DO DELETE FROM pass_recovery WHERE `hash` = ?";
 	
 	private static final String SQL_FIND_USER_BY_HASH = "SELECT users.* FROM pass_recovery JOIN users ON users.id = pass_recovery.user_id WHERE pass_recovery.hash = ?";		
 	private static final String SQL_DELETE_HASH = "DELETE FROM pass_recovery WHERE `hash` = ?";
@@ -559,7 +557,7 @@ public class UserDAO extends AbstractDAO {
 	 * @throws DBException
 	 */
 	public String createHash(User user) throws DBException {
-		String hash = generateHash(45);
+		String hash = PasswordUtils.getSalt(45);
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -572,6 +570,7 @@ public class UserDAO extends AbstractDAO {
 			pstmt.setInt(k++, user.getId());
 			pstmt.executeUpdate();
 			close(pstmt);
+			
 			pstmt = con.prepareStatement(SQL_CREATE_EVENT + "delete_hash" + hash + SQL_EVENT_PROPERTIES);
 			k = 1;
 			pstmt.setString(k++, hash);
@@ -617,18 +616,5 @@ public class UserDAO extends AbstractDAO {
 			close(con, pstmt, resultSet);
 		}
 		return user;
-	}
-	
-	
-	
-	
-	
-	public static String generateHash(int len) {
-		String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-				Random rnd = new Random();
-				StringBuilder sb = new StringBuilder(len);
-				for (int i = 0; i < len; i++)
-					sb.append(chars.charAt(rnd.nextInt(chars.length())));
-				return sb.toString();
 	}
 }

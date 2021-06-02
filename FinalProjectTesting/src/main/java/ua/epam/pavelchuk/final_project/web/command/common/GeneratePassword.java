@@ -62,7 +62,7 @@ public class GeneratePassword extends Command{
 				message = "This link to change password is no longer valid";
 			} else {
 			
-			String newPassword = UserDAO.generateHash(10);
+			String newPassword = PasswordUtils.getSalt(10);
 			String passwordKey = user.getPasswordKey();	
 			String securePassword = PasswordUtils.generateSecurePassword(newPassword, passwordKey);	
 			user.setPassword(securePassword);

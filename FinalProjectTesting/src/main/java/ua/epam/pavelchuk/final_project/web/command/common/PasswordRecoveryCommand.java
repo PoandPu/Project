@@ -55,13 +55,11 @@ public class PasswordRecoveryCommand extends Command{
 		String pattern = request.getParameter(ParameterNames.PATTERN);
 		User user = null;
 		UserDAO userDAO = null;
-		//some validation
 		try {
 			userDAO = UserDAO.getInstance();
 			user = userDAO.findUserByLoginMail(pattern);
 			LOG.trace(user);
-			
-			//some actions
+
 			if (user == null) {
 				request.getSession().setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, "login_jsp.error.not_found_password_recovery");
 				return Path.COMMAND_PASSWORD_RECOVERY;
@@ -73,8 +71,8 @@ public class PasswordRecoveryCommand extends Command{
 			message = "A letter will now come to the mail "+ user.getEmail().replaceFirst("[\\S]{2,5}@[\\S]{2,4}", "******") + ", specified during registration. It will contain a link that should be followed so that we can create a temporary password. It is very important not to forget to check the \"SPAM\" folder in your mailbox if the letter does not arrive for a long time!";
 		} catch (DBException ex) {
 			LOG.error(ex);
+			throw new AppException(ex.getMessage());
 		}
-		
 				
 		return Path.COMMAND_PASSWORD_RECOVERY + "&message=" + message;
 	}

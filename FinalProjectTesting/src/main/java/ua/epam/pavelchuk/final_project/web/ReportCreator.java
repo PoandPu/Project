@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web;
 
-import java.io.DataOutputStream;
+import java.io.DataOutputStream; 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -40,7 +40,6 @@ import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
-import ua.epam.pavelchuk.final_project.web.mail.SendMail;
 
 public class ReportCreator extends HttpServlet {
 	/**
@@ -88,16 +87,8 @@ public class ReportCreator extends HttpServlet {
 				return;
 			}
 			createReport(request);
-	
-			if (request.getParameter("sendReportEmail") != null) {
-				LOG.debug("Download report ="+request.getParameter("sendReportEmail") );
-				sendReport(request);
-				return;
-			}	
-			if (request.getParameter("downloadReport") != null) {
-				LOG.debug("Download report ="+request.getParameter("downloadReport"));
-				getReport(response);
-			}
+
+			getReport(response);
 
 		} catch (AppException ex) {
 			LOG.trace("Err in ReportCreator" + ex.getMessage());
@@ -159,12 +150,6 @@ public class ReportCreator extends HttpServlet {
 					LOG.error("Error!");
 				}
 		}
-	}
-	
-	public void sendReport(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute(AttributeNames.USER);
-		SendMail.send(user.getEmail());
 	}
 
 	private static void addEmptyLine(Paragraph paragraph, int number) {

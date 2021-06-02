@@ -61,6 +61,7 @@
 				</table>
 			</td>
 		</tr>
+		<%@ include file="/WEB-INF/jspf/footer.jspf"%>
 	</table>
 </body>
 </html>

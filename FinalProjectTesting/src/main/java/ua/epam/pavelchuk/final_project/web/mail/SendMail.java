@@ -1,79 +1,18 @@
 package ua.epam.pavelchuk.final_project.web.mail;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 public class SendMail {
 
 	private SendMail() {
-
-	}
-
-	public static void send(String email) {
-		// Recipient's email ID needs to be mentioned.
-		String to = email;
-		// Sender's email ID needs to be mentioned
-		String from = "aleksandrspak856@gmail.com";
-		// Assuming you are sending email from through gmails smtp
-		String host = "smtp.gmail.com";
-		// Get system properties
-		Properties properties = System.getProperties();
-
-		// Setup mail server
-		properties.put("mail.smtp.host", host);
-		properties.put("mail.smtp.port", "465");
-		properties.put("mail.smtp.ssl.enable", "true");
-		properties.put("mail.smtp.auth", "true");
-
-		// Get the Session object.// and pass
-		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("aleksandrspak856@gmail.com", "testForProject");
-			}
-		});
-		session.setDebug(true);
-		try {
-			// Create a default MimeMessage object.
-			MimeMessage message = new MimeMessage(session);
-			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
-			// Set To: header field of the header.
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			// Set Subject: header field
-			message.setSubject("This is the Subject Line!");
-			Multipart multipart = new MimeMultipart();
-			MimeBodyPart attachmentPart = new MimeBodyPart();
-			MimeBodyPart textPart = new MimeBodyPart();
-			try {
-				File f = new File(System.getProperty("catalina.home") + "\\logs\\temp\\iTextHelloWorld.pdf");
-				attachmentPart.attachFile(f);
-				textPart.setText("This is text");
-				multipart.addBodyPart(textPart);
-				multipart.addBodyPart(attachmentPart);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			message.setContent(multipart);
-			System.out.println("sending...");
-			// Send message
-			Transport.send(message);
-			System.out.println("Sent message successfully....");
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
-		}
-
 	}
 
 	public static void sendRefence(String email, String login, String hash) {
@@ -107,23 +46,8 @@ public class SendMail {
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 			// Set Subject: header field
 			message.setSubject("Restore your password");
-//			Multipart multipart = new MimeMultipart();
-//			//MimeBodyPart attachmentPart = new MimeBodyPart();
-//			MimeBodyPart textPart = new MimeBodyPart();
-
-//			textPart.setText("Приветствуем, " + userName + "/r/n"
-//					+ "Для того, чтобы продолжить восстановление пароля, необходимо перейти по данной ссылке, скопировав её в адресную строку своего браузера:/r/n"
-//					+ "http://localhost:8080/FinalProjectTesting/controller?command=login"
-//					);
-
-//			multipart.addBodyPart(textPart);
-//			textPart.setText("http://localhost:8080/FinalProjectTesting/controller?command=login");
-//			multipart.addBodyPart(textPart);
-//			//multipart.addBodyPart(attachmentPart);
+			
 			StringBuilder sb = new StringBuilder();
-			// sb.append("<style>p
-			// {color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px}
-			// </style>");
 			sb.append("<h2>Hello, ");
 			sb.append(login);
 			sb.append("!</h2>");
