@@ -47,14 +47,14 @@ public class SubjectDAOTest {
 	
 	@Test
 	public void getSubjectById() throws DBException {
-		assertEquals(subject, subjectDAO.getSubjectById(subject.getId()));
+		assertEquals(subject, subjectDAO.findSubjectById(subject.getId()));
 	}
 	
 	@Test
 	public void update() throws DBException {
 		subject.setNameRu(subject.getNameRu() + "test");
 		assertTrue(subjectDAO.update(subject));
-		subject = subjectDAO.getSubjectById(subject.getId());
+		subject = subjectDAO.findSubjectById(subject.getId());
 	}
 	
 	

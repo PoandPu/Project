@@ -63,11 +63,11 @@ public class ViewTestsListCommand extends Command {
 		String direction = request.getParameter(ParameterNames.DIRECTION) == null ? "ASC"
 				: request.getParameter(ParameterNames.DIRECTION);
 
-		tests = testDAO.findAllOrderBy(orderBy, direction, subjectId, (page-1) * lines, lines);
+		tests = testDAO.findTestBySubjectIdAllOrderBy(subjectId, orderBy, direction, (page-1) * lines, lines);
 		
 		while (tests.isEmpty() && page > 1) {
 			page--;
-			tests = testDAO.findAllOrderBy(orderBy, direction, subjectId, (page-1) * lines, lines);
+			tests = testDAO.findTestBySubjectIdAllOrderBy(subjectId, orderBy, direction, (page-1) * lines, lines);
 		}
 
 		request.setAttribute(AttributeNames.TESTS, tests);

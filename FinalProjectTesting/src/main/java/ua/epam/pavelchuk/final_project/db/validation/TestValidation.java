@@ -11,7 +11,7 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 
-public abstract class TestValidation extends LocalizationValidation {
+public class TestValidation extends LocalizationValidation {
 	
 	private TestValidation() {
 	}

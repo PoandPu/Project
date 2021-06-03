@@ -83,11 +83,11 @@ public class ViewProfileCommand extends Command {
 		String direction = request.getParameter(ParameterNames.DIRECTION) == null ? "DESC"
 				: request.getParameter(ParameterNames.DIRECTION);
 
-		List<Result> results = resultDAO.getResultsByUserId(userId, orderBy, direction, (page - 1) * lines, lines);
+		List<Result> results = resultDAO.findResultsByUserIdAllOrderedBy(userId, orderBy, direction, (page - 1) * lines, lines);
 
 		while (results.isEmpty() && page > 1) {
 			page--;
-			results = resultDAO.getResultsByUserId(userId, orderBy, direction, (page - 1) * lines, lines);
+			results = resultDAO.findResultsByUserIdAllOrderedBy(userId, orderBy, direction, (page - 1) * lines, lines);
 		}
 
 		request.setAttribute(AttributeNames.RESULTS, results);

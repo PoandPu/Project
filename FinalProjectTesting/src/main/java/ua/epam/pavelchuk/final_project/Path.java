@@ -1,9 +1,9 @@
 package ua.epam.pavelchuk.final_project;
 
 /**
- * Path holder (jsp pages, controller commands).
+ * Path holder for jsp pages and controller commands.
  * 
- * @author 
+ * @author O.Pavelchuk
  * 
  */
 public final class Path {
@@ -38,11 +38,11 @@ public final class Path {
 	public static final String ADMIN_EDIT_USER ="/WEB-INF/jsp/admin/users/edit_user.jsp";
 	
 	// commands
-	
 	public static final String COMMAND_VIEW_LOGIN_PAGE = "controller?command=login";
 	public static final String COMMAND_VIEW_REGISTRATION_PAGE = "controller?command=registration";
 	public static final String COMMAND_LOGOUT = "controller?command=logout";
 	public static final String COMMAND_VIEW_ERROR_PAGE ="controller?command=viewErrorPage";
+	public static final String COMMAND_PASSWORD_RECOVERY = "controller?command=passwordRecovery";
 	
 	public static final String COMMAND_VIEW_USERS_LIST = "controller?command=viewUsersList";
 	public static final String COMMAND_EDIT_USER = "controller?command=editUser";
@@ -58,6 +58,4 @@ public final class Path {
 	public static final String COMMAND_EDIT_TEST = "controller?command=editTest";
 
 	public static final String COMMAND_EDIT_TEST_CONTENT = "controller?command=editTestContent";
-	
-	public static final String COMMAND_PASSWORD_RECOVERY = "controller?command=passwordRecovery";
 }

@@ -37,12 +37,12 @@ public class ResultDAOTest {
 	
 	@Test
 	public void getResultsByUserIdWithPagination() throws DBException {
-		assertFalse(resultDAO.getResultsByUserId(result.getEntrantId(), "tests.name_Ru", "ASC", 0, 10).isEmpty());
+		assertFalse(resultDAO.findResultsByUserIdAllOrderedBy(result.getEntrantId(), "tests.name_Ru", "ASC", 0, 10).isEmpty());
 	}
 	
 	@Test
 	public void getResultsByUserId() throws DBException {
-		assertFalse(resultDAO.getResultsByUserId(result.getEntrantId()).isEmpty());
+		assertFalse(resultDAO.findResultsByUserId(result.getEntrantId()).isEmpty());
 	}
 	
 }

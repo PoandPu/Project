@@ -47,14 +47,13 @@ public class Controller extends HttpServlet {
 	 */
 	private String process(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException {
-
 		LOG.debug("Controller starts");
-		
-		
+	
 		// extract command name from the request
 		String commandName = request.getParameter(ParameterNames.COMMAND);
 		LOG.trace("Request parameter: command --> " + commandName);
 		LOG.trace(commandName);
+		
 		// obtain command object by its name
 		Command command = CommandContainer.get(commandName);
 		LOG.trace("Obtained command --> " + command);

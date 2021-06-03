@@ -15,14 +15,31 @@ import ua.epam.pavelchuk.final_project.db.entity.Question;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
+/**
+ * Manipulates "questions" table in the DB
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class QuestionDAO extends AbstractDAO {
 
+	/**
+	 * standard constructor
+	 * 
+	 * @throws DBException
+	 */
 	private QuestionDAO() throws DBException {
 		super();
 	}
 
-	private QuestionDAO(boolean isUseJNDI) throws DBException {
-		super(isUseJNDI);
+	/**
+	 * constructor constructor with the option not to use JNDI for Junit
+	 * 
+	 * @param useJNDI
+	 * @throws DBException
+	 */
+	private QuestionDAO(boolean useJNDI) throws DBException {
+		super(useJNDI);
 	}
 
 	private static QuestionDAO instance;
@@ -36,7 +53,7 @@ public class QuestionDAO extends AbstractDAO {
 	/**
 	 * singleton pattern
 	 * 
-	 * @return
+	 * @return instance of QuestionDAO
 	 * @throws DBException
 	 */
 	public static synchronized QuestionDAO getInstance() throws DBException {
@@ -49,7 +66,7 @@ public class QuestionDAO extends AbstractDAO {
 	/**
 	 * singleton pattern
 	 * 
-	 * @return
+	 * @return instance of QuestionDAO
 	 * @throws DBException
 	 */
 	public static synchronized QuestionDAO getInstance(boolean useJNDI) throws DBException {
@@ -58,7 +75,29 @@ public class QuestionDAO extends AbstractDAO {
 		}
 		return instance;
 	}
+	
+	/**
+	 * Extracts a Question object from ResultSet
+	 * 
+	 * @param ResultSet
+	 * @return Question
+	 * @throws SQLException
+	 */
+	private Question extract(ResultSet rs) throws SQLException {
+		Question question = new Question();
+		question.setId(rs.getInt(Fields.ID));
+		question.setNameRu(rs.getString(Fields.QUESTION_TITLE_RU));
+		question.setNameEn(rs.getString(Fields.QUESTION_TITLE_EN));
+		return question;
+	}
 
+	/**
+	 * Finds all questions for test
+	 * 
+	 * @param test id
+	 * @return List of questions
+	 * @throws DBException
+	 */
 	public List<Question> findQuestionsByTest(int testId) throws DBException {
 		List<Question> list = new ArrayList<>();
 
@@ -68,10 +107,10 @@ public class QuestionDAO extends AbstractDAO {
 
 		try {
 			con = getConnection();
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(GET_QUESTIONS_BY_TEST);
 			pstmt.setInt(1, testId);
 			resultSet = pstmt.executeQuery();
+			
 			while (resultSet.next()) {
 				list.add(extract(resultSet));
 			}
@@ -84,6 +123,13 @@ public class QuestionDAO extends AbstractDAO {
 		return list;
 	}
 
+	/**
+	 * Finds question by id
+	 * 
+	 * @param question id
+	 * @return Question
+	 * @throws DBException
+	 */
 	public Question findQuestionById(int id) throws DBException {
 		Question question = null;
 
@@ -93,9 +139,9 @@ public class QuestionDAO extends AbstractDAO {
 
 		try {
 			con = getConnection();
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(GET_QUESTION_BY_ID);
 			pstmt.setInt(1, id);
+			
 			resultSet = pstmt.executeQuery();
 			while (resultSet.next()) {
 				question = extract(resultSet);
@@ -109,19 +155,11 @@ public class QuestionDAO extends AbstractDAO {
 		return question;
 	}
 
-	private Question extract(ResultSet rs) throws SQLException {
-		Question question = new Question();
-		question.setId(rs.getInt(Fields.ID));
-		question.setNameRu(rs.getString(Fields.QUESTION_TITLE_RU));
-		question.setNameEn(rs.getString(Fields.QUESTION_TITLE_EN));
-		return question;
-	}
-
 	/**
 	 * Delete question by id
 	 * 
-	 * @param id
-	 * @return result true or false
+	 * @param question id
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean delete(int id) throws DBException {
@@ -146,10 +184,10 @@ public class QuestionDAO extends AbstractDAO {
 	}
 
 	/**
-	 * Delete question by id
+	 * Update question by id
 	 * 
-	 * @param id
-	 * @return result true or false
+	 * @param question id
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean update(Question question) throws DBException {
@@ -158,8 +196,6 @@ public class QuestionDAO extends AbstractDAO {
 		PreparedStatement pstmt = null;
 		try {
 			con = getConnection();
-			con.setAutoCommit(false);
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(SQL_UPDATE_QUESTION_BY_ID);
 			int k = 1;
 			pstmt.setString(k++, question.getNameRu());
@@ -167,12 +203,10 @@ public class QuestionDAO extends AbstractDAO {
 			pstmt.setInt(k, question.getId());
 
 			if (pstmt.executeUpdate() > 0) {
-				con.commit();
 				LOG.trace("Question with id " + question.getId() + " was updated");
 				result = true;
 			}
 		} catch (SQLException e) {
-			rollback(con);
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException();
 		} finally {
@@ -180,31 +214,36 @@ public class QuestionDAO extends AbstractDAO {
 		}
 		return result;
 	}
-
-	public boolean insert(Question qiestion) throws DBException {
+	
+	/**
+	 * Inserts question in the DB
+	 * 
+	 * @param Question
+	 * @return boolean
+	 * @throws DBException
+	 */
+	public boolean insert(Question question) throws DBException {
 		boolean result = false;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
 		try {
 			con = getConnection();
-			con.setAutoCommit(false);
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
 			pstmt = con.prepareStatement(SQL_INSERT_QUESTION, Statement.RETURN_GENERATED_KEYS);
 			int k = 1;
-			pstmt.setString(k++, qiestion.getNameRu());
-			pstmt.setString(k++, qiestion.getNameEn());
-			pstmt.setInt(k++, qiestion.getTestId());
+			pstmt.setString(k++, question.getNameRu());
+			pstmt.setString(k++, question.getNameEn());
+			pstmt.setInt(k++, question.getTestId());
+			
 			if (pstmt.executeUpdate() > 0) {
 				resultSet = pstmt.getGeneratedKeys();
 				if (resultSet.next()) {
-					con.commit();
-					qiestion.setId(resultSet.getInt(1));
+					question.setId(resultSet.getInt(1));
 					result = true;
 				}
 			}
 		} catch (SQLException e) {
-			rollback(con);
 			LOG.error("Cannot insert question!");
 			throw new DBException("Cannot insert question!", e);
 		} finally {

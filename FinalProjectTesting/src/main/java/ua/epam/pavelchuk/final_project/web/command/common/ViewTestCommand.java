@@ -86,7 +86,7 @@ public class ViewTestCommand extends Command {
 			questionDAO = QuestionDAO.getInstance();
 			answerDAO = AnswerDAO.getInstance();
 			testDAO = TestDAO.getInstance();
-			test = testDAO.getTestById(testId);
+			test = testDAO.findTestById(testId);
 			List<Question> questions = questionDAO.findQuestionsByTest(testId);
 			List<List<Answer>> answers = new ArrayList<>();
 			for (Question q : questions) {

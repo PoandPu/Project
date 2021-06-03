@@ -16,12 +16,31 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
 /**
- * DAO class for working with MySQL
+ * Manipulates "subjects" table in the DB
  * 
- * @author
+ * @author O.Pavelchuk
  *
  */
 public class SubjectDAO extends AbstractDAO {
+
+	/**
+	 * standard constructor
+	 * 
+	 * @throws DBException
+	 */
+	private SubjectDAO() throws DBException {
+		super();
+	}
+
+	/**
+	 * constructor constructor with the option not to use JNDI for Junit
+	 * 
+	 * @param useJNDI
+	 * @throws DBException
+	 */
+	private SubjectDAO(boolean useJNDI) throws DBException {
+		super(useJNDI);
+	}
 
 	// singleton variable
 	private static SubjectDAO instance;
@@ -36,43 +55,9 @@ public class SubjectDAO extends AbstractDAO {
 	private static final String SQL_FIND_ALL_SUBJECT = "SELECT * FROM subjects";
 
 	/**
-	 * standard constructor
-	 * 
-	 * @throws DBException
-	 */
-	private SubjectDAO() throws DBException {
-		super();
-	}
-
-	/**
-	 * constructor constructor with the option not to use JNDI for Junit
-	 * 
-	 * @param isUseJNDI
-	 * @throws DBException
-	 */
-	private SubjectDAO(boolean isUseJNDI) throws DBException {
-		super(isUseJNDI);
-	}
-
-	/**
-	 * Extract subject from ResultSet
-	 * 
-	 * @param resultSet
-	 * @return
-	 * @throws SQLException
-	 */
-	private Subject extract(ResultSet resultSet) throws SQLException {
-		Subject subject = new Subject();
-		subject.setId(resultSet.getInt(Fields.ENTITY_ID));
-		subject.setNameEn(resultSet.getString(Fields.SUBJECTS_NAME_EN));
-		subject.setNameRu(resultSet.getString(Fields.SUBJECTS_NAME_RU));
-		return subject;
-	}
-
-	/**
 	 * singleton pattern
 	 * 
-	 * @return
+	 * @return instance of SubjectDAO
 	 * @throws DBException
 	 */
 	public static synchronized SubjectDAO getInstance() throws DBException {
@@ -86,25 +71,42 @@ public class SubjectDAO extends AbstractDAO {
 	 * singleton pattern with use constructor with the option not to use JNDI for
 	 * Junit
 	 * 
-	 * @param isUseJNDI
-	 * @return
+	 * @param useJNDI
+	 * @return instance of SubjectDAO
 	 * @throws DBException
 	 */
-	public static synchronized SubjectDAO getInstance(boolean isUseJNDI) throws DBException {
+	public static synchronized SubjectDAO getInstance(boolean useJNDI) throws DBException {
 		if (instance == null) {
-			instance = new SubjectDAO(isUseJNDI);
+			instance = new SubjectDAO(useJNDI);
 		}
 		return instance;
 	}
+
 	/**
-	 * Check name
+	 * Extracts a Subject object from ResultSet
+	 * 
+	 * @param ResultSet
+	 * @return Subject
+	 * @throws SQLException
+	 */
+	private Subject extract(ResultSet resultSet) throws SQLException {
+		Subject subject = new Subject();
+		subject.setId(resultSet.getInt(Fields.ENTITY_ID));
+		subject.setNameEn(resultSet.getString(Fields.SUBJECTS_NAME_EN));
+		subject.setNameRu(resultSet.getString(Fields.SUBJECTS_NAME_RU));
+		return subject;
+	}
+
+	/**
+	 * Checks if a name exists in the DB
 	 * 
 	 * @param name
-	 * @return result true or false
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean hasName(String name) throws DBException {
 		boolean result = false;
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
@@ -115,6 +117,7 @@ public class SubjectDAO extends AbstractDAO {
 			int k = 1;
 			pstmt.setString(k++, name);
 			pstmt.setString(k, name);
+
 			resultSet = pstmt.executeQuery();
 			result = resultSet.next();
 		} catch (SQLException e) {
@@ -128,10 +131,10 @@ public class SubjectDAO extends AbstractDAO {
 	}
 
 	/**
-	 * Insert subject
+	 * Inserts subject in the DB
 	 * 
-	 * @param subject
-	 * @return result true or false
+	 * @param Subject
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean insert(Subject subject) throws DBException {
@@ -142,24 +145,19 @@ public class SubjectDAO extends AbstractDAO {
 
 		try {
 			con = getConnection();
-			con.setAutoCommit(false);
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(SQL_INSERT_SUBJECT, Statement.RETURN_GENERATED_KEYS);
 			int k = 1;
-
 			pstmt.setString(k++, subject.getNameRu());
 			pstmt.setString(k, subject.getNameEn());
 
 			if (pstmt.executeUpdate() > 0) {
 				resultSet = pstmt.getGeneratedKeys();
 				if (resultSet.next()) {
-					con.commit();
 					subject.setId(resultSet.getInt(1));
 					result = true;
 				}
 			}
 		} catch (SQLException e) {
-			rollback(con);
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 		} finally {
@@ -172,47 +170,40 @@ public class SubjectDAO extends AbstractDAO {
 	/**
 	 * Update subject
 	 * 
-	 * @param subject
-	 * @return result true or false
+	 * @param Subject
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean update(Subject subject) throws DBException {
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
-		Connection con = null;
 		boolean result = false;
+
+		PreparedStatement pstmt = null;
+		Connection con = null;
 
 		try {
 			con = getConnection();
-			con.setAutoCommit(false);
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(SQL_UPDATE_SUBJECT, Statement.RETURN_GENERATED_KEYS);
 			int k = 1;
-
 			pstmt.setString(k++, subject.getNameRu());
 			pstmt.setString(k++, subject.getNameEn());
 			pstmt.setInt(k, subject.getId());
 
-			if (pstmt.executeUpdate() > 0) {
-				con.commit();
-				LOG.trace("Subject with id " + subject.getId() + " was update");
-			}
-			result = true;
+			result = pstmt.executeUpdate() > 0;
+			LOG.trace("Subject with (id: " + subject.getId() + ") was updated");
 		} catch (SQLException e) {
-			rollback(con);
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 		} finally {
-			close(con, pstmt, resultSet);
+			close(con, pstmt);
 		}
 		return result;
 	}
 
 	/**
-	 * Delete subject by id
+	 * Deletes subject by id
 	 * 
 	 * @param id
-	 * @return result true or false
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean delete(int id) throws DBException {
@@ -220,29 +211,34 @@ public class SubjectDAO extends AbstractDAO {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
+
 		try {
 			con = getConnection();
-			con.setAutoCommit(false);
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(SQL_DELETE_SUBJECT_BY_ID);
 			pstmt.setInt(1, id);
 
 			result = pstmt.executeUpdate() > 0;
-			con.commit();
-			LOG.trace("Subject was delited (id: " + id + ")");
+			LOG.trace("Subject with (id: " + id + ") was deleted");
 		} catch (SQLException e) {
-			rollback(con);
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException();
 		} finally {
-			close(con, pstmt, resultSet);
+			close(con, pstmt);
 		}
 		return result;
 	}
 
+	/**
+	 * Finds all subjects, paginated and sorted
+	 * 
+	 * @param orderBy
+	 * @param direction
+	 * @param offset
+	 * @param lines
+	 * @return List of subjects
+	 * @throws DBException
+	 */
 	public List<Subject> findAllOrderBy(String orderBy, String direction, int offset, int lines) throws DBException {
-
 		List<Subject> subjects = new ArrayList<>();
 
 		Connection con = null;
@@ -253,6 +249,7 @@ public class SubjectDAO extends AbstractDAO {
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_FIND_ALL_SUBJECT + " ORDER BY " + orderBy + " " + direction + " LIMIT "
 					+ offset + ", " + lines);
+			
 			resultSet = pstmt.executeQuery();
 			while (resultSet.next()) {
 				subjects.add(extract(resultSet));
@@ -267,26 +264,35 @@ public class SubjectDAO extends AbstractDAO {
 		return subjects;
 	}
 
-	public Subject getSubjectById(int id) throws DBException {
+	/**
+	 * Finds subject by id
+	 * 
+	 * @param id
+	 * @return Subject
+	 * @throws DBException
+	 */
+	public Subject findSubjectById(int id) throws DBException {
 		Subject subject = null;
+		
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		ResultSet resultSet = null;
+		
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_GET_SUBJECT_BY_ID);
 			pstmt.setInt(1, id);
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				subject = extract(rs);
+			
+			resultSet = pstmt.executeQuery();
+			if (resultSet.next()) {
+				subject = extract(resultSet);
 			}
 		} catch (SQLException e) {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException("Cannot find test by theme id", e);
 		} finally {
-			close(con, pstmt, rs);
+			close(con, pstmt, resultSet);
 		}
 		return subject;
 	}
-
 }

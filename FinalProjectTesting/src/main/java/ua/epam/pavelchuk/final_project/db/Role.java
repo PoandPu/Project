@@ -5,7 +5,7 @@ import ua.epam.pavelchuk.final_project.db.entity.User;
 /**
  * Role entity.
  * 
- * @author 
+ * @author O.Pavelchuk
  * 
  */
 

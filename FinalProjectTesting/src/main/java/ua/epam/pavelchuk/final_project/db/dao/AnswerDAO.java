@@ -15,13 +15,31 @@ import ua.epam.pavelchuk.final_project.db.entity.Answer;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
+/**
+ * Manipulates "answers" table in the DB
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class AnswerDAO extends AbstractDAO {
+
+	/**
+	 * standard constructor
+	 * 
+	 * @throws DBException
+	 */
 	private AnswerDAO() throws DBException {
 		super();
 	}
-
-	private AnswerDAO(boolean isUseJNDI) throws DBException {
-		super(isUseJNDI);
+	
+	/**
+	 * constructor constructor with the option not to use JNDI for Junit
+	 * 
+	 * @param useJNDI
+	 * @throws DBException
+	 */
+	private AnswerDAO(boolean useJNDI) throws DBException {
+		super(useJNDI);
 	}
 
 	private static AnswerDAO instance;
@@ -34,9 +52,9 @@ public class AnswerDAO extends AbstractDAO {
 	private static final String SQL_INSERT_ANSWER = "INSERT INTO answers (option_ru, option_en, question_id, isCorrect) VALUE (?, ?, ?, ?)";
 
 	/**
-	 * singleton pattern
+	 * singleton
 	 * 
-	 * @return
+	 * @return instance of AnswerDAO
 	 * @throws DBException
 	 */
 	public static synchronized AnswerDAO getInstance() throws DBException {
@@ -45,11 +63,12 @@ public class AnswerDAO extends AbstractDAO {
 		}
 		return instance;
 	}
-	
+
 	/**
-	 * singleton pattern
+	 * singleton
 	 * 
-	 * @return
+	 * @param useJNDI
+	 * @return instance of AnswerDAO
 	 * @throws DBException
 	 */
 	public static synchronized AnswerDAO getInstance(boolean useJNDI) throws DBException {
@@ -58,7 +77,30 @@ public class AnswerDAO extends AbstractDAO {
 		}
 		return instance;
 	}
+	
+	/**
+	 * Extracts an Answer object from ResultSet
+	 * 
+	 * @param ResultSet
+	 * @return Answer
+	 * @throws SQLException
+	 */
+	private Answer extract(ResultSet rs) throws SQLException {
+		Answer answer = new Answer();
+		answer.setId(rs.getInt(Fields.ID));
+		answer.setNameRu(rs.getString(Fields.ANSWER_OPTION_RU));
+		answer.setNameEn(rs.getString(Fields.ANSWER_OPTION_EN));
+		answer.setIsCorrect(rs.getBoolean(Fields.ANSWER_CORRECT));
+		return answer;
+	}
 
+	/**
+	 * Finds all answers for question
+	 * 
+	 * @param question id
+	 * @return List of answers
+	 * @throws DBException
+	 */
 	public List<Answer> findAnswersByQuestion(int questionId) throws DBException {
 		List<Answer> list = new ArrayList<>();
 
@@ -68,9 +110,9 @@ public class AnswerDAO extends AbstractDAO {
 
 		try {
 			con = getConnection();
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(GET_ANSWERS_BY_QUESTION_ID);
 			pstmt.setInt(1, questionId);
+			
 			resultSet = pstmt.executeQuery();
 			while (resultSet.next()) {
 				list.add(extract(resultSet));
@@ -84,6 +126,13 @@ public class AnswerDAO extends AbstractDAO {
 		return list;
 	}
 
+	/**
+	 * Finds all correct answers for question
+	 * 
+	 * @param question id
+	 * @return List of answers
+	 * @throws DBException
+	 */
 	public List<Answer> findCorrectAnswersByQuestion(int questionId) throws DBException {
 		List<Answer> list = new ArrayList<>();
 
@@ -93,9 +142,9 @@ public class AnswerDAO extends AbstractDAO {
 
 		try {
 			con = getConnection();
-			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			pstmt = con.prepareStatement(GET_CORRECT_ANSWERS_BY_QUESTION);
 			pstmt.setInt(1, questionId);
+			
 			resultSet = pstmt.executeQuery();
 			while (resultSet.next()) {
 				list.add(extract(resultSet));
@@ -109,20 +158,11 @@ public class AnswerDAO extends AbstractDAO {
 		return list;
 	}
 
-	private Answer extract(ResultSet rs) throws SQLException {
-		Answer answer = new Answer();
-		answer.setId(rs.getInt(Fields.ID));
-		answer.setNameRu(rs.getString(Fields.ANSWER_OPTION_RU));
-		answer.setNameEn(rs.getString(Fields.ANSWER_OPTION_EN));
-		answer.setIsCorrect(rs.getBoolean(Fields.ANSWER_CORRECT));
-		return answer;
-	}
-
 	/**
-	 * Delete answer by id
+	 * Deletes answer by id
 	 * 
 	 * @param id
-	 * @return result true or false
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean delete(int id) throws DBException {
@@ -130,19 +170,19 @@ public class AnswerDAO extends AbstractDAO {
 
 		Connection con = null;
 		PreparedStatement statement = null;
-		ResultSet resultSet = null;
+
 		try {
 			con = getConnection();
 			statement = con.prepareStatement(SQL_DELETE_ANSWER_BY_ID);
 			statement.setInt(1, id);
-
+			
 			result = statement.executeUpdate() > 0;
 			LOG.trace("Answer was deleted (id: " + id + ")");
 		} catch (SQLException e) {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException();
+			throw new DBException("Cannot delete answer", e);
 		} finally {
-			close(con, statement, resultSet);
+			close(con, statement);
 		}
 		return result;
 	}
@@ -151,7 +191,7 @@ public class AnswerDAO extends AbstractDAO {
 	 * Update answer by id
 	 * 
 	 * @param id
-	 * @return result true or false
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean update(Answer answer) throws DBException {
@@ -159,7 +199,7 @@ public class AnswerDAO extends AbstractDAO {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
+
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_UPDATE_ANSWER_BY_ID);
@@ -168,20 +208,27 @@ public class AnswerDAO extends AbstractDAO {
 			pstmt.setString(k++, answer.getNameEn());
 			pstmt.setBoolean(k++, answer.getIsCorrect());
 			pstmt.setInt(k, answer.getId());
-
+			
 			if (pstmt.executeUpdate() > 0) {
 				LOG.trace("Answer with id " + answer.getId() + " was updated");
 				result = true;
 			}
 		} catch (SQLException e) {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException();
+			throw new DBException("Cannot update answer", e);
 		} finally {
-			close(con, pstmt, resultSet);
+			close(con, pstmt);
 		}
 		return result;
 	}
 
+	/**
+	 * Inserts answer to the DB
+	 * 
+	 * @param Answer
+	 * @return boolean
+	 * @throws DBException
+	 */
 	public boolean insert(Answer answer) throws DBException {
 		boolean result = false;
 		Connection con = null;
@@ -195,6 +242,7 @@ public class AnswerDAO extends AbstractDAO {
 			pstmt.setString(k++, answer.getNameEn());
 			pstmt.setInt(k++, answer.getQuestionId());
 			pstmt.setBoolean(k++, answer.getIsCorrect());
+			
 			if (pstmt.executeUpdate() > 0) {
 				resultSet = pstmt.getGeneratedKeys();
 				if (resultSet.next()) {
@@ -204,11 +252,10 @@ public class AnswerDAO extends AbstractDAO {
 			}
 		} catch (SQLException e) {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException("Cannot find test by theme id", e);
+			throw new DBException("Cannot insert answer", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
 		return result;
 	}
-
 }

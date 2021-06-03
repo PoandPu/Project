@@ -20,7 +20,7 @@ import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
 
 /**
- * DB manager. Only the required DAO methods are defined!
+ * Abstract DAO with only common methods
  * 
  * @author 
  *
@@ -28,7 +28,7 @@ import ua.epam.pavelchuk.final_project.db.exception.Messages;
 public abstract class AbstractDAO {
 	
 	// Use JNDI flag
-	protected boolean isUseJNDI;
+	protected boolean useJNDI;
 	
 	private static final Logger LOG = Logger.getLogger(AbstractDAO.class);
 	
@@ -46,7 +46,7 @@ public abstract class AbstractDAO {
 	 */
 	protected AbstractDAO(boolean isUseJNDI) throws DBException {
 		// ST4DB - the name of data source
-		this.isUseJNDI = isUseJNDI;
+		this.useJNDI = isUseJNDI;
 		if(isUseJNDI) {
 			try {
 				Context initContext = new InitialContext();
@@ -76,11 +76,11 @@ public abstract class AbstractDAO {
 	}
 	
 	public boolean isUseJNDI() {
-		return isUseJNDI;
+		return useJNDI;
 	}
 
 	public void setUseJNDI(boolean isUseJNDI) {
-		this.isUseJNDI = isUseJNDI;
+		this.useJNDI = isUseJNDI;
 	}
 	/**
 	 * Connection to BD

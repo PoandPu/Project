@@ -37,17 +37,17 @@ public class TestDAOTest {
 	
 	@org.junit.Test
 	public void getTestById() throws DBException {
-		assertEquals(test, testDAO.getTestById(test.getId()));
+		assertEquals(test, testDAO.findTestById(test.getId()));
 	}
 	
-	@org.junit.Test
-	public void findTestsBySubject() throws DBException {
-		assertFalse(testDAO.findTestsBySubject(test.getSubjectId()).isEmpty());
-	}
+//	@org.junit.Test
+//	public void findTestsBySubject() throws DBException {
+//		assertFalse(testDAO.findTestsBySubject(test.getSubjectId()).isEmpty());
+//	}
 	
 	@org.junit.Test
 	public void findAllOrderBy() throws DBException {
-		assertFalse(testDAO.findAllOrderBy("id", "ASC", test.getSubjectId(), 1, 10).isEmpty());
+		assertFalse(testDAO.findTestBySubjectIdAllOrderBy(test.getSubjectId(), "id", "ASC", 1, 10).isEmpty());
 	}
 	
 	@org.junit.Test
@@ -77,7 +77,7 @@ public class TestDAOTest {
 		test.setDifficultyLevel(difLev);
 		test.setTime(time);
 		testDAO.update(test);
-		test = testDAO.getTestById(test.getId());
+		test = testDAO.findTestById(test.getId());
 		assertEquals(difLev, test.getDifficultyLevel());
 		assertEquals(time, test.getTime());
 		assertEquals(nameRu, test.getNameRu());

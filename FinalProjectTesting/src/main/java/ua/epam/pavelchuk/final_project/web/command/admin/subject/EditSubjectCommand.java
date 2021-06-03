@@ -47,7 +47,7 @@ public class EditSubjectCommand extends Command {
 		try {
 			SubjectDAO subjectDAO = SubjectDAO.getInstance();
 			Subject subject = subjectDAO
-					.getSubjectById(Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID)));
+					.findSubjectById(Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID)));
 			LOG.debug(subject);
 			request.setAttribute("subject", subject);
 		} catch (DBException e) {
@@ -65,7 +65,7 @@ public class EditSubjectCommand extends Command {
 		try {
 			subjectDAO = SubjectDAO.getInstance();
 
-			Subject subject = subjectDAO.getSubjectById(subjectId);
+			Subject subject = subjectDAO.findSubjectById(subjectId);
 
 			if (request.getParameter(ParameterNames.DELETE) != null) {
 				subjectDAO.delete(subjectId);

@@ -20,8 +20,6 @@ public class Messages {
 	public static final String ERR_CANNOT_GET_ENTRANT_ID_BY_USER_ID = "Cannot get entrant id by user id";
 	
 	public static final String ERR_CANNOT_GET_SUBJECTS ="Cannot get subjects";
-	public static final String ERR_CANNOT_DELETE_FACULTY ="Cannot delete faculty";
-	public static final String ERR_CANNOT_INSERT_FACULTY ="Cannot insert faculty";
 	public static final String ERR_CANNOT_DELETE_SUBJECT ="Cannot delete subject";
 	public static final String ERR_CANNOT_INSERT_SUBJECT ="Cannot insert subject";
 	public static final String ERR_CANNOT_UPDATE_ENTRANT ="Cannot update subject";

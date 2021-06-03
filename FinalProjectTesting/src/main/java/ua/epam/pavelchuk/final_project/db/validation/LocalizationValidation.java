@@ -1,9 +1,8 @@
 package ua.epam.pavelchuk.final_project.db.validation;
 
-public abstract class LocalizationValidation {
+public class LocalizationValidation {
 	
 	protected LocalizationValidation() {
-		
 	}
 	
 	public static final String REGULAR_EXPRESSION_NAME_EN = "[A-Za-z][A-Za-z0-9\\s,-\\.;?]+";

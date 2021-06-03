@@ -219,7 +219,7 @@ public class ReportCreator extends HttpServlet {
 		try {
 			ResultDAO resultDAO = ResultDAO.getInstance();
 			int userId = Integer.parseInt(request.getParameter(ParameterNames.USER_ID));
-			List<Result> results = resultDAO.getResultsByUserId(userId);
+			List<Result> results = resultDAO.findResultsByUserId(userId);
 			if (!results.isEmpty()) {
 				if (rb.getLocale().getLanguage().equals("ru")) {
 					for (Result res : results) {

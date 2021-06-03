@@ -47,7 +47,7 @@ public class EditTestCommand extends Command {
 	private String doGet(HttpServletRequest request) throws AppException {
 		try {
 			TestDAO testDAO = TestDAO.getInstance();
-			Test test = testDAO.getTestById(Integer.parseInt(request.getParameter(ParameterNames.TEST_ID)));
+			Test test = testDAO.findTestById(Integer.parseInt(request.getParameter(ParameterNames.TEST_ID)));
 			int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
 			LOG.debug(test);
 			request.setAttribute(AttributeNames.TEST, test);
@@ -69,7 +69,7 @@ public class EditTestCommand extends Command {
 
 		// it was made to return to the page tests_list of current subject
 		int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
-		Test test = testDAO.getTestById(testId);
+		Test test = testDAO.findTestById(testId);
 
 		if (request.getParameter(ParameterNames.DELETE) != null) {
 			testDAO.delete(testId);

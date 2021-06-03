@@ -17,44 +17,28 @@ import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
 public class TestDAO extends AbstractDAO {
 
+	/**
+	 * standard constructor
+	 * 
+	 * @throws DBException
+	 */
 	private TestDAO() throws DBException {
 		super();
 	}
 
-	private TestDAO(boolean isUseJNDI) throws DBException {
-		super(isUseJNDI);
+	/**
+	 * constructor constructor with the option not to use JNDI for Junit
+	 * 
+	 * @param useJNDI
+	 * @throws DBException
+	 */
+	private TestDAO(boolean useJNDI) throws DBException {
+		super(useJNDI);
 	}
 
 	private static final Logger LOG = Logger.getLogger(TestDAO.class);
-
 	private static TestDAO instance;
 
-	/**
-	 * singleton pattern
-	 * 
-	 * @return
-	 * @throws DBException
-	 */
-	public static synchronized TestDAO getInstance() throws DBException {
-		if (instance == null) {
-			instance = new TestDAO();
-		}
-		return instance;
-	}
-	
-	/**
-	 * singleton pattern
-	 * 
-	 * @return
-	 * @throws DBException
-	 */
-	public static synchronized TestDAO getInstance(boolean isUseJNDI) throws DBException {
-		if (instance == null) {
-			instance = new TestDAO(isUseJNDI);
-		}
-		return instance;
-	}
-	
 	private static final String SQL_INSERT_TEST ="INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE (?, ?, ?, ?, ?);";
 	private static final String SQL_GET_TEST_BY_ID ="SELECT * FROM tests WHERE id = ?";
 	private static final String GET_TESTS_BY_SUBJECT = "SELECT * FROM tests WHERE subject_id = ?";
@@ -65,59 +49,40 @@ public class TestDAO extends AbstractDAO {
 	private static final String SQL_DELETE_TEST_BY_ID ="DELETE FROM tests WHERE id=?";
 	private static final String SQL_FIND_TEST_BY_NAME ="SELECT * FROM tests WHERE name_ru=? or name_en=?";
 	
-	public boolean insert(Test test)  throws DBException{
-		boolean result = false;
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			con = getConnection();
-			pstmt = con.prepareStatement(SQL_INSERT_TEST, Statement.RETURN_GENERATED_KEYS);
-			int k = 1;
-			pstmt.setString(k++, test.getNameRu());
-			pstmt.setString(k++, test.getNameEn());
-			pstmt.setInt(k++, test.getSubjectId());
-			pstmt.setInt(k++, test.getDifficultyLevel());
-			pstmt.setInt(k++, test.getTime());
-			if(pstmt.executeUpdate()>0) {
-				rs = pstmt.getGeneratedKeys();
-				if (rs.next()) {
-					test.setId(rs.getInt(1));
-					result = true;
-				}
-			}
-		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException("Cannot find test by theme id", e);
-		} finally {
-			close(con, pstmt, rs);
+	/**
+	 * singleton pattern
+	 * 
+	 * @return instance of TestDAO
+	 * @throws DBException
+	 */
+	public static synchronized TestDAO getInstance() throws DBException {
+		if (instance == null) {
+			instance = new TestDAO();
 		}
-		return result;
+		return instance;
 	}
 	
-	
-	public List<Test> findTestsBySubject(int subjectId) throws DBException {
-		List<Test> list = new ArrayList<>();
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
-		try {
-			con = getConnection();
-			pstmt = con.prepareStatement(GET_TESTS_BY_SUBJECT);
-			pstmt.setInt(1, subjectId);
-			resultSet = pstmt.executeQuery();
-			while (resultSet.next()) {
-				list.add(extract(resultSet));
-			}
-		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException("Cannot find test by theme id", e);
-		} finally {
-			close(con, pstmt, resultSet);
+	/**
+	 * singleton pattern that use constructor with the option not to use JNDI for
+	 * Junit
+	 * 
+	 * @return instance of TestDAO
+	 * @throws DBException
+	 */
+	public static synchronized TestDAO getInstance(boolean isUseJNDI) throws DBException {
+		if (instance == null) {
+			instance = new TestDAO(isUseJNDI);
 		}
-		return list;
+		return instance;
 	}
-
+	
+	/**
+	 * Extracts a Test object from ResultSet
+	 * 
+	 * @param ResultSet
+	 * @return Test
+	 * @throws SQLException
+	 */
 	private Test extract(ResultSet rs) throws SQLException, DBException {
 		Test test = new Test();
 		test.setId(rs.getInt(Fields.ID));
@@ -132,8 +97,59 @@ public class TestDAO extends AbstractDAO {
 		test.setRequests(rs.getInt(Fields.TEST_REQ_NUMB));
 		return test;
 	}
+	
+	/**
+	 * Inserts Test in the DB
+	 * 
+	 * @param Test
+	 * @return boolean
+	 * @throws DBException
+	 */
+	public boolean insert(Test test)  throws DBException{
+		boolean result = false;
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		
+		try {
+			con = getConnection();
+			pstmt = con.prepareStatement(SQL_INSERT_TEST, Statement.RETURN_GENERATED_KEYS);
+			int k = 1;
+			pstmt.setString(k++, test.getNameRu());
+			pstmt.setString(k++, test.getNameEn());
+			pstmt.setInt(k++, test.getSubjectId());
+			pstmt.setInt(k++, test.getDifficultyLevel());
+			pstmt.setInt(k++, test.getTime());
+			
+			if(pstmt.executeUpdate()>0) {
+				resultSet = pstmt.getGeneratedKeys();
+				if (resultSet.next()) {
+					test.setId(resultSet.getInt(1));
+					result = true;
+				}
+			}
+		} catch (SQLException e) {
+			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			throw new DBException("Cannot find test by theme id", e);
+		} finally {
+			close(con, pstmt, resultSet);
+		}
+		return result;
+	}
 
-	public List<Test> findAllOrderBy(String orderBy, String direction, int subjectId, int offset, int lines) throws DBException {
+	/**
+	 * Finds Test by subject ID, paginated and sorted
+	 * 
+	 * @param subject ID
+	 * @param orderBy
+	 * @param direction
+	 * @param offset
+	 * @param lines
+	 * @return List of tests
+	 * @throws DBException
+	 */	
+	public List<Test> findTestBySubjectIdAllOrderBy(int subjectId, String orderBy, String direction, int offset, int lines) throws DBException {
 		List<Test> tests = new ArrayList<>();
 
 		Connection con = null;
@@ -144,6 +160,7 @@ public class TestDAO extends AbstractDAO {
 			con = getConnection();
 			pstmt = con.prepareStatement(GET_TESTS_BY_SUBJECT + " ORDER BY " + orderBy + " " + direction +" LIMIT " + offset + ", " + lines );
 			pstmt.setInt(1, subjectId);
+			
 			resultSet = pstmt.executeQuery();
 			while (resultSet.next()) {
 				tests.add(extract(resultSet));
@@ -154,14 +171,19 @@ public class TestDAO extends AbstractDAO {
 		} finally {
 			close(con, pstmt, resultSet);
 		}
-
 		return tests;
 	}
 	
-	
-	
+	/**
+	 * Finds difficulty for test in different Ru and En by difficulty ID
+	 * 
+	 * @param difficulty ID
+	 * @return List of difficulty name in English and Russian
+	 * @throws DBException
+	 */	
 	private List<String> findDifficultyForTest(int difficultyId) throws DBException {
 		List<String> difficultyName = new ArrayList<>();
+		
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
@@ -170,6 +192,7 @@ public class TestDAO extends AbstractDAO {
 			con = getConnection();
 			pstmt = con.prepareStatement(GET_DIFFICULTY_BY_ID);
 			pstmt.setInt(1, difficultyId);
+			
 			resultSet = pstmt.executeQuery();
 			if (resultSet.next()) {
 				difficultyName.add(resultSet.getString(Fields.DIFFICULTY_NAME_EN));
@@ -184,15 +207,25 @@ public class TestDAO extends AbstractDAO {
 		return difficultyName;
 	}
 		
+	/**
+	 * Finds time for test 
+	 * 
+	 * @param test ID
+	 * @return int minutes
+	 * @throws DBException
+	 */	
 	public int findTimeByTestId(int testId) throws DBException {
 		int time = 0;
+		
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
+		
 		try {
 			con = getConnection();
-			pstmt = con.prepareStatement(GET_TIME_BY_ID );
+			pstmt = con.prepareStatement(GET_TIME_BY_ID);
 			pstmt.setInt(1, testId);
+			
 			resultSet = pstmt.executeQuery();
 			if (resultSet.next()) {
 				time = resultSet.getInt(Fields.TEST_TIME_MINUTES); 
@@ -206,17 +239,24 @@ public class TestDAO extends AbstractDAO {
 		return time;
 	}
 	
+	/**
+	 * Increases number of requests for test
+	 * 
+	 * @param test ID
+	 * @return boolean
+	 * @throws DBException
+	 */	
 	public boolean increaseRequests(int testId) throws DBException {
 		boolean res = false;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
+		
+		PreparedStatement pstmt = null;
 		Connection con = null;
 		
 		try {
 			con = getConnection();
-			statement = con.prepareStatement(INCREASE_REQUESTS_BY_ID, Statement.RETURN_GENERATED_KEYS);
-			statement.setInt(1, testId);
-			if(statement.executeUpdate() > 0) {
+			pstmt = con.prepareStatement(INCREASE_REQUESTS_BY_ID, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, testId);
+			if(pstmt.executeUpdate() > 0) {
 				LOG.trace("Number of requests of testId = " + testId + " was increased");
 			}
 			res = true;
@@ -224,20 +264,30 @@ public class TestDAO extends AbstractDAO {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 		} finally {
-			close(con, statement, resultSet);
+			close(con, pstmt);
 		}
 		return res;
 	}
 	
-	public Test getTestById(int id) throws DBException {
+	/**
+	 * Finds test in the DB by ID
+	 * 
+	 * @param test ID
+	 * @return Test
+	 * @throws DBException
+	 */	
+	public Test findTestById(int id) throws DBException {
 		Test test = null;
+		
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
+		
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_GET_TEST_BY_ID);
 			pstmt.setInt(1, id);
+			
 			resultSet = pstmt.executeQuery();
 			if (resultSet.next()) {
 				test = extract(resultSet); 
@@ -251,25 +301,22 @@ public class TestDAO extends AbstractDAO {
 		return test;
 	}
 	
-	
 	/**
-	 * Update test
+	 * Updates test
 	 * @param test
-	 * @return result true or false
+	 * @return boolean
 	 * @throws DBException
 	 */
 	public boolean update(Test test) throws DBException {
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
-		Connection con = null;
 		boolean result = false;
 		
+		PreparedStatement pstmt = null;
+		Connection con = null;
+		
 		try {
-			
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_UPDATE_TEST, Statement.RETURN_GENERATED_KEYS);
 			int k = 1;
-			
 			pstmt.setString(k++, test.getNameRu());
 			pstmt.setString(k++, test.getNameEn());
 			pstmt.setInt(k++, test.getTime());
@@ -277,14 +324,14 @@ public class TestDAO extends AbstractDAO {
 			pstmt.setInt(k, test.getId());
 			
 			if(pstmt.executeUpdate() > 0) {
+				result = true;
 				LOG.trace("Subject with id " + test.getId() + " was updated");
 			}
-			result = true;
 		} catch (SQLException e) {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 		} finally {
-			close(con, pstmt, resultSet);
+			close(con, pstmt);
 		}
 		return result;
 	}
@@ -300,7 +347,7 @@ public class TestDAO extends AbstractDAO {
 		
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
+		
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_DELETE_TEST_BY_ID);
@@ -312,19 +359,21 @@ public class TestDAO extends AbstractDAO {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			throw new DBException();
 		} finally {
-			close(con, pstmt, resultSet);
+			close(con, pstmt);
 		}
 		return result;
 	}
 	
 	/**
-	 * Check name
+	 * Checks if a name exists in the DB
+	 * 
 	 * @param name
-	 * @return result true or false
+	 * @return boolean
 	 * @throws DBException
 	 */
 	 public boolean hasName(String name) throws DBException {
 		boolean result = false;
+		
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
@@ -334,7 +383,8 @@ public class TestDAO extends AbstractDAO {
 			pstmt = con.prepareStatement(SQL_FIND_TEST_BY_NAME);
 			int k = 1;
 			pstmt.setString(k++, name);
-			pstmt.setString(k, name);
+			pstmt.setString(k++, name);
+			
 			resultSet = pstmt.executeQuery();
 			result = resultSet.next();
 		} catch (SQLException e) {
