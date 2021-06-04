@@ -44,6 +44,16 @@ public class Question extends Entity {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((nameRu == null) ? 0 : nameRu.hashCode());
+		result = prime * result + ((nameEn == null) ? 0 : nameEn.hashCode());
+		result = prime * result + testId;
+		return result;
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -58,11 +68,10 @@ public class Question extends Entity {
 			return false;
 		if (!nameEn.equals(question.getNameEn()))
 			return false;
-		if (testId != question.getTestId()) {
+		if (testId != question.getTestId()) 
 			return false;
-		}
-		else {
+		else 
 			return true;
-		}
+		
 	}
 }

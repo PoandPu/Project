@@ -31,7 +31,6 @@ public class EditTestCommand extends Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
-
 		LOG.debug("Command starts");
 		String result = null;
 
@@ -40,60 +39,82 @@ public class EditTestCommand extends Command {
 		} else {
 			result = doGet(request);
 		}
+
 		LOG.debug("Command finished");
 		return result;
 	}
 
 	private String doGet(HttpServletRequest request) throws AppException {
+		int testId = 0;
+		int subjectId = 0;
 		try {
-			TestDAO testDAO = TestDAO.getInstance();
-			Test test = testDAO.findTestById(Integer.parseInt(request.getParameter(ParameterNames.TEST_ID)));
-			int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
-			LOG.debug(test);
-			request.setAttribute(AttributeNames.TEST, test);
-			// it was made to return to the page tests_list page of current subject
-			request.setAttribute(AttributeNames.SUBJECT_ID, subjectId);
-			LOG.debug(subjectId);
-		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_UPDATE_ENTRANT);
-			throw new AppException(Messages.ERR_CANNOT_UPDATE_ENTRANT, e);
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
 
-		// WRITE A PAGE
+		try {
+			TestDAO testDAO = TestDAO.getInstance();
+			Test test = testDAO.findTestById(testId);
+			request.setAttribute(AttributeNames.TEST, test);
+		} catch (DBException e) {
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_EDIT_TEST_GET, e);
+		}
+		request.setAttribute(AttributeNames.SUBJECT_ID, subjectId);
 		return Path.ADMIN_EDIT_TEST;
 	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
-		TestDAO testDAO = TestDAO.getInstance();
-		int testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+		int testId = 0;
+		int subjectId = 0;
+		int time = 0;
+		int difficultyLevel = 0;
+		
+		try {
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+			difficultyLevel = Integer.parseInt(request.getParameter(ParameterNames.TEST_DIFFICULTY));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
 
-		// it was made to return to the page tests_list of current subject
-		int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
-		Test test = testDAO.findTestById(testId);
+		String nameRu = request.getParameter(ParameterNames.NAME_RU);
+		String nameEn = request.getParameter(ParameterNames.NAME_EN);
+		
+		//time field validation 
+		try {
+			time = Integer.parseInt(request.getParameter(ParameterNames.TEST_TIME));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			request.getSession().setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "test_validation.error.time_not_number");
+			return Path.COMMAND_EDIT_TEST + "&subjectId=" + subjectId + "&testId=" + testId;
+		}
 
-		if (request.getParameter(ParameterNames.DELETE) != null) {
-			testDAO.delete(testId);
-		} else {
-			String nameRu = request.getParameter(ParameterNames.NAME_RU);
-			String nameEn = request.getParameter(ParameterNames.NAME_EN);
-			String timeStr = request.getParameter(ParameterNames.TEST_TIME);
-			int difficultyLevel = Integer.parseInt(request.getParameter(ParameterNames.TEST_DIFFICULTY));
+		try {
+			TestDAO testDAO = TestDAO.getInstance();
+			Test test = testDAO.findTestById(testId);
 
-			if (!TestValidation.validate(request, nameRu, nameEn, timeStr, test)) {
+			if (request.getParameter(ParameterNames.DELETE) != null) {
+				testDAO.delete(testId);
+			}
+			
+			if (!TestValidation.validate(request, nameRu, nameEn, time, test)) {
 				return Path.COMMAND_EDIT_TEST + "&subjectId=" + subjectId + "&testId=" + testId;
 			}
-
-			int time = Integer.parseInt(request.getParameter(ParameterNames.TEST_TIME));
 
 			test.setNameRu(nameRu);
 			test.setNameEn(nameEn);
 			test.setTime(time);
 			test.setDifficultyLevel(difficultyLevel);
 			testDAO.update(test);
+		} catch (DBException e) {
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_EDIT_TEST_POST, e);
 		}
-
 		return Path.COMMAND_VIEW_TESTS_LIST + "&subjectId=" + subjectId;
-
 	}
-
 }

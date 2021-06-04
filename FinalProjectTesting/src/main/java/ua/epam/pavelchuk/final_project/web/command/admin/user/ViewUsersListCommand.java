@@ -14,6 +14,7 @@ import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
 import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
+import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
@@ -31,10 +32,7 @@ public class ViewUsersListCommand extends Command {
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
 		LOG.debug("Command starts");
-		String result = null;
-
-		result = doGet(request);
-
+		String result = doGet(request);
 		LOG.debug("Command finished");
 		return result;
 	}
@@ -43,16 +41,22 @@ public class ViewUsersListCommand extends Command {
 		// pagination
 		int page = 1;
 		int lines = 10;
-		if (request.getParameter(ParameterNames.PAGINATION_PAGE) != null
-				&& !request.getParameter(ParameterNames.PAGINATION_PAGE).isEmpty()) {
-			page = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_PAGE));
+		try {
+			if (request.getParameter(ParameterNames.PAGINATION_PAGE) != null
+					&& !request.getParameter(ParameterNames.PAGINATION_PAGE).isEmpty()) {
+				page = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_PAGE));
+			}
+			if (request.getParameter(ParameterNames.PAGINATION_LINES) != null
+					&& !request.getParameter(ParameterNames.PAGINATION_LINES).isEmpty()) {
+				lines = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_LINES));
+			}
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
+
 		if (page < 1) {
 			page = 1;
-		}
-		if (request.getParameter(ParameterNames.PAGINATION_LINES) != null
-				&& !request.getParameter(ParameterNames.PAGINATION_LINES).isEmpty()) {
-			lines = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_LINES));
 		}
 		if (lines < 1) {
 			lines = 10;
@@ -71,13 +75,12 @@ public class ViewUsersListCommand extends Command {
 				users = userDAO.findAllUsersOrderBy(orderBy, direction, (page - 1) * lines, lines);
 			}
 			request.setAttribute(AttributeNames.USERS, users);
-		} catch (DBException e) {
-			LOG.error("Cannot get a users list from data base");
-			throw new AppException("Cannot get a users list from data base", e);
+		} catch (DBException ex) {
+			LOG.error(ex.getMessage());
+			throw new AppException("view_users_list_command.error.get", ex);
 		}
 		request.setAttribute(AttributeNames.PAGINATION_LINES, lines);
 		request.setAttribute(AttributeNames.PAGINATION_PAGE, page);
-
 		request.setAttribute(AttributeNames.ORDER_BY, orderBy);
 		request.setAttribute(AttributeNames.DIRECTION, direction);
 

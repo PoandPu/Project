@@ -76,13 +76,13 @@ public class CheckTestCommand extends Command {
 			double mark = checkTest(request, testId);
 
 			BigDecimal m = BigDecimal.valueOf(mark);
-			LOG.debug("BIG DECIMAL Mark : " + m);
+			LOG.debug("Mark : " + m);
 			Result testResult = new Result(m, currentUserId, testId);
 			resultDAO.insert(testResult);
 		} catch (DBException ex) {
 			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION);
 			throw new AppException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, ex);
-		} finally {// нужно ли это вообще?
+		} finally {
 			session.removeAttribute(AttributeNames.TEST_END_TIME);
 		}
 
@@ -103,16 +103,29 @@ public class CheckTestCommand extends Command {
 		return userAnswersId;
 	}
 
-	
 	private double checkTest(HttpServletRequest request, int testId) throws DBException {
 		QuestionDAO questionDAO = QuestionDAO.getInstance();
 		AnswerDAO answerDAO = AnswerDAO.getInstance();
-		
+
 		List<Question> questions = questionDAO.findQuestionsByTest(testId);
 		List<Integer> userAnswersId = getUserAnswersId(request, "answerNumb");
 		double amountOfCorrectAnswers = 0;
-		
-		one: for (Question q : questions) {
+
+//		one: for (Question q : questions) {
+//			List<Answer> answers = answerDAO.findAnswersByQuestion(q.getId());
+//			for (Answer a : answers) {
+//				// answer is correct, but the user didn't mark it OR answer isn't correct and
+//				// user marked it
+//				// go to the other question!
+//				if (a.getIsCorrect() && userAnswersId.indexOf(a.getId()) == -1
+//						|| !a.getIsCorrect() && userAnswersId.indexOf(a.getId()) != -1) {
+//					continue one;
+//				}
+//			}
+//			amountOfCorrectAnswers++;
+//		}
+		for (Question q : questions) {
+			boolean isCorrect = true;
 			List<Answer> answers = answerDAO.findAnswersByQuestion(q.getId());
 			for (Answer a : answers) {
 				// answer is correct, but the user didn't mark it OR answer isn't correct and
@@ -120,18 +133,19 @@ public class CheckTestCommand extends Command {
 				// go to the other question!
 				if (a.getIsCorrect() && userAnswersId.indexOf(a.getId()) == -1
 						|| !a.getIsCorrect() && userAnswersId.indexOf(a.getId()) != -1) {
-					continue one;
+					isCorrect = false;
 				}
 			}
-			amountOfCorrectAnswers++;
+			if (isCorrect) {
+				amountOfCorrectAnswers++;
+			}
 		}
 		LOG.debug("Questions amount : " + questions.size());
-		LOG.debug("Corr Answers : " + amountOfCorrectAnswers);
+		LOG.debug("Amount of correct answers : " + amountOfCorrectAnswers);
 		double mark = 0;
 		if (!questions.isEmpty()) {
 			mark = amountOfCorrectAnswers / (double) questions.size() * 100;
 		}
-		LOG.debug("Mark : " + mark);
 		return mark;
 	}
 }

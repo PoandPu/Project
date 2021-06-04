@@ -9,9 +9,10 @@ package ua.epam.pavelchuk.final_project.db.entity;
 public class User extends Entity {
 
 	private static final long serialVersionUID = -8402369682289356425L;
+	
 	private String login;
-	private String password;
-	private String passwordKey;
+	private transient String password;
+	private transient String passwordKey;
 	private String lang;
 	private String firstName;
 	private String lastName;
@@ -19,8 +20,7 @@ public class User extends Entity {
 	private boolean isBlocked;
 	private int roleId;
 
-	public User() {
-	}
+	public User() {}
 	
 	public String getPasswordKey() {
 		return passwordKey;
@@ -93,19 +93,19 @@ public class User extends Entity {
 		this.roleId = roleId;
 	}
 
-//	@Override
-//	public int hashCode() {
-//		final int prime = 31;
-//		int result = 1;
-//		result = prime * result + ((lang == null) ? 0 : lang.hashCode());
-//		result = prime * result + ((login == null) ? 0 : login.hashCode());
-//		result = prime * result + ((password == null) ? 0 : password.hashCode());
-//		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-//		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-//		result = prime * result + ((email == null) ? 0 : email.hashCode());
-//		result = prime * result + roleId;
-//		return result;
-//	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((lang == null) ? 0 : lang.hashCode());
+		result = prime * result + ((login == null) ? 0 : login.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + roleId;
+		return result;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -116,6 +116,8 @@ public class User extends Entity {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
+		if (roleId != other.roleId)
+			return false;
 		if (lang == null) {
 			if (other.lang != null)
 				return false;
@@ -130,8 +132,6 @@ public class User extends Entity {
 			if (other.password != null)
 				return false;
 		} else if (!password.equals(other.password))
-			return false;
-		if (roleId != other.roleId)
 			return false;
 		return true;
 	}

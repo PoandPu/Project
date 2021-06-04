@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.user;
 
-import java.io.IOException; 
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +46,14 @@ public class EditUserCommand extends Command {
 	}
 
 	private String doGet(HttpServletRequest request) throws AppException {
-		int userId =  Integer.parseInt(request.getParameter(ParameterNames.USER_ID));
+		int userId = 0;
+		try {
+			userId = Integer.parseInt(request.getParameter(ParameterNames.USER_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
+
 		try {
 			UserDAO userDAO = UserDAO.getInstance();
 			User user = userDAO.findById(userId);
@@ -55,24 +62,29 @@ public class EditUserCommand extends Command {
 			}
 			request.setAttribute(AttributeNames.USER, user);
 		} catch (DBException e) {
-			LOG.error("Cannot obtain a connection");
-			throw new AppException();
+			LOG.error(e.getMessage());
+			throw new AppException("edit_user_command.error.get", e);
 		}
 		return Path.ADMIN_EDIT_USER;
 	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
-		int userId =  Integer.parseInt(request.getParameter(ParameterNames.USER_ID));
-		
+		int userId = 0;
 		try {
-			UserDAO entrantDAO = UserDAO.getInstance();	
-			User user = entrantDAO.findById(userId);
-				
+			userId = Integer.parseInt(request.getParameter(ParameterNames.USER_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
+
+		try {
+			UserDAO userDAO = UserDAO.getInstance();
+			User user = userDAO.findById(userId);
+
 			String firstName = request.getParameter(ParameterNames.USER_FIRST_NAME);
 			String lastName = request.getParameter(ParameterNames.USER_LAST_NAME);
 			String email = request.getParameter(ParameterNames.USER_EMAIL);
-			
-			
+
 			if (!UserValidation.validate(request, firstName, lastName, email, user, null, null)) {
 				return Path.COMMAND_EDIT_USER + "&userId=" + userId;
 			}
@@ -80,15 +92,15 @@ public class EditUserCommand extends Command {
 			user.setFirstName(request.getParameter(ParameterNames.USER_FIRST_NAME));
 			user.setLastName(request.getParameter(ParameterNames.USER_LAST_NAME));
 			user.setEmail(request.getParameter(ParameterNames.USER_EMAIL));
-			entrantDAO.update(user);
+			userDAO.update(user);
 			if (request.getParameter(ParameterNames.RADIO_BUTTON).equals(ParameterNames.BLOCK)) {
-				entrantDAO.blockById(userId);
+				userDAO.blockById(userId);
 			} else {
-				entrantDAO.unblockById(userId);
+				userDAO.unblockById(userId);
 			}
 		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new AppException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error(e.getMessage());
+			throw new AppException("edit_user_command.error.post", e);
 		}
 
 		return Path.COMMAND_VIEW_USERS_LIST;

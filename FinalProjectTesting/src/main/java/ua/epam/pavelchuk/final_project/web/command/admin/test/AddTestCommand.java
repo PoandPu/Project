@@ -31,46 +31,59 @@ public class AddTestCommand extends Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
-
 		LOG.debug("Command starts");
+		
 		String result = null;
-
 		if (method == HttpMethod.POST) {
 			result = doPost(request);
 		} else {
 			result = doGet(request);
 		}
+		
 		LOG.debug("Command finished");
 		return result;
 	}
 
-	private String doGet(HttpServletRequest request) {
-		int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
-
+	private String doGet(HttpServletRequest request) throws AppException {
+		int subjectId = 0;
+		try {
+		subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
+		
 		// it was made to return to the page tests_list page of current subject
 		request.setAttribute(AttributeNames.SUBJECT_ID, subjectId);
-		LOG.debug(subjectId);
+		LOG.trace(subjectId);
 		return Path.ADMIN_ADD_TEST;
 	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
-		// it was made to return to the tests_list page of current subject
-		int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+		int subjectId = 0;
+		int difficultyLevel = 0;
+		int time = 0;
+		
+		try {
+		subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+		difficultyLevel = Integer.parseInt(request.getParameter(ParameterNames.TEST_DIFFICULTY));
+		time = Integer.parseInt(request.getParameter(ParameterNames.TEST_TIME).trim());
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
+		
 		String nameRu = request.getParameter(ParameterNames.NAME_RU);
 		String nameEn = request.getParameter(ParameterNames.NAME_EN);
-		String timeStr = request.getParameter(ParameterNames.TEST_TIME);
-		int difficultyLevel = Integer.parseInt(request.getParameter(ParameterNames.TEST_DIFFICULTY));
-
+		
 		TestDAO testDAO = null;
 		try {
 			testDAO = TestDAO.getInstance();
 			Test test = new Test();
 			
-			if(!TestValidation.validate(request, nameRu, nameEn, timeStr, test)) {
+			if(!TestValidation.validate(request, nameRu, nameEn, time, test)) {
 				return Path.COMMAND_ADD_TEST + "&subjectId=" + subjectId;
 			}
-			
-			int time = Integer.parseInt(timeStr);
 			
 			test.setNameRu(nameRu);
 			test.setNameEn(nameEn);
@@ -79,10 +92,9 @@ public class AddTestCommand extends Command {
 			test.setDifficultyLevel(difficultyLevel);
 			testDAO.insert(test);
 		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new AppException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_ADD_TEST_POST, e);
 		}
-
 		return Path.COMMAND_VIEW_TESTS_LIST + "&subjectId=" + subjectId;
 	}
 }

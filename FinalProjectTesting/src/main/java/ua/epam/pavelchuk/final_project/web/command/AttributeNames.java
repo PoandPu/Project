@@ -23,6 +23,7 @@ public class AttributeNames {
 	public static final String TESTS = "tests";
 	public static final String TEST = "test";
 	
+	public static final String SUBJECT = "subject";
 	
 	public static final String QUESTIONS = "questions";
 	public static final String ANSWERS = "answers";

@@ -46,7 +46,7 @@ public class AddAnswerCommand extends Command {
 		subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
 		questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
 		} catch (NumberFormatException ex) {
-			LOG.error(Messages.ERR_PARSING_PARAMETERS);
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
 		
@@ -59,8 +59,8 @@ public class AddAnswerCommand extends Command {
 			answer.setIsCorrect(false);
 			answerDAO.insert(answer);
 		} catch (DBException e) {
-			LOG.error("An error occured while adding a new answer", e);
-			throw new AppException("An error occured while adding a new answer", e);
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_ADD_ANSWER_POST, e);
 		}
 		return Path.COMMAND_EDIT_TEST_CONTENT + "&subjectId=" + subjectId + "&testId=" + testId + "&questionId="
 				+ questionId;

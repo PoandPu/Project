@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.test;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -24,34 +24,43 @@ import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
 public class EditTestContentCommand extends Command {
-	
-	private QuestionDAO questionDAO;
-	private AnswerDAO answerDAO;
-	
-	public EditTestContentCommand() {
+
+	/**
+	 * standard constructor
+	 * 
+	 */
+	public EditTestContentCommand(){
 		try {
 			questionDAO = QuestionDAO.getInstance();
 			answerDAO = AnswerDAO.getInstance();
 		} catch (DBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Cannot obtain a connection!");
 		}
 	}
 	
+	/**
+	 * Constructor for Mockito tests
+	 * 
+	 * @param QuestionDAO
+	 * @param AnswerDAO
+	 * 
+	 */
 	public EditTestContentCommand(QuestionDAO questionDAO, AnswerDAO answerDAO) {
 		this.questionDAO = questionDAO;
 		this.answerDAO = answerDAO;
 	}
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2684928586891220013L;
 	private static final Logger LOG = Logger.getLogger(EditTestContentCommand.class);
+	private QuestionDAO questionDAO;
+	private AnswerDAO answerDAO;
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
-
 		LOG.debug("Command starts");
 		String result = null;
 
@@ -65,45 +74,55 @@ public class EditTestContentCommand extends Command {
 	}
 
 	private String doGet(HttpServletRequest request) throws AppException {
-		int testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
-		int questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
-//		QuestionDAO questionDAO = null;
-//		AnswerDAO answerDAO = null;
+		int testId = 0;
+		int questionId = 0;
+		int subjectId = 0;
+		try {
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+			questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
 		try {
 			Question question = questionDAO.findQuestionById(questionId);
 			List<Answer> answers = answerDAO.findAnswersByQuestion(questionId);
-			int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
 
 			request.setAttribute(AttributeNames.TEST_ID, testId);
 			request.setAttribute(AttributeNames.ANSWERS, answers);
 			request.setAttribute(AttributeNames.QUESTION, question);
 			request.setAttribute(AttributeNames.SUBJECT_ID, subjectId);
 		} catch (DBException ex) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, ex);
-			throw new AppException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, ex);
+			LOG.error(ex.getMessage());
+			throw new AppException(Messages.ERR_EDIT_TEST_CONTENT_GET, ex);
 		}
-
 		return Path.ADMIN_EDIT_TEST_CONTENT;
 	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
-		int testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
-		int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
-		int questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
+		int testId = 0;
+		int subjectId = 0;
+		int questionId = 0;
+
+		try {
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+			questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
 
 		String pathEdit = Path.COMMAND_EDIT_TEST_CONTENT + "&subjectId=" + subjectId + "&testId=" + testId
 				+ "&questionId=" + questionId;
 
-//		AnswerDAO answerDAO;
-//		QuestionDAO questionDAO;
 		try {
-//			answerDAO = AnswerDAO.getInstance();
-//			questionDAO = QuestionDAO.getInstance();
 			Question question = questionDAO.findQuestionById(questionId);
 			String titleRu = request.getParameter(ParameterNames.TITLE_RU);
 			String titleEn = request.getParameter(ParameterNames.TITLE_EN);
 
-			//question validation
+			// question validation
 			if (!LocalizationValidation.validationNameRu(titleRu)) {
 				request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 						"admin.edit_test_content_jsp.error.question_title_ru");
@@ -120,8 +139,7 @@ public class EditTestContentCommand extends Command {
 			questionDAO.update(question);
 
 			List<Answer> answers = answerDAO.findAnswersByQuestion(question.getId());
-			System.out.println(question.getId());
-			System.out.println(answers.size());
+			LOG.trace("answers list size = " + answers.size());
 			for (Answer a : answers) {
 				String optionRu = request.getParameter(ParameterNames.OPTION_RU + a.getId());
 				String optionEn = request.getParameter(ParameterNames.OPTION_EN + a.getId());
@@ -150,10 +168,9 @@ public class EditTestContentCommand extends Command {
 				answerDAO.update(a);
 			}
 		} catch (DBException e) {
-			LOG.error("An error occurred while updating a question", e);
-			throw new AppException("An error occurred while updating a question", e);
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_EDIT_TEST_CONTENT_POST, e);
 		}
-		return Path.COMMAND_EDIT_TEST_CONTENT + "&subjectId=" + subjectId + "&testId=" + testId + "&questionId="
-				+ questionId;
+		return pathEdit;
 	}
 }

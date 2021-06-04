@@ -17,7 +17,6 @@ public class TestValidation extends LocalizationValidation {
 	}
 
 	private static final Logger LOG = Logger.getLogger(TestValidation.class);
-	public static final String REGULAR_EXPRESSION_NUMBER = "\\d+";
 
 	public static boolean checkUniquenessName(String name) throws AppException {
 		boolean result = false;
@@ -31,11 +30,7 @@ public class TestValidation extends LocalizationValidation {
 		return result;
 	}
 
-	public static boolean isNumber(String number) {
-		return !number.isEmpty() && number.matches(REGULAR_EXPRESSION_NUMBER);
-	}
-
-	public static boolean validate(HttpServletRequest request, String nameRu, String nameEn, String time, Test test)
+	public static boolean validate(HttpServletRequest request, String nameRu, String nameEn, int time, Test test)
 			throws AppException {
 		if (!validationNameRu(nameRu)) {
 			request.getSession().setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "test_validation.error.name_ru");
@@ -64,12 +59,7 @@ public class TestValidation extends LocalizationValidation {
 				return false;
 			}
 		}
-
-		if (!isNumber(time)) {
-			request.getSession().setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "test_validation.error.time_not_number");
-			return false;
-		}
-		if (Integer.parseInt(time) <= 0) {
+		if (time <= 0) {
 			request.getSession().setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "test_validation.error.time_invalid");
 			return false;
 		} else {

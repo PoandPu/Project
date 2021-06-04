@@ -18,7 +18,7 @@ import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
-public class AddQuestionCommand extends Command{
+public class AddQuestionCommand extends Command {
 	/**
 	 * 
 	 */
@@ -29,9 +29,9 @@ public class AddQuestionCommand extends Command{
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
 		LOG.debug("Command starts");
-		
+
 		String result = doPost(request);
-			
+
 		LOG.debug("Command finished");
 		return result;
 	}
@@ -40,10 +40,10 @@ public class AddQuestionCommand extends Command{
 		int testId = 0;
 		int subjectId = 0;
 		try {
-		testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
-		subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
 		} catch (NumberFormatException ex) {
-			LOG.error(Messages.ERR_PARSING_PARAMETERS);
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
 
@@ -55,12 +55,10 @@ public class AddQuestionCommand extends Command{
 			question.setTestId(testId);
 			questionDAO.insert(question);
 		} catch (DBException e) {
-			LOG.error("An error occured while adding a new question", e);
-			throw new AppException("An error occured while adding a new question", e);
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_ADD_QUESTION_POST, e);
 		}
 		return Path.COMMAND_VIEW_TEST + "&subjectId=" + subjectId + "&testId=" + testId;
 	}
 
 }
-
-

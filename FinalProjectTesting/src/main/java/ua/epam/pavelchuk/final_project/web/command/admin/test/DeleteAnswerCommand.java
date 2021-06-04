@@ -13,6 +13,7 @@ import ua.epam.pavelchuk.final_project.Path;
 import ua.epam.pavelchuk.final_project.db.dao.AnswerDAO;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
+import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
@@ -36,16 +37,26 @@ public class DeleteAnswerCommand extends Command{
 	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
-		int testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
-		int subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
-		int questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
-		int answerId = getIdByParameter(request, ParameterNames.DELETE);
+		int testId = 0;
+		int subjectId = 0;
+		int questionId = 0;
+		int answerId = 0;
+		try {
+		testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+		subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+		questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
+		answerId = getIdByParameter(request, ParameterNames.DELETE);
+		}catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
+		
 		try {
 			AnswerDAO answerDAO = AnswerDAO.getInstance();
 			answerDAO.delete(answerId);
 		} catch (DBException e) {
-			LOG.error("An error occured during deletion an answer", e);
-			throw new AppException("An error occured during deletion an answer", e);
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_DELETE_ANSWER_POST, e);
 		}
 		return Path.COMMAND_EDIT_TEST_CONTENT + "&subjectId=" + subjectId + "&testId=" + testId + "&questionId="
 				+ questionId;

@@ -46,8 +46,8 @@ public class FindUserCommand extends Command {
 			List<User> users = userDAO.findUsersLike(searchPattern);
 			request.setAttribute(AttributeNames.USERS, users);
 		} catch (DBException e) {
-			LOG.error("Cannot get a users list from data base");
-			throw new AppException("Cannot get a users list from data base", e);
+			LOG.error(e.getMessage());
+			throw new AppException("find_user_command.error.get", e);
 		}
 		return Path.ADMIN_PAGE_LIST_USERS;
 	}
