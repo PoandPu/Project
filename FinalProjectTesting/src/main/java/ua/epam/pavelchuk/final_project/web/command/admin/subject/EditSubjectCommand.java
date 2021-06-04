@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.subject;
 
-import java.io.IOException;
+import java.io.IOException; 
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -51,10 +51,9 @@ public class EditSubjectCommand extends Command {
 			LOG.debug(subject);
 			request.setAttribute("subject", subject);
 		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_UPDATE_ENTRANT);
-			throw new AppException(Messages.ERR_CANNOT_UPDATE_ENTRANT, e);
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_EDIT_SUBJECT_GET, e);
 		}
-
 		return Path.ADMIN_EDIT_SUBJECT;
 	}
 
@@ -82,12 +81,9 @@ public class EditSubjectCommand extends Command {
 				subjectDAO.update(subject);
 			}
 		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_UPDATE_ENTRANT);
-			throw new AppException(Messages.ERR_CANNOT_UPDATE_ENTRANT, e);
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_EDIT_SUBJECT_POST, e);
 		}
-
 		return Path.COMMAND_VIEW_LIST_SUBJECTS;
-
 	}
-
 }

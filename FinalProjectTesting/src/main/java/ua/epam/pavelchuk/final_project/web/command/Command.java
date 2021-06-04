@@ -13,7 +13,7 @@ import ua.epam.pavelchuk.final_project.web.HttpMethod;
 /**
  * Main interface for the Command pattern implementation.
  * 
- * @author
+ * @author O.Pavelchuk
  *
  */
 

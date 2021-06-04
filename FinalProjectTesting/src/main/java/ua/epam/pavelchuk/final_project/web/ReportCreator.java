@@ -72,11 +72,13 @@ public class ReportCreator extends HttpServlet {
 		}
 		super.init();
 	}
-
+	
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 	}
-
+	
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
@@ -91,7 +93,7 @@ public class ReportCreator extends HttpServlet {
 			getReport(response);
 
 		} catch (AppException ex) {
-			LOG.trace("Err in ReportCreator" + ex.getMessage());
+			LOG.error("Err in ReportCreator" + ex.getMessage());
 			response.sendRedirect(
 					ex.getMessage() != null ? Path.COMMAND_VIEW_ERROR_PAGE + "&errorMessage=" + ex.getMessage()
 							: Path.COMMAND_VIEW_ERROR_PAGE);
@@ -121,8 +123,9 @@ public class ReportCreator extends HttpServlet {
 			createTable(rb, document, request);
 
 			document.close();
-		} catch (DocumentException | IOException exception) {
-			LOG.error(exception.getMessage());
+		} catch (DocumentException | IOException ex) {
+			LOG.error(ex.getMessage());
+			throw new AppException();
 		}
 	}
 

@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.subject;
 
-import java.io.IOException;  
+import java.io.IOException;   
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,15 +31,15 @@ public class AddSubjectCommand extends Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
-
 		LOG.debug("Command starts");
+		
 		String result = null;
-
 		if (method == HttpMethod.POST) {
 			result = doPost(request);
 		} else {
 			result = doGet();
 		}
+		
 		LOG.debug("Command finished");
 		return result;
 	}
@@ -49,7 +49,6 @@ public class AddSubjectCommand extends Command {
 	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
-	
 		String nameRu = request.getParameter(ParameterNames.NAME_RU);
 		String nameEn = request.getParameter(ParameterNames.NAME_EN);
 		Subject subject = new Subject();
@@ -65,12 +64,9 @@ public class AddSubjectCommand extends Command {
 			subject.setNameEn(nameEn);
 			subjectDAO.insert(subject);
 		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_UPDATE_ENTRANT);
-			throw new AppException(Messages.ERR_CANNOT_UPDATE_ENTRANT, e);
+			LOG.error(e.getMessage());
+			throw new AppException(Messages.ERR_ADD_SUBJECT_POST, e);
 		}
-		
 		return Path.COMMAND_VIEW_LIST_SUBJECTS;
-
 	}
-
 }

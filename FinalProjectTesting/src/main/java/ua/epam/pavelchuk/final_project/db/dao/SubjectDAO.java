@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.db.dao;
 
-import java.sql.Connection;
+import java.sql.Connection; 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import ua.epam.pavelchuk.final_project.db.Fields;
 import ua.epam.pavelchuk.final_project.db.entity.Subject;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
-import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
 /**
  * Manipulates "subjects" table in the DB
@@ -121,8 +120,8 @@ public class SubjectDAO extends AbstractDAO {
 			resultSet = pstmt.executeQuery();
 			result = resultSet.next();
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot check Subject name uniqueness in the DB");
+			throw new DBException("cannot check Subject name uniqueness in the DB", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -158,8 +157,8 @@ public class SubjectDAO extends AbstractDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot insert a subject");
+			throw new DBException("cannot insert a subject", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -191,8 +190,8 @@ public class SubjectDAO extends AbstractDAO {
 			result = pstmt.executeUpdate() > 0;
 			LOG.trace("Subject with (id: " + subject.getId() + ") was updated");
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot upate a subject");
+			throw new DBException("cannot upate a subject", e);
 		} finally {
 			close(con, pstmt);
 		}
@@ -220,8 +219,8 @@ public class SubjectDAO extends AbstractDAO {
 			result = pstmt.executeUpdate() > 0;
 			LOG.trace("Subject with (id: " + id + ") was deleted");
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException();
+			LOG.error("cannot delete a subject");
+			throw new DBException("cannot delete a subject", e);
 		} finally {
 			close(con, pstmt);
 		}
@@ -255,8 +254,8 @@ public class SubjectDAO extends AbstractDAO {
 				subjects.add(extract(resultSet));
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot find all sorted and paginated subjects");
+			throw new DBException("cannot find all sorted and paginated subjects", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -288,8 +287,8 @@ public class SubjectDAO extends AbstractDAO {
 				subject = extract(resultSet);
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException("Cannot find test by theme id", e);
+			LOG.error("Cannot find subject by id");
+			throw new DBException("Cannot find subject by id", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}

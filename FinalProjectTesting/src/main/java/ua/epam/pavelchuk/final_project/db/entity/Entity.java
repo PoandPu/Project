@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Root of all entities which have identifier field.
  * 
- * @author 
+ * @author O.Pavelchuk
  * 
  */
 public abstract class Entity implements Serializable {

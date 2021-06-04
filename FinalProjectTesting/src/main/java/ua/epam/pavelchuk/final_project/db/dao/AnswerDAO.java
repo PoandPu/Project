@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.db.dao;
 
-import java.sql.Connection;
+import java.sql.Connection; 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import ua.epam.pavelchuk.final_project.db.Fields;
 import ua.epam.pavelchuk.final_project.db.entity.Answer;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
-import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
 /**
  * Manipulates "answers" table in the DB
@@ -118,7 +117,7 @@ public class AnswerDAO extends AbstractDAO {
 				list.add(extract(resultSet));
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Cannot find answers by question id");
 			throw new DBException("Cannot find answers by question id", e);
 		} finally {
 			close(con, pstmt, resultSet);
@@ -150,7 +149,7 @@ public class AnswerDAO extends AbstractDAO {
 				list.add(extract(resultSet));
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Cannot find correct answers by question id");
 			throw new DBException("Cannot find correct answers by question id", e);
 		} finally {
 			close(con, pstmt, resultSet);
@@ -179,7 +178,7 @@ public class AnswerDAO extends AbstractDAO {
 			result = statement.executeUpdate() > 0;
 			LOG.trace("Answer was deleted (id: " + id + ")");
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Cannot delete answer");
 			throw new DBException("Cannot delete answer", e);
 		} finally {
 			close(con, statement);
@@ -214,7 +213,7 @@ public class AnswerDAO extends AbstractDAO {
 				result = true;
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Cannot update answer");
 			throw new DBException("Cannot update answer", e);
 		} finally {
 			close(con, pstmt);
@@ -251,7 +250,7 @@ public class AnswerDAO extends AbstractDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Cannot insert answer");
 			throw new DBException("Cannot insert answer", e);
 		} finally {
 			close(con, pstmt, resultSet);

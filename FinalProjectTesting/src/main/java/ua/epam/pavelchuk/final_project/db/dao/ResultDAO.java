@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.db.dao;
 
-import java.sql.Connection; 
+import java.sql.Connection;  
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import ua.epam.pavelchuk.final_project.db.Fields;
 import ua.epam.pavelchuk.final_project.db.entity.Result;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
-import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
 /**
  * Manipulates "results" table in the DB
@@ -126,8 +125,8 @@ public class ResultDAO extends AbstractDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot insert a result");
+			throw new DBException("cannot insert a result", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -158,8 +157,8 @@ public class ResultDAO extends AbstractDAO {
 					results.add(extract(resultSet));	
 				}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot find results for user | userId = " + userId);
+			throw new DBException("cannot find results for user", e);
 		} finally {
 			close(connection, pstm, resultSet);
 		}
@@ -194,8 +193,8 @@ public class ResultDAO extends AbstractDAO {
 					results.add(extract(resultSet));	
 				}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot find paginated and sorted results for user | userId = " + userId);
+			throw new DBException("cannot find paginated and sorted results for user", e);
 		} finally {
 			close(connection, pstmt, resultSet);
 		}
@@ -223,8 +222,8 @@ public class ResultDAO extends AbstractDAO {
 			result = pstmt.executeUpdate() > 0;
 			LOG.trace("Result was deleted (id: " + id + ")");
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException();
+			LOG.error("cannot delete a result");
+			throw new DBException("cannot delete a result", e);
 		} finally {
 			close(con, pstmt);
 		}

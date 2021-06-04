@@ -63,7 +63,7 @@ public class Controller extends HttpServlet {
 		try {
 			forward = command.execute(request, response, method);
 		} catch (AppException ex) {
-			LOG.trace("Err in controller" + ex.getMessage());
+			LOG.error("Error in controller " + ex.getMessage());
 			if (method == HttpMethod.POST) {
 				forward = ex.getMessage() != null ? Path.COMMAND_VIEW_ERROR_PAGE + "&errorMessage=" + ex.getMessage()
 						: Path.COMMAND_VIEW_ERROR_PAGE;

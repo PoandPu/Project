@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.db.dao;
 
-import java.sql.Connection;  
+import java.sql.Connection;   
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +13,13 @@ import org.apache.log4j.Logger;
 import ua.epam.pavelchuk.final_project.db.Fields;
 import ua.epam.pavelchuk.final_project.db.entity.Test;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
-import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
+/**
+ * Manipulates "tests" table in the DB
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class TestDAO extends AbstractDAO {
 
 	/**
@@ -130,8 +135,8 @@ public class TestDAO extends AbstractDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException("Cannot find test by theme id", e);
+			LOG.error("Cannot insert a test");
+			throw new DBException("Cannot insert a test", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -166,8 +171,8 @@ public class TestDAO extends AbstractDAO {
 				tests.add(extract(resultSet));
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Cannot find sorted and paginated list of tests by subject id");
+			throw new DBException("Cannot find sorted and paginated list of tests by subject id", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -175,7 +180,7 @@ public class TestDAO extends AbstractDAO {
 	}
 	
 	/**
-	 * Finds difficulty for test in different Ru and En by difficulty ID
+	 * Finds difficulty for test in Russian and English by difficulty ID
 	 * 
 	 * @param difficulty ID
 	 * @return List of difficulty name in English and Russian
@@ -199,8 +204,8 @@ public class TestDAO extends AbstractDAO {
 				difficultyName.add(resultSet.getString(Fields.DIFFICULTY_NAME_RU));
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot find difficulty for test");
+			throw new DBException("cannot find difficulty for test", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -231,8 +236,8 @@ public class TestDAO extends AbstractDAO {
 				time = resultSet.getInt(Fields.TEST_TIME_MINUTES); 
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException("Cannot find test by theme id", e);
+			LOG.error("cannot find time for test");
+			throw new DBException("cannot find time for test", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -261,8 +266,8 @@ public class TestDAO extends AbstractDAO {
 			}
 			res = true;
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("cannot increase number of requests for test");
+			throw new DBException("cannot increase number of requests for test", e);
 		} finally {
 			close(con, pstmt);
 		}
@@ -293,8 +298,8 @@ public class TestDAO extends AbstractDAO {
 				test = extract(resultSet); 
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException("Cannot find test by theme id", e);
+			LOG.error("Cannot find test by id");
+			throw new DBException("Cannot find test by id", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
@@ -328,8 +333,8 @@ public class TestDAO extends AbstractDAO {
 				LOG.trace("Subject with id " + test.getId() + " was updated");
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Failed to update test");
+			throw new DBException("Failed to update test", e);
 		} finally {
 			close(con, pstmt);
 		}
@@ -356,8 +361,8 @@ public class TestDAO extends AbstractDAO {
 			result =  pstmt.executeUpdate() > 0;
 			LOG.trace("Subject was delited (id: " + id + ")");
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException();
+			LOG.error("Failed to update test");
+			throw new DBException("Failed to update test", e);
 		} finally {
 			close(con, pstmt);
 		}
@@ -388,15 +393,11 @@ public class TestDAO extends AbstractDAO {
 			resultSet = pstmt.executeQuery();
 			result = resultSet.next();
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Cannot check name uniqueness of the test");
+			throw new DBException("Cannot check name uniqueness of the test", e);
 		} finally {
 			close(con, pstmt, resultSet);
 		}
-		
 		return result;
 	}
-	
-	
-
 }

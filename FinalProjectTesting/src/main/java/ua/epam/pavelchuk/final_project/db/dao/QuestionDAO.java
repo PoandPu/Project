@@ -147,7 +147,7 @@ public class QuestionDAO extends AbstractDAO {
 				question = extract(resultSet);
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error("Cannot find question by id");
 			throw new DBException("Cannot find question by id", e);
 		} finally {
 			close(con, pstmt, resultSet);
@@ -175,8 +175,8 @@ public class QuestionDAO extends AbstractDAO {
 			result = pstmt.executeUpdate() > 0;
 			LOG.trace("Questions was deleted (id: " + id + ")");
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException();
+			LOG.error("Cannot delete question");
+			throw new DBException("Cannot delete question", e);
 		} finally {
 			close(con, pstmt);
 		}
@@ -207,8 +207,8 @@ public class QuestionDAO extends AbstractDAO {
 				result = true;
 			}
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-			throw new DBException();
+			LOG.error("Cannot update question");
+			throw new DBException("Cannot update question", e);
 		} finally {
 			close(con, pstmt);
 		}

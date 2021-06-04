@@ -1,8 +1,8 @@
 package ua.epam.pavelchuk.final_project.web.command;
 
 /**
- * Utility class that contains attribute names
- * @author  
+ * Utility class that contains parameters names
+ * @author O.Pavelchuk
  *
  */
 public class ParameterNames {

@@ -1,11 +1,18 @@
 package ua.epam.pavelchuk.final_project.web.command;
 
+/**
+ * Utility class that contains attribute names
+ * @author O.Pavelchuk
+ *
+ */
 public class AttributeNames {
 	
+	/**
+	 * Private utility class constructor
+	 */
 	private AttributeNames() {}
 	
 	public static final String USER = "user";
-//	public static final String ENTRANT = "entrant";
 	public static final String ID = "id";
 	public static final String USER_ROLE = "userRole";
 	public static final String TEST_ID = "testId";

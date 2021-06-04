@@ -17,12 +17,12 @@ import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
-public class DeleteAnswer extends Command{
+public class DeleteAnswerCommand extends Command{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2684928586891220013L;
-	private static final Logger LOG = Logger.getLogger(DeleteAnswer.class);
+	private static final Logger LOG = Logger.getLogger(DeleteAnswerCommand.class);
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)

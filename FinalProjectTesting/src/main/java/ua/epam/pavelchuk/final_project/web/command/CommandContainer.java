@@ -7,11 +7,11 @@ import org.apache.log4j.Logger;
 
 import ua.epam.pavelchuk.final_project.web.command.admin.subject.AddSubjectCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.subject.EditSubjectCommand;
-import ua.epam.pavelchuk.final_project.web.command.admin.test.AddAnswer;
-import ua.epam.pavelchuk.final_project.web.command.admin.test.AddQuestion;
+import ua.epam.pavelchuk.final_project.web.command.admin.test.AddAnswerCommand;
+import ua.epam.pavelchuk.final_project.web.command.admin.test.AddQuestionCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.test.AddTestCommand;
-import ua.epam.pavelchuk.final_project.web.command.admin.test.DeleteAnswer;
-import ua.epam.pavelchuk.final_project.web.command.admin.test.DeleteQuestion;
+import ua.epam.pavelchuk.final_project.web.command.admin.test.DeleteAnswerCommand;
+import ua.epam.pavelchuk.final_project.web.command.admin.test.DeleteQuestionCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.test.EditTestCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.test.EditTestContentCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.EditUserCommand;
@@ -19,7 +19,7 @@ import ua.epam.pavelchuk.final_project.web.command.admin.user.FindUserCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.ViewUsersListCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.CheckTestCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.PasswordRecoveryCommand;
-import ua.epam.pavelchuk.final_project.web.command.common.GeneratePassword;
+import ua.epam.pavelchuk.final_project.web.command.common.GeneratePasswordCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.LoginCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.LogoutCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.RegistrationCommand;
@@ -35,7 +35,7 @@ import ua.epam.pavelchuk.final_project.web.command.error.ViewErrorCommand;
 /**
  * Holder for all commands.
  * 
- * @author 
+ * @author O.Pavelchuk
  * 
  */
 public class CommandContainer {
@@ -59,10 +59,10 @@ public class CommandContainer {
 		commands.put("editTestContent", new EditTestContentCommand());
 		commands.put("viewUsersList", new ViewUsersListCommand());
 		commands.put("editUser", new EditUserCommand());
-		commands.put("addQuestion", new AddQuestion());
-		commands.put("addAnswer", new AddAnswer());
-		commands.put("deleteAnswer", new DeleteAnswer());
-		commands.put("deleteQuestion", new DeleteQuestion());
+		commands.put("addQuestion", new AddQuestionCommand());
+		commands.put("addAnswer", new AddAnswerCommand());
+		commands.put("deleteAnswer", new DeleteAnswerCommand());
+		commands.put("deleteQuestion", new DeleteQuestionCommand());
 		commands.put("findUser", new FindUserCommand());
 		
 //		// client commands
@@ -82,7 +82,7 @@ public class CommandContainer {
 		commands.put("registration", new RegistrationCommand());
 		commands.put("viewErrorPage", new ViewErrorCommand());
 		commands.put("passwordRecovery", new PasswordRecoveryCommand());
-		commands.put("generatePassword", new GeneratePassword());
+		commands.put("generatePassword", new GeneratePasswordCommand());
 		
 		LOG.debug("Command container was successfully initialized");
 		LOG.trace("Number of commands --> " + commands.size());

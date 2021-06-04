@@ -19,64 +19,52 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 import ua.epam.pavelchuk.final_project.web.mail.SendMail;
 import ua.epam.pavelchuk.final_project.web.password_encryption.PasswordUtils;
 
-public class GeneratePassword extends Command{
+public class GeneratePasswordCommand extends Command {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4819639561973518537L;
-	private static final Logger LOG = Logger.getLogger(GeneratePassword.class);
+	private static final Logger LOG = Logger.getLogger(GeneratePasswordCommand.class);
 
 	@Override
-	public String execute(HttpServletRequest request, HttpServletResponse response, 
-			HttpMethod method) throws IOException, ServletException, AppException {
+	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
+			throws IOException, ServletException, AppException {
 		LOG.debug("Command starts");
 		String result = null;
-		if(method == HttpMethod.POST) {
-			result = doPost(request);
-		} else {
-			result = doGet(request);
-		}
+		result = doPost(request);
 		LOG.debug("Command finished");
 		return result;
 	}
-	
-	private String doGet(HttpServletRequest request) {
-		String message = request.getParameter(ParameterNames.HASH);
-		LOG.debug(message);
-		if (message != null) {
-		request.setAttribute(ParameterNames.MESSAGE, message);
-		}
-		return Path.PAGE_PASSWORD_RECOVERY;
-	}
-	
+
 	private String doPost(HttpServletRequest request) throws AppException {
 		String hash = request.getParameter(ParameterNames.HASH);
 		String message = null;
+		String email = null;
 		UserDAO userDAO = null;
 		try {
 			userDAO = UserDAO.getInstance();
 			User user = userDAO.findByHashAndDelete(hash);
-			
+
 			if (user == null) {
 				message = "This link to change password is no longer valid";
 			} else {
-			
-			String newPassword = PasswordUtils.getSalt(10);
-			String passwordKey = user.getPasswordKey();	
-			String securePassword = PasswordUtils.generateSecurePassword(newPassword, passwordKey);	
-			user.setPassword(securePassword);
-			
-			userDAO.update(user);
-	
-			SendMail.sendNewPassword(user.getEmail(), newPassword);
-			message = "A new password has been successfully generated and sent to email: " + user.getEmail();
+
+				String newPassword = PasswordUtils.getSalt(10);
+				String passwordKey = user.getPasswordKey();
+				String securePassword = PasswordUtils.generateSecurePassword(newPassword, passwordKey);
+				user.setPassword(securePassword);
+
+				userDAO.update(user);
+
+				SendMail.sendNewPassword(user.getEmail(), newPassword);
+				message = "script2";
+				email = user.getEmail();
 			}
 		} catch (DBException ex) {
 			LOG.error(ex);
 		}
-		
-		
-		return Path.COMMAND_PASSWORD_RECOVERY + "&message=" + message;
+
+		return Path.COMMAND_PASSWORD_RECOVERY + "&message=" + message + "&email=" + email;
 	}
 }

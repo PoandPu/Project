@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.mail;
 
-import java.util.Properties;
+import java.util.Properties; 
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -10,12 +10,18 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.log4j.Logger;
+
+import ua.epam.pavelchuk.final_project.db.exception.AppException;
+
 public class SendMail {
 
 	private SendMail() {
 	}
+	
+	private static final Logger LOG = Logger.getLogger(SendMail.class);
 
-	public static void sendRefence(String email, String login, String hash) {
+	public static void sendRefence(String email, String login, String hash) throws AppException {
 		String to = email;
 		// Sender's email ID needs to be mentioned
 		String from = "aleksandrspak856@gmail.com";
@@ -36,7 +42,6 @@ public class SendMail {
 				return new PasswordAuthentication("aleksandrspak856@gmail.com", "testForProject");
 			}
 		});
-		session.setDebug(true);
 		try {
 			// Create a default MimeMessage object.
 			MimeMessage message = new MimeMessage(session);
@@ -70,11 +75,12 @@ public class SendMail {
 			// Send message
 			Transport.send(message);
 		} catch (MessagingException mex) {
-			mex.printStackTrace();
+			LOG.error("MessagingException");
+			throw new AppException("MessagingException");
 		}
 	}
 
-	public static void sendNewPassword(String email, String password) {
+	public static void sendNewPassword(String email, String password) throws AppException {
 		String to = email;
 		// Sender's email ID needs to be mentioned
 		String from = "aleksandrspak856@gmail.com";
@@ -90,12 +96,11 @@ public class SendMail {
 		properties.put("mail.smtp.auth", "true");
 
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-
+			
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication("aleksandrspak856@gmail.com", "testForProject");
 			}
 		});
-		session.setDebug(true);
 		try {
 			// Create a default MimeMessage object.
 			MimeMessage message = new MimeMessage(session);
@@ -111,7 +116,7 @@ public class SendMail {
 			sb.append(
 					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \">A new password has been successfully generated. We strongly recommend that you change this temporary password to your personal one in your profile settings immediately after successful authorization on the site.");
 			sb.append(
-					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \">Your new password: ");
+					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:bold;line-height:18px;margin-top:0;margin-bottom:15px \">Your new password: ");
 			sb.append(password);
 			sb.append(
 					"<p style = \"color:#677483;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:18px;margin-top:0;margin-bottom:15px \">When copying the password, make sure that there are no leading and trailing spaces (there should be no spaces at the edges).");
@@ -120,7 +125,8 @@ public class SendMail {
 			// Send message
 			Transport.send(message);
 		} catch (MessagingException mex) {
-			mex.printStackTrace();
+			LOG.error("MessagingException");
+			throw new AppException("MessagingException");
 		}
 	}
 }

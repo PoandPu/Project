@@ -9,8 +9,7 @@
 		
 		<c:if test="${not empty errorMessage}">
 			<tr style="height: 100px; vertical-align: text-top;">
-				<th><label class="validation"><fmt:message
-							key="${errorMessage}" /></label> <c:remove
+				<th><label class="validation"><fmt:message key="${errorMessage}"/></label> <c:remove
 						var="errorMessage" /></th>
 			</tr>
 		</c:if>
