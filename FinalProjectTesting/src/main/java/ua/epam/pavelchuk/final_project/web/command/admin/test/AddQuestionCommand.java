@@ -56,7 +56,7 @@ public class AddQuestionCommand extends Command {
 			questionDAO.insert(question);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_ADD_QUESTION_POST, e);
+			throw new AppException("add_question_command.error.post", e);
 		}
 		return Path.COMMAND_VIEW_TEST + "&subjectId=" + subjectId + "&testId=" + testId;
 	}

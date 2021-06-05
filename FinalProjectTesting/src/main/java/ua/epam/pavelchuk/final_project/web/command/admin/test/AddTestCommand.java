@@ -101,7 +101,7 @@ public class AddTestCommand extends Command {
 			testDAO.insert(test);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_ADD_TEST_POST, e);
+			throw new AppException("add_test_command.error.post", e);
 		}
 		return Path.COMMAND_VIEW_TESTS_LIST + "&subjectId=" + subjectId;
 	}

@@ -61,7 +61,7 @@ public class EditTestCommand extends Command {
 			request.setAttribute(AttributeNames.TEST, test);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_EDIT_TEST_GET, e);
+			throw new AppException("edit_test_command.error.get", e);
 		}
 		request.setAttribute(AttributeNames.SUBJECT_ID, subjectId);
 		return Path.ADMIN_EDIT_TEST;
@@ -113,7 +113,7 @@ public class EditTestCommand extends Command {
 			testDAO.update(test);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_EDIT_TEST_POST, e);
+			throw new AppException("edit_test_command.error.post", e);
 		}
 		return Path.COMMAND_VIEW_TESTS_LIST + "&subjectId=" + subjectId;
 	}

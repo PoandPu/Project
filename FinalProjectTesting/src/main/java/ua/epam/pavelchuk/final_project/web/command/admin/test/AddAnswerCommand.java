@@ -60,7 +60,7 @@ public class AddAnswerCommand extends Command {
 			answerDAO.insert(answer);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_ADD_ANSWER_POST, e);
+			throw new AppException("add_answer_command.error.post", e);
 		}
 		return Path.COMMAND_EDIT_TEST_CONTENT + "&subjectId=" + subjectId + "&testId=" + testId + "&questionId="
 				+ questionId;

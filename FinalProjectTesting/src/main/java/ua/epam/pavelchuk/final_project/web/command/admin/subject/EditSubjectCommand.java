@@ -55,7 +55,7 @@ public class EditSubjectCommand extends Command {
 			
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_EDIT_SUBJECT_GET, e);
+			throw new AppException("edit_subject_command.error.get", e);
 		} catch (NumberFormatException ex) {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
@@ -94,7 +94,7 @@ public class EditSubjectCommand extends Command {
 			}
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_EDIT_SUBJECT_POST, e);
+			throw new AppException("edit_subject_command.error.post", e);
 		}
 		return Path.COMMAND_VIEW_LIST_SUBJECTS;
 	}

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import ua.epam.pavelchuk.final_project.Path;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
+import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 
 /**
@@ -19,12 +20,12 @@ import ua.epam.pavelchuk.final_project.web.command.Command;
  */
 public class ViewErrorCommand extends Command {
 
-	private static final long serialVersionUID = -3695555195703848425L;
+	private static final long serialVersionUID = 543044319988306036L;
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
-		request.setAttribute("errorMessage", request.getParameter("errorMessage"));
+		request.setAttribute(AttributeNames.ERROR_MESSAGE, request.getParameter(AttributeNames.ERROR_MESSAGE));
 		return Path.PAGE_ERROR;
 	}
 }

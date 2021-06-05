@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web;
 
-import java.io.IOException; 
+import java.io.IOException;  
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import ua.epam.pavelchuk.final_project.Path;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
-import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.CommandContainer;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
@@ -28,7 +27,7 @@ public class Controller extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		LOG.debug("Try to execute GET command (" + request.getParameter(AttributeNames.COMMAND) + ")");
+		LOG.debug("Try to execute GET command (" + request.getParameter(ParameterNames.COMMAND) + ")");
 		String forward = process(request, response, HttpMethod.GET);
 		request.getRequestDispatcher(forward).forward(request, response);
 	}
@@ -36,7 +35,7 @@ public class Controller extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		LOG.debug("Try to execute POST command (" + request.getParameter(AttributeNames.COMMAND) + ")");
+		LOG.debug("Try to execute POST command (" + request.getParameter(ParameterNames.COMMAND) + ")");
 		String redirect = process(request, response, HttpMethod.POST);
 		response.sendRedirect(redirect);
 

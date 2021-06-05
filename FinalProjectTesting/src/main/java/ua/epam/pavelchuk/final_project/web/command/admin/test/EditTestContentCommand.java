@@ -34,7 +34,7 @@ public class EditTestContentCommand extends Command {
 			questionDAO = QuestionDAO.getInstance();
 			answerDAO = AnswerDAO.getInstance();
 		} catch (DBException e) {
-			LOG.error("Cannot obtain a connection!");
+			LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE);
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class EditTestContentCommand extends Command {
 			request.setAttribute(AttributeNames.SUBJECT_ID, subjectId);
 		} catch (DBException ex) {
 			LOG.error(ex.getMessage());
-			throw new AppException(Messages.ERR_EDIT_TEST_CONTENT_GET, ex);
+			throw new AppException("edit_test_content_command.error.get", ex);
 		}
 		return Path.ADMIN_EDIT_TEST_CONTENT;
 	}
@@ -169,7 +169,7 @@ public class EditTestContentCommand extends Command {
 			}
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_EDIT_TEST_CONTENT_POST, e);
+			throw new AppException("edit_test_content_command.error.post", e);
 		}
 		return pathEdit;
 	}

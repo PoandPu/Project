@@ -15,8 +15,6 @@ public class PaginationTag extends SimpleTagSupport {
 	private String direction;
 	private String lines;
 
-
-	
 	public void setLines(String lines) {
 		this.lines = lines;
 	}
@@ -36,6 +34,7 @@ public class PaginationTag extends SimpleTagSupport {
 		this.page = page;
 	}
 
+	@Override
 	public void doTag() throws JspException, IOException {
 		JspWriter out = getJspContext().getOut();
 		out.println("<div id=\"pageLeftFooter\">");

@@ -52,7 +52,7 @@ public class DeleteQuestionCommand extends Command{
 			questionDAO.delete(questionId);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
-			throw new AppException(Messages.ERR_DELETE_QUESTION_POST, e);
+			throw new AppException("delete_question_command.error.post", e);
 		}
 		return Path.COMMAND_VIEW_TEST + "&subjectId=" + subjectId + "&testId=" + testId;
 	}

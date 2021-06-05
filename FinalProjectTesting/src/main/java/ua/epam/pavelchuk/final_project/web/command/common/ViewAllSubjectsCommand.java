@@ -35,7 +35,7 @@ public class ViewAllSubjectsCommand extends Command {
 		try {
 			subjectDAO = SubjectDAO.getInstance();
 		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION);
+			LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE);
 		}
 	}
 

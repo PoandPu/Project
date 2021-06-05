@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.mail;
 
-import java.util.Properties; 
+import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -13,18 +13,17 @@ import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
+import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
 public class SendMail {
 
 	private SendMail() {
 	}
-	
+
+	private static final String FROM = "aleksandrspak856@gmail.com";
 	private static final Logger LOG = Logger.getLogger(SendMail.class);
 
-	public static void sendRefence(String email, String login, String hash) throws AppException {
-		String to = email;
-		// Sender's email ID needs to be mentioned
-		String from = "aleksandrspak856@gmail.com";
+	private static Session authentification() {
 		// Assuming you are sending email from through gmails smtp
 		String host = "smtp.gmail.com";
 		// Get system properties
@@ -36,22 +35,27 @@ public class SendMail {
 		properties.put("mail.smtp.ssl.enable", "true");
 		properties.put("mail.smtp.auth", "true");
 
-		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-
+		return Session.getInstance(properties, new javax.mail.Authenticator() {
+			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("aleksandrspak856@gmail.com", "testForProject");
+				return new PasswordAuthentication(FROM, "testForProject");
 			}
 		});
+	}
+
+	public static void sendRefence(String toEmail, String login, String hash) throws AppException {
+		// Sender's email ID needs to be mentioned
+		Session session = authentification();
 		try {
 			// Create a default MimeMessage object.
 			MimeMessage message = new MimeMessage(session);
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(FROM));
 			// Set To: header field of the header.
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
 			// Set Subject: header field
 			message.setSubject("Restore your password");
-			
+
 			StringBuilder sb = new StringBuilder();
 			sb.append("<h2>Hello, ");
 			sb.append(login);
@@ -63,7 +67,8 @@ public class SendMail {
 			sb.append("<input type=\"hidden\" name=\"hash\" value='");
 			sb.append(hash);
 			sb.append("' required>");
-			sb.append("<input class=\"form\" type=\"submit\" name=\"submit\" value= \"Restore\" style = \"background-color: #4e6e6f;");
+			sb.append(
+					"<input class=\"form\" type=\"submit\" name=\"submit\" value= \"Restore\" style = \"background-color: #4e6e6f;");
 			sb.append("  color: white; padding: 12px 40px; border:none;");
 			sb.append(" border-radius: 4px; cursor: pointer;\"  />");
 			sb.append("</form>");
@@ -75,41 +80,22 @@ public class SendMail {
 			// Send message
 			Transport.send(message);
 		} catch (MessagingException mex) {
-			LOG.error("MessagingException");
-			throw new AppException("MessagingException");
+			LOG.error(Messages.ERR_EMAIL_LOG);
+			throw new AppException(Messages.ERR_EMAIL, mex);
 		}
 	}
 
-	public static void sendNewPassword(String email, String password) throws AppException {
-		String to = email;
-		// Sender's email ID needs to be mentioned
-		String from = "aleksandrspak856@gmail.com";
-		// Assuming you are sending email from through gmails smtp
-		String host = "smtp.gmail.com";
-		// Get system properties
-		Properties properties = System.getProperties();
-
-		// Setup mail server
-		properties.put("mail.smtp.host", host);
-		properties.put("mail.smtp.port", "465");
-		properties.put("mail.smtp.ssl.enable", "true");
-		properties.put("mail.smtp.auth", "true");
-
-		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-			
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("aleksandrspak856@gmail.com", "testForProject");
-			}
-		});
+	public static void sendNewPassword(String toEmail, String password) throws AppException {
+		Session session = authentification();
 		try {
 			// Create a default MimeMessage object.
 			MimeMessage message = new MimeMessage(session);
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(FROM));
 			// Set To: header field of the header.
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
 			// Set Subject: header field
-			message.setSubject("Restore your password");
+			message.setSubject("Your new password");
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("<h2>Successfully sent</h2>");
@@ -125,8 +111,8 @@ public class SendMail {
 			// Send message
 			Transport.send(message);
 		} catch (MessagingException mex) {
-			LOG.error("MessagingException");
-			throw new AppException("MessagingException");
+			LOG.error(Messages.ERR_EMAIL_LOG);
+			throw new AppException(Messages.ERR_EMAIL, mex);
 		}
 	}
 }
