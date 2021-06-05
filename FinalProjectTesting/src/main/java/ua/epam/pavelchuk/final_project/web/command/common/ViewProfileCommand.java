@@ -18,6 +18,7 @@ import ua.epam.pavelchuk.final_project.db.entity.Result;
 import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
+import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
@@ -51,28 +52,22 @@ public class ViewProfileCommand extends Command {
 			throw new AppException("command_access.error.no_root");
 		}
 
-		UserDAO userDAO = null;
-		ResultDAO resultDAO = null;
-		User user = null;
-		try {
-			userDAO = UserDAO.getInstance();
-			user = userDAO.findById(userId);
-			resultDAO = ResultDAO.getInstance();
-		} catch (DBException e) {
-			LOG.error("Error");
-			throw new AppException();
-		}
-
 		int page = 1;
 		int lines = 10;
-		if (request.getParameter(ParameterNames.PAGINATION_PAGE) != null) {
-			page = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_PAGE));
+		try {
+			if (request.getParameter(ParameterNames.PAGINATION_PAGE) != null) {
+				page = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_PAGE));
+			}
+
+			if (request.getParameter(ParameterNames.PAGINATION_LINES) != null) {
+				lines = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_LINES));
+			}
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
 		if (page < 1) {
 			page = 1;
-		}
-		if (request.getParameter(ParameterNames.PAGINATION_LINES) != null) {
-			lines = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_LINES));
 		}
 		if (lines < 1) {
 			lines = 10;
@@ -83,11 +78,25 @@ public class ViewProfileCommand extends Command {
 		String direction = request.getParameter(ParameterNames.DIRECTION) == null ? "DESC"
 				: request.getParameter(ParameterNames.DIRECTION);
 
-		List<Result> results = resultDAO.findResultsByUserIdAllOrderedBy(userId, orderBy, direction, (page - 1) * lines, lines);
+		UserDAO userDAO = null;
+		ResultDAO resultDAO = null;
+		User user = null;
+		List<Result> results = null;
+		try {
+			userDAO = UserDAO.getInstance();
+			resultDAO = ResultDAO.getInstance();
 
-		while (results.isEmpty() && page > 1) {
-			page--;
+			user = userDAO.findById(userId);
 			results = resultDAO.findResultsByUserIdAllOrderedBy(userId, orderBy, direction, (page - 1) * lines, lines);
+
+			while (results.isEmpty() && page > 1) {
+				page--;
+				results = resultDAO.findResultsByUserIdAllOrderedBy(userId, orderBy, direction, (page - 1) * lines,
+						lines);
+			}
+		} catch (DBException e) {
+			LOG.error("Error");
+			throw new AppException();
 		}
 
 		request.setAttribute(AttributeNames.RESULTS, results);
@@ -98,6 +107,5 @@ public class ViewProfileCommand extends Command {
 		request.setAttribute(AttributeNames.DIRECTION, direction);
 
 		return Path.PAGE_PROFILE;
-
 	}
 }

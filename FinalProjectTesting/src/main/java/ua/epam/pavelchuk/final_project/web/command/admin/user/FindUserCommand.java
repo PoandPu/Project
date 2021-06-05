@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.user;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -41,6 +41,11 @@ public class FindUserCommand extends Command {
 
 	private String doGet(HttpServletRequest request) throws AppException {
 		String searchPattern = request.getParameter(ParameterNames.PATTERN);
+		String orderBy = request.getParameter(ParameterNames.ORDER_BY) == null ? "id"
+				: request.getParameter(ParameterNames.ORDER_BY);
+		String direction = request.getParameter(ParameterNames.DIRECTION) == null ? "ASC"
+				: request.getParameter(ParameterNames.DIRECTION);
+
 		try {
 			UserDAO userDAO = UserDAO.getInstance();
 			List<User> users = userDAO.findUsersLike(searchPattern);
@@ -49,6 +54,9 @@ public class FindUserCommand extends Command {
 			LOG.error(e.getMessage());
 			throw new AppException("find_user_command.error.get", e);
 		}
+
+		request.setAttribute(AttributeNames.ORDER_BY, orderBy);
+		request.setAttribute(AttributeNames.DIRECTION, direction);
 		return Path.ADMIN_PAGE_LIST_USERS;
 	}
 }

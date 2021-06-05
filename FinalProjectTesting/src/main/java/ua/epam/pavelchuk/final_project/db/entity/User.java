@@ -11,8 +11,8 @@ public class User extends Entity {
 	private static final long serialVersionUID = -8402369682289356425L;
 	
 	private String login;
-	private transient String password;
-	private transient String passwordKey;
+	private String password;
+	private String passwordKey;
 	private String lang;
 	private String firstName;
 	private String lastName;

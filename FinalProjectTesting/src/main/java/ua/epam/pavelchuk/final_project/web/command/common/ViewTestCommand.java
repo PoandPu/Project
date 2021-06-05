@@ -1,6 +1,7 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,35 +51,17 @@ public class ViewTestCommand extends Command {
 		return result;
 	}
 
-	private String doPost(HttpServletRequest request) throws AppException {
-		LOG.debug("doPost() started");
-		int testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
-		HttpSession session = request.getSession();
-		// increase the number of requests of the current test
-		TestDAO testDAO = null;
-		try {
-			testDAO = TestDAO.getInstance();
-			testDAO.increaseRequests(testId);
-			int timeForTest = testDAO.findTimeByTestId(testId);
-			long startTime = System.currentTimeMillis();
-			long endTime = startTime + timeForTest * 60000;
-			session.setAttribute(AttributeNames.TEST_END_TIME, endTime);
-			LOG.debug("Test start time: " + startTime);
-		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION);
-			throw new AppException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
-		}
-		return Path.COMMAND_VIEW_TEST + "&testId=" + testId;
-
-	}
-
 	private String doGet(HttpServletRequest request) throws AppException {
-		LOG.debug("doGet() started");
 		HttpSession session = request.getSession();
-		int testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+		int testId = 0;
+		try {
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
 		
 		Test test = null;
-		
 		QuestionDAO questionDAO = null;
 		AnswerDAO answerDAO = null;
 		TestDAO testDAO = null;
@@ -95,12 +78,12 @@ public class ViewTestCommand extends Command {
 			request.setAttribute(AttributeNames.ANSWERS_LIST, answers);
 			request.setAttribute(AttributeNames.QUESTIONS, questions);
 		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION);
-			throw new AppException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
+			LOG.error(e.getMessage());
+			throw new AppException("view_test_command.error.get", e);
 		}
 
 		request.setAttribute(AttributeNames.TEST, test);
-		
+
 		// to return to the subject page
 		request.setAttribute(AttributeNames.SUBJECT_ID, request.getParameter(ParameterNames.SUBJECT_ID));
 
@@ -108,23 +91,50 @@ public class ViewTestCommand extends Command {
 		if (session.getAttribute(AttributeNames.USER_ROLE) == Role.ADMIN) {
 			return Path.ADMIN_PAGE_TEST;
 		}
+		// Error page
 		if (session.getAttribute(AttributeNames.TEST_END_TIME) == null) {
-			throw new AppException("Test wasn't started in correct way, go to -> subjects, -> tests, -> start test");
+			throw new AppException("view_test_command.error.get.incorrect_way");
 		}
 
 		long currentTime = System.currentTimeMillis();
 		long endTime = (long) session.getAttribute(AttributeNames.TEST_END_TIME);
-		LOG.debug("endTime = " + endTime);
-		LOG.debug("current Time = " + currentTime);
 		int minutes = (int) ((endTime - currentTime) / 60000);
 		int seconds = (int) ((endTime - currentTime) / 1000) % 60;
-		LOG.debug("Minutes left: " + minutes);
-		LOG.debug("Seconds left: " + seconds);
+		LOG.debug("Time left : " + minutes + ":" + seconds);
 
-		request.setAttribute("minutes", minutes);
-		request.setAttribute("seconds", seconds);
+		request.setAttribute(AttributeNames.MINUTES, minutes);
+		request.setAttribute(AttributeNames.SECONDS, seconds);
 		// User page
 		return Path.PAGE_TEST;
 	}
-
+	
+	private String doPost(HttpServletRequest request) throws AppException {
+		int testId = 0;
+		try {
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
+		
+		HttpSession session = request.getSession();
+		// increase the number of requests of the current test
+		TestDAO testDAO = null;
+		try {
+			testDAO = TestDAO.getInstance();
+			
+			testDAO.increaseRequests(testId);
+			
+			int timeForTest = testDAO.findTimeByTestId(testId);
+			long startTime = System.currentTimeMillis();
+			long endTime = startTime + timeForTest * 60000;
+			
+			session.setAttribute(AttributeNames.TEST_END_TIME, endTime);
+			LOG.debug("Test start time: " +  DateFormat.getDateTimeInstance().format(startTime));
+		} catch (DBException e) {
+			LOG.error(e.getMessage());
+			throw new AppException("view_test_command.error.post", e);
+		}
+		return Path.COMMAND_VIEW_TEST + "&testId=" + testId;
+	}
 }

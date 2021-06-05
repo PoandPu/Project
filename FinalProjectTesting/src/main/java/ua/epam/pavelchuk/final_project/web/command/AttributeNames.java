@@ -37,7 +37,9 @@ public class AttributeNames {
 	public static final String RESULTS = "results";
 	public static final String SUBJECTS = "subjects";
 	
-
+	public static final String MINUTES = "minutes";
+	public static final String SECONDS = "seconds";
+	
 	public static final String USERS = "users";
 
 	

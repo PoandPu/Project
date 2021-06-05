@@ -49,7 +49,6 @@ public class GeneratePasswordCommand extends Command {
 			if (user == null) {
 				message = "This link to change password is no longer valid";
 			} else {
-
 				String newPassword = PasswordUtils.getSalt(10);
 				String passwordKey = user.getPasswordKey();
 				String securePassword = PasswordUtils.generateSecurePassword(newPassword, passwordKey);
@@ -62,9 +61,9 @@ public class GeneratePasswordCommand extends Command {
 				email = user.getEmail();
 			}
 		} catch (DBException ex) {
-			LOG.error(ex);
+			LOG.error(ex.getMessage());
+			throw new AppException("check_test_error", ex);
 		}
-
 		return Path.COMMAND_PASSWORD_RECOVERY + "&message=" + message + "&email=" + email;
 	}
 }

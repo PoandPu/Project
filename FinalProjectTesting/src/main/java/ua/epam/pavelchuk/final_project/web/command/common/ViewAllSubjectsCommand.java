@@ -74,7 +74,7 @@ public class ViewAllSubjectsCommand extends Command {
 		if (page < 1) {
 			page = 1;
 		}
-		
+
 		if (lines < 1) {
 			lines = 10;
 		}
@@ -85,13 +85,13 @@ public class ViewAllSubjectsCommand extends Command {
 				: request.getParameter(ParameterNames.DIRECTION);
 
 		try {
-		subjects = subjectDAO.findAllOrderBy(orderBy, direction, (page - 1) * lines, lines);
-		while (subjects.isEmpty() && page > 1) {
-			page--;
 			subjects = subjectDAO.findAllOrderBy(orderBy, direction, (page - 1) * lines, lines);
-		}
-		request.setAttribute(AttributeNames.SUBJECTS, subjects);
-		} catch(DBException ex) {
+			while (subjects.isEmpty() && page > 1) {
+				page--;
+				subjects = subjectDAO.findAllOrderBy(orderBy, direction, (page - 1) * lines, lines);
+			}
+			request.setAttribute(AttributeNames.SUBJECTS, subjects);
+		} catch (DBException ex) {
 			LOG.error(ex.getMessage());
 			throw new AppException("view_subjects_command.error.get", ex);
 		}

@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException;
+import java.io.IOException; 
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +18,7 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
+import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
 public class SwitchLocaleCommand extends Command {
 
@@ -37,20 +38,27 @@ public class SwitchLocaleCommand extends Command {
 		return result;
 	}
 
-	private String doPost(HttpServletRequest request) throws DBException {
+	private String doPost(HttpServletRequest request) throws AppException {
 		HttpSession session = request.getSession();
-		UserDAO userDAO = UserDAO.getInstance();
-		String lang = request.getParameter("language");
-		
+		String lang = request.getParameter(ParameterNames.LANGUAGE);
 		User user = (User) session.getAttribute(AttributeNames.USER);
+		
 		LOG.debug("Users language BEFORE " + user.getLanguage());
+		LOG.debug("Users password" + user.getPassword());
+		LOG.debug("Users password key" + user.getPasswordKey());
 		if (lang.equals(Fields.EN)) {
 			user.setLanguage(Fields.EN);
 		} else {
 			user.setLanguage(Fields.RU);
 		}
-		LOG.debug("Users language AFTER " + user.getLanguage());
+		try {
+		UserDAO userDAO = UserDAO.getInstance();
 		userDAO.update(user);
+		} catch (DBException e) {
+			LOG.error(e.getMessage());
+			throw new AppException("switch_locale_command.error", e);
+		}
+		LOG.debug("Users language AFTER " + user.getLanguage());
 
 		session.setAttribute(AttributeNames.USER, user);
 

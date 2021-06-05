@@ -61,12 +61,10 @@ public class ViewUsersListCommand extends Command {
 		if (lines < 1) {
 			lines = 10;
 		}
-
 		String orderBy = request.getParameter(ParameterNames.ORDER_BY) == null ? "id"
 				: request.getParameter(ParameterNames.ORDER_BY);
 		String direction = request.getParameter(ParameterNames.DIRECTION) == null ? "ASC"
 				: request.getParameter(ParameterNames.DIRECTION);
-
 		try {
 			UserDAO userDAO = UserDAO.getInstance();
 			List<User> users = userDAO.findAllUsersOrderBy(orderBy, direction, (page - 1) * lines, lines);

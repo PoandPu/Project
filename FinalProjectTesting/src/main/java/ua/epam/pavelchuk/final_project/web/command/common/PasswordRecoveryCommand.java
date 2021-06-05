@@ -43,14 +43,16 @@ public class PasswordRecoveryCommand extends Command {
 
 	private String doGet(HttpServletRequest request) {
 		String message = request.getParameter(ParameterNames.MESSAGE);
-		String email = request.getParameter("email");
-		LOG.debug(message);
+		String email = request.getParameter(ParameterNames.USER_EMAIL);
+		LOG.trace(message);
 		if (message != null) {
 			if (message.equals("script1")) {
 				message = "A letter will now come to the mail " + email
 						+ ", specified during registration. It will contain a link that should be followed so that we can create a temporary password. It is very important not to forget to check the \"SPAM\" folder in your mailbox if the letter does not arrive for a long time!";
 			} else if (message.equals("script2")) {
 				message = "A new password has been successfully generated and sent to email: " + email;
+			} else {
+				message = "This link to change password is no longer valid ";
 			}
 			request.setAttribute(ParameterNames.MESSAGE, message);
 		}
@@ -58,9 +60,9 @@ public class PasswordRecoveryCommand extends Command {
 	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
+		String pattern = request.getParameter(ParameterNames.PATTERN).trim();
 		String message = null;
 		String email = null;
-		String pattern = request.getParameter(ParameterNames.PATTERN).trim();
 		User user = null;
 		UserDAO userDAO = null;
 		try {
@@ -86,8 +88,8 @@ public class PasswordRecoveryCommand extends Command {
 			// \"SPAM\" folder in your mailbox if the letter does not arrive for a long
 			// time!";
 		} catch (DBException ex) {
-			LOG.error(ex);
-			throw new AppException(ex.getMessage());
+			LOG.error(ex.getMessage());
+			throw new AppException("password_recovery_command.error", ex);
 		}
 
 		return Path.COMMAND_PASSWORD_RECOVERY + "&message=" + message + "&email=" + email;

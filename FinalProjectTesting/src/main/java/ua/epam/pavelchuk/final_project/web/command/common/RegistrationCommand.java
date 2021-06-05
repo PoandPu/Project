@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException; 
+import java.io.IOException;  
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +14,7 @@ import ua.epam.pavelchuk.final_project.db.Role;
 import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
 import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
+import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.validation.UserValidation;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
@@ -32,7 +33,6 @@ public class RegistrationCommand extends Command {
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
 		LOG.debug("Start executing Command");
-
 		String result = null;
 
 		if (method == HttpMethod.POST) {
@@ -54,11 +54,8 @@ public class RegistrationCommand extends Command {
 		String confirmPassword = request.getParameter(Fields.USER_CONFIRM_PASSWORD);
 		String email = request.getParameter(Fields.USER_EMAIL);
 		String firstName = request.getParameter(Fields.USER_FIRST_NAME);
-		LOG.debug("FIRST NAME " + firstName);
 		String lastName = request.getParameter(Fields.USER_LAST_NAME);
-		LOG.debug("LAST NAME " + lastName);
 		String language = request.getParameter(Fields.USER_LANGUAGE);
-		LOG.debug("EMAIL " + email);
 		
 		User user = new User();
 
@@ -82,9 +79,13 @@ public class RegistrationCommand extends Command {
 		user.setLanguage(language);
 		user.setRoleId(Role.CLIENT.ordinal());
 		
+		try {
 		UserDAO userDAO = UserDAO.getInstance();
 		userDAO.insert(user); 
-
+		} catch (DBException e) {
+			LOG.error(e.getMessage());
+			throw new AppException("registration_command.error.post", e);
+		}
 		return Path.COMMAND_VIEW_LOGIN_PAGE;
 	}
 

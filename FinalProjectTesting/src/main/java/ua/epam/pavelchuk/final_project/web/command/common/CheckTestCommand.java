@@ -39,26 +39,32 @@ public class CheckTestCommand extends Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
-
 		LOG.debug("Command starts");
 		String result = null;
 
-		if (method == HttpMethod.POST) {
+//		if (method == HttpMethod.POST) {
 			result = doPost(request);
-		} else {
-			result = doGet();
-		}
+//		} else {
+//			result = doGet();
+//		}
 		LOG.debug("Command finished");
 		return result;
 	}
-
-	private String doGet() {
-		return Path.PAGE_LIST_ALL_SUBJECTS;
-	}
+//
+//	private String doGet() {
+//		return Path.PAGE_LIST_ALL_SUBJECTS;
+//	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
+		int testId = 0;
+		try {
+		testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+		} catch (NumberFormatException ex) {
+			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
+			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
+		}
+		
 		HttpSession session = request.getSession();
-		int testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
 		long endTime = (long) session.getAttribute(AttributeNames.TEST_END_TIME);
 		int currentUserId = (int) session.getAttribute(AttributeNames.ID);
 		long currentTime = System.currentTimeMillis();
@@ -70,7 +76,7 @@ public class CheckTestCommand extends Command {
 				BigDecimal mark = BigDecimal.valueOf(0);
 				Result testResult = new Result(mark, currentUserId, testId);
 				resultDAO.insert(testResult);
-				throw new AppException("Time is over! Your result is 0.");
+				throw new AppException("check_test_error.time_is_over");
 			}
 
 			double mark = checkTest(request, testId);
@@ -80,12 +86,11 @@ public class CheckTestCommand extends Command {
 			Result testResult = new Result(m, currentUserId, testId);
 			resultDAO.insert(testResult);
 		} catch (DBException ex) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION);
-			throw new AppException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, ex);
+			LOG.error(ex.getMessage());
+			throw new AppException("check_test_error", ex);
 		} finally {
 			session.removeAttribute(AttributeNames.TEST_END_TIME);
 		}
-
 		return Path.COMMAND_VIEW_LIST_SUBJECTS;
 	}
 

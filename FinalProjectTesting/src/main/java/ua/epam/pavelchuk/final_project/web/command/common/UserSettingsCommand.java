@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException;
+import java.io.IOException; 
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,6 @@ import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
 import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
-import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.db.validation.UserValidation;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
@@ -33,7 +32,6 @@ public class UserSettingsCommand extends Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException, AppException {
-
 		LOG.debug("Command starts");
 		String result = null;
 
@@ -51,14 +49,14 @@ public class UserSettingsCommand extends Command {
 	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute(AttributeNames.USER);
 		String firstName = request.getParameter(ParameterNames.USER_FIRST_NAME);
 		String lastName = request.getParameter(ParameterNames.USER_LAST_NAME);
 		String email = request.getParameter(ParameterNames.USER_EMAIL);
 		String newPassword = request.getParameter(ParameterNames.NEW_PASSWORD);
 		String confirmPassword = request.getParameter(ParameterNames.CONFIRM_NEW_PASSWORD);
-		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute(AttributeNames.USER);
-
+		
 		if (!UserValidation.validate(request, firstName, lastName, email, user, newPassword, confirmPassword)) {
 			return Path.COMMAND_SETTINGS_USER;
 		}
@@ -75,8 +73,8 @@ public class UserSettingsCommand extends Command {
 			UserDAO userDAO = UserDAO.getInstance();
 			userDAO.update(user);
 		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_UPDATE_ENTRANT);
-			throw new AppException(Messages.ERR_CANNOT_UPDATE_ENTRANT, e);
+			LOG.error(e.getMessage());
+			throw new AppException("user_settings_command.error.post", e);
 		}
 		return Path.COMMAND_VIEW_LIST_SUBJECTS;
 	}
