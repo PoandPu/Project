@@ -95,10 +95,11 @@ public class ViewProfileCommand extends Command {
 						lines);
 			}
 		} catch (DBException e) {
-			LOG.error("Error");
-			throw new AppException();
+			LOG.error(e.getMessage());
+			throw new AppException("view_profile_command.error", e);
 		}
-
+//		LOG.debug(results.get(0).getTestDate());
+//		LOG.debug(results.get(1).getTestDate());
 		request.setAttribute(AttributeNames.RESULTS, results);
 		request.setAttribute(AttributeNames.USER, user);
 		request.setAttribute(AttributeNames.PAGINATION_LINES, lines);

@@ -72,18 +72,17 @@ public class CheckTestCommand extends Command {
 		ResultDAO resultDAO = null;
 		try {
 			resultDAO = ResultDAO.getInstance();
+			BigDecimal mark = null;
 			if (currentTime > endTime) {
-				BigDecimal mark = BigDecimal.valueOf(0);
+				mark = BigDecimal.valueOf(0);
 				Result testResult = new Result(mark, currentUserId, testId);
 				resultDAO.insert(testResult);
 				throw new AppException("check_test_error.time_is_over");
 			}
 
-			double mark = checkTest(request, testId);
-
-			BigDecimal m = BigDecimal.valueOf(mark);
-			LOG.debug("Mark : " + m);
-			Result testResult = new Result(m, currentUserId, testId);
+			mark = BigDecimal.valueOf(checkTest(request, testId));
+			LOG.debug("Mark : " + mark);
+			Result testResult = new Result(mark, currentUserId, testId);
 			resultDAO.insert(testResult);
 		} catch (DBException ex) {
 			LOG.error(ex.getMessage());

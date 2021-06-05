@@ -12,7 +12,7 @@
 		password="Alexei2000Semen"
 		driverClassName="com.mysql.cj.jdbc.Driver"
 		defaultTransactionIsolation="READ_COMMITTED"
-		connectionProperties="useUnicode=true;characterEncoding=UTF-8;serverTimezone=UTC"
+		connectionProperties="useUnicode=true;characterEncoding=UTF-8;serverTimezone=GMT+3"
 		url="jdbc:mysql://localhost:3306/ScreeningDB"/>
 
 </Context>

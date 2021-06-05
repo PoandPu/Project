@@ -1,10 +1,11 @@
 package ua.epam.pavelchuk.final_project.db.dao;
 
-import java.sql.Connection;  
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
  *
  */
 public class ResultDAO extends AbstractDAO {
-	
+
 	/**
 	 * standard constructor
 	 * 
@@ -40,17 +41,15 @@ public class ResultDAO extends AbstractDAO {
 	private ResultDAO(boolean isUseJNDI) throws DBException {
 		super(isUseJNDI);
 	}
-	
+
 	private static ResultDAO instance;
 	private static final Logger LOG = Logger.getLogger(ResultDAO.class);
-	
+
 	private static final String SQL_INSERT_RESULT = "INSERT INTO results (mark, user_id, test_id) VALUES (?, ?, ?)";
 	private static final String SQL_GET_RESULTS = "SELECT results.mark, results.test_date, tests.name_Ru, tests.name_En, subjects.name_Ru, subjects.name_En FROM tests "
-			+ "JOIN results ON tests.id = results.test_id "
-			+ "JOIN subjects ON tests.subject_id = subjects.id "
+			+ "JOIN results ON tests.id = results.test_id " + "JOIN subjects ON tests.subject_id = subjects.id "
 			+ "WHERE results.user_id = ?";
 	private static final String SQL_DELETE_RESULT = "DELETE FROM results WHERE id = ?";
-	
 
 	/**
 	 * singleton pattern
@@ -64,7 +63,7 @@ public class ResultDAO extends AbstractDAO {
 		}
 		return instance;
 	}
-	
+
 	/**
 	 * singleton pattern
 	 * 
@@ -77,7 +76,7 @@ public class ResultDAO extends AbstractDAO {
 		}
 		return instance;
 	}
-	
+
 	/**
 	 * Extracts a Result object from ResultSet
 	 * 
@@ -88,14 +87,19 @@ public class ResultDAO extends AbstractDAO {
 	private Result extract(ResultSet rs) throws SQLException {
 		Result result = new Result();
 		result.setMark(rs.getBigDecimal(Fields.RESULT_MARK));
-		result.setTestDate(rs.getTimestamp(Fields.RESULT_TEST_DATE).toString());
+		
+		String pattern = "dd.MM.YYYY HH:mm:ss";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String date = simpleDateFormat.format(rs.getTimestamp(Fields.RESULT_TEST_DATE));
+		
+		result.setTestDate(date);
 		result.setTestNameRu(rs.getString(Fields.TEST_NAME_RU));
 		result.setTestNameEn(rs.getString(Fields.TEST_NAME_EN));
 		result.setSubjectNameRu(rs.getString(Fields.SUBJECTS_NAME_RU));
 		result.setSubjectNameEn(rs.getString(Fields.SUBJECTS_NAME_EN));
 		return result;
 	}
-	
+
 	/**
 	 * Inserts result in the DB
 	 * 
@@ -105,11 +109,11 @@ public class ResultDAO extends AbstractDAO {
 	 */
 	public boolean insert(Result result) throws DBException {
 		boolean res = false;
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
 		Connection con = null;
-		
+
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_INSERT_RESULT, Statement.RETURN_GENERATED_KEYS);
@@ -132,7 +136,7 @@ public class ResultDAO extends AbstractDAO {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * Finds results by user ID
 	 * 
@@ -142,20 +146,20 @@ public class ResultDAO extends AbstractDAO {
 	 */
 	public List<Result> findResultsByUserId(int userId) throws DBException {
 		List<Result> results = new ArrayList<>();
-		
+
 		PreparedStatement pstm = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-		
+
 		try {
 			connection = getConnection();
 			pstm = connection.prepareStatement(SQL_GET_RESULTS);
 			pstm.setInt(1, userId);
-			
+
 			resultSet = pstm.executeQuery();
-				while (resultSet.next()) {
-					results.add(extract(resultSet));	
-				}
+			while (resultSet.next()) {
+				results.add(extract(resultSet));
+			}
 		} catch (SQLException e) {
 			LOG.error("cannot find results for user | userId = " + userId);
 			throw new DBException("cannot find results for user", e);
@@ -164,11 +168,11 @@ public class ResultDAO extends AbstractDAO {
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Finds results by user ID, paginated and sorted
 	 * 
-	 * @param userId 
+	 * @param userId
 	 * @param orderBy
 	 * @param direction
 	 * @param offset
@@ -176,22 +180,24 @@ public class ResultDAO extends AbstractDAO {
 	 * @return List of results
 	 * @throws DBException
 	 */
-	public List<Result> findResultsByUserIdAllOrderedBy(int userId, String orderBy, String direction, int offset, int lines) throws DBException {
+	public List<Result> findResultsByUserIdAllOrderedBy(int userId, String orderBy, String direction, int offset,
+			int lines) throws DBException {
 		List<Result> results = new ArrayList<>();
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-		
+
 		try {
 			connection = getConnection();
-			pstmt = connection.prepareStatement(SQL_GET_RESULTS + " ORDER BY " + orderBy + " " + direction + " LIMIT " + offset + ", " + lines);
+			pstmt = connection.prepareStatement(
+					SQL_GET_RESULTS + " ORDER BY " + orderBy + " " + direction + " LIMIT " + offset + ", " + lines);
 			pstmt.setInt(1, userId);
-			
+
 			resultSet = pstmt.executeQuery();
-				while (resultSet.next()) {
-					results.add(extract(resultSet));	
-				}
+			while (resultSet.next()) {
+				results.add(extract(resultSet));
+			}
 		} catch (SQLException e) {
 			LOG.error("cannot find paginated and sorted results for user | userId = " + userId);
 			throw new DBException("cannot find paginated and sorted results for user", e);
@@ -200,7 +206,7 @@ public class ResultDAO extends AbstractDAO {
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Deletes result by ID
 	 * 
@@ -210,15 +216,15 @@ public class ResultDAO extends AbstractDAO {
 	 */
 	public boolean delete(int id) throws DBException {
 		boolean result = false;
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(SQL_DELETE_RESULT);
 			pstmt.setInt(1, id);
-			
+
 			result = pstmt.executeUpdate() > 0;
 			LOG.trace("Result was deleted (id: " + id + ")");
 		} catch (SQLException e) {
