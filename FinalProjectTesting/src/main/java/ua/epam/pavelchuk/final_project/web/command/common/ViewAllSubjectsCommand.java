@@ -29,20 +29,6 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
  */
 public class ViewAllSubjectsCommand extends Command {
 
-	private SubjectDAO subjectDAO;
-
-	public ViewAllSubjectsCommand() {
-		try {
-			subjectDAO = SubjectDAO.getInstance();
-		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE);
-		}
-	}
-
-	public ViewAllSubjectsCommand(SubjectDAO subjectDAO) {
-		this.subjectDAO = subjectDAO;
-	}
-
 	private static final long serialVersionUID = 9188012295034506682L;
 	private static final Logger LOG = Logger.getLogger(ViewAllSubjectsCommand.class);
 
@@ -83,8 +69,9 @@ public class ViewAllSubjectsCommand extends Command {
 				: request.getParameter(ParameterNames.ORDER_BY);
 		String direction = request.getParameter(ParameterNames.DIRECTION) == null ? "ASC"
 				: request.getParameter(ParameterNames.DIRECTION);
-
+		SubjectDAO subjectDAO = null;
 		try {
+			subjectDAO = SubjectDAO.getInstance();
 			subjects = subjectDAO.findAllOrderBy(orderBy, direction, (page - 1) * lines, lines);
 			while (subjects.isEmpty() && page > 1) {
 				page--;

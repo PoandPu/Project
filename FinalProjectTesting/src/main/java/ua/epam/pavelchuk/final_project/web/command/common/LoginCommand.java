@@ -79,7 +79,7 @@ public class LoginCommand extends Command {
 		}
 
 		LOG.trace("Found in DB: user --> " + user);
-
+		
 		if (user == null
 				|| !PasswordUtils.generateSecurePassword(password, user.getPasswordKey()).equals(user.getPassword())) {
 			request.getSession().setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, "login_jsp.error.not_found");

@@ -1,8 +1,13 @@
 package ua.epam.pavelchuk.final_project.web.command;
 
-
-import static org.mockito.Mockito.mock;   
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.any;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,93 +18,80 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import ua.epam.pavelchuk.final_project.db.dao.AnswerDAO;
 import ua.epam.pavelchuk.final_project.db.dao.QuestionDAO;
 import ua.epam.pavelchuk.final_project.db.entity.Answer;
 import ua.epam.pavelchuk.final_project.db.entity.Question;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
+import ua.epam.pavelchuk.final_project.db.validation.LocalizationValidation;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.admin.test.EditTestContentCommand;
 
 public class EditTestContentCommantTest {
-	
-	private static AnswerDAO answerDAO;
-	private static QuestionDAO questionDAO;
-	private static HttpServletRequest request;
-	private static HttpServletResponse response;
-	private static HttpSession session;
-	private static EditTestContentCommand testCommand;
-	
-//	@BeforeAll
-//	static void init() {
-//		answerDAO = mock(AnswerDAO.class);
-//		questionDAO = mock(QuestionDAO.class);
-//		request = Mockito.mock(HttpServletRequest.class);
-//		response = Mockito.mock(HttpServletResponse.class);
-//		session = Mockito.mock(HttpSession.class);
-//		when(request.getSession()).thenReturn(session);
-//	}
-	
-	
-	@Test
-	public void doGet() throws IOException, ServletException, AppException {
-		
+
+	private AnswerDAO answerDAO;
+	private QuestionDAO questionDAO;
+	private HttpServletRequest request;
+	private HttpServletResponse response;
+	private HttpSession session;
+	private EditTestContentCommand testCommand;
+
+	@BeforeEach
+	public void init() {
 		answerDAO = mock(AnswerDAO.class);
 		questionDAO = mock(QuestionDAO.class);
-		request = mock(HttpServletRequest.class);
-		response = mock(HttpServletResponse.class);
-		session = mock(HttpSession.class);
-		
-		testCommand = new EditTestContentCommand(questionDAO, answerDAO);
-		
+		request = Mockito.mock(HttpServletRequest.class);
+		response = Mockito.mock(HttpServletResponse.class);
+		session = Mockito.mock(HttpSession.class);
 		when(request.getSession()).thenReturn(session);
-		
-		when(request.getParameter(ParameterNames.TEST_ID)).thenReturn("1");
-		when(request.getParameter(ParameterNames.QUESTION_ID)).thenReturn("1");
-		when(request.getParameter(ParameterNames.SUBJECT_ID)).thenReturn("1");
-		when(questionDAO.findQuestionById(1)).thenReturn(new Question());
-		when(answerDAO.findAnswersByQuestion(1)).thenReturn(new ArrayList<>());
-		
-		testCommand.execute(request, response, HttpMethod.GET);
+		testCommand = new EditTestContentCommand();
 	}
-	
+
 	@Test
-	public void doPost() throws IOException, ServletException, AppException {
-		answerDAO = mock(AnswerDAO.class);
-		questionDAO = mock(QuestionDAO.class);
-		request = mock(HttpServletRequest.class);
-		response = mock(HttpServletResponse.class);
-		session = mock(HttpSession.class);
-		testCommand = new EditTestContentCommand(questionDAO, answerDAO);
-		when(request.getSession()).thenReturn(session);
-		
-		when(request.getParameter(ParameterNames.TEST_ID)).thenReturn("1");
-		when(request.getParameter(ParameterNames.QUESTION_ID)).thenReturn("1");
-		when(request.getParameter(ParameterNames.SUBJECT_ID)).thenReturn("1");
-		
-		when(questionDAO.findQuestionById(1)).thenReturn(new Question());
-		
-		when(request.getParameter(ParameterNames.TITLE_RU)).thenReturn("что-то");
-		when(request.getParameter(ParameterNames.TITLE_EN)).thenReturn("something");
-		List<Answer> answers = new ArrayList<>();
-		Answer a = new Answer();
-		a.setId(1);
-		a.setNameEn("name");
-		a.setNameRu("имя");
-		a.setQuestionId(1);
-		answers.add(a);
-		answers.add(a);
-		when(answerDAO.findAnswersByQuestion(0)).thenReturn(answers);
-		
-		when(request.getParameter(ParameterNames.OPTION_RU + 1)).thenReturn("что-то");
-		when(request.getParameter(ParameterNames.OPTION_EN + 1)).thenReturn("something");
-		when(request.getParameter(ParameterNames.IS_CORRECT + 1)).thenReturn("correct1");
-		
-		testCommand.execute(request, response, HttpMethod.POST);
-		
+	void doGet() throws IOException, ServletException, AppException {
+		try (MockedStatic<AnswerDAO> answerDAOMockedStatic = mockStatic(AnswerDAO.class);
+				MockedStatic<QuestionDAO> questionDAOMockedStatic = mockStatic(QuestionDAO.class)) {
+			when(AnswerDAO.getInstance()).thenReturn(answerDAO);
+			when(QuestionDAO.getInstance()).thenReturn(questionDAO);
+			when(request.getParameter(anyString())).thenReturn("1");
+
+			//testCommand.execute(request, response, HttpMethod.GET);
+			testCommand.execute(request, response, HttpMethod.GET);
+
+			verify(questionDAO, times(1)).findQuestionById(anyInt());
+			verify(answerDAO, times(1)).findAnswersByQuestion(anyInt());
+			verify(request, times(4)).setAttribute(anyString(), any());
+		}
 	}
-	
-	
+
+	@Test
+	void doPost() throws IOException, ServletException, AppException {
+		Question question = mock(Question.class);
+		Answer answer = mock(Answer.class);
+		try (MockedStatic<AnswerDAO> answerDAOMockedStatic = mockStatic(AnswerDAO.class);
+				MockedStatic<QuestionDAO> questionDAOMockedStatic = mockStatic(QuestionDAO.class);
+				MockedStatic<LocalizationValidation> LocalizationValidationMockedStatic = mockStatic(LocalizationValidation.class)) {
+			when(AnswerDAO.getInstance()).thenReturn(answerDAO);
+			when(QuestionDAO.getInstance()).thenReturn(questionDAO);
+			when(questionDAO.findQuestionById(anyInt())).thenReturn(question);
+			List<Answer> answers = new ArrayList<>();
+			answers.add(answer);
+			answers.add(answer);
+			when(answerDAO.findAnswersByQuestion(anyInt())).thenReturn(answers);
+			when(LocalizationValidation.validationNameEn(anyString())).thenReturn(true);
+			when(LocalizationValidation.validationNameRu(anyString())).thenReturn(true);
+			when(request.getParameter(anyString())).thenReturn("1");
+			
+			testCommand.execute(request, response, HttpMethod.POST);	
+			
+			verify(questionDAO, times(1)).findQuestionById(anyInt());
+			verify(answerDAO, times(1)).findAnswersByQuestion(anyInt());
+			verify(answerDAO, times(answers.size())).update(answer);
+		}
+	}
 }

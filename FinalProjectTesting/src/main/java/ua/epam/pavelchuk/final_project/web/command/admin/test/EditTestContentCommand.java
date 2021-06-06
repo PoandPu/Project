@@ -26,37 +26,10 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 public class EditTestContentCommand extends Command {
 
 	/**
-	 * standard constructor
-	 * 
-	 */
-	public EditTestContentCommand(){
-		try {
-			questionDAO = QuestionDAO.getInstance();
-			answerDAO = AnswerDAO.getInstance();
-		} catch (DBException e) {
-			LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE);
-		}
-	}
-	
-	/**
-	 * Constructor for Mockito tests
-	 * 
-	 * @param QuestionDAO
-	 * @param AnswerDAO
-	 * 
-	 */
-	public EditTestContentCommand(QuestionDAO questionDAO, AnswerDAO answerDAO) {
-		this.questionDAO = questionDAO;
-		this.answerDAO = answerDAO;
-	}
-
-	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2684928586891220013L;
 	private static final Logger LOG = Logger.getLogger(EditTestContentCommand.class);
-	private QuestionDAO questionDAO;
-	private AnswerDAO answerDAO;
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
@@ -85,7 +58,11 @@ public class EditTestContentCommand extends Command {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
+		QuestionDAO questionDAO = null;
+		AnswerDAO answerDAO = null;
 		try {
+			questionDAO = QuestionDAO.getInstance();
+			answerDAO = AnswerDAO.getInstance();
 			Question question = questionDAO.findQuestionById(questionId);
 			List<Answer> answers = answerDAO.findAnswersByQuestion(questionId);
 
@@ -116,8 +93,11 @@ public class EditTestContentCommand extends Command {
 
 		String pathEdit = Path.COMMAND_EDIT_TEST_CONTENT + "&subjectId=" + subjectId + "&testId=" + testId
 				+ "&questionId=" + questionId;
-
+		QuestionDAO questionDAO = null;
+		AnswerDAO answerDAO = null;
 		try {
+			questionDAO = QuestionDAO.getInstance();
+			answerDAO = AnswerDAO.getInstance();
 			Question question = questionDAO.findQuestionById(questionId);
 			String titleRu = request.getParameter(ParameterNames.TITLE_RU);
 			String titleEn = request.getParameter(ParameterNames.TITLE_EN);

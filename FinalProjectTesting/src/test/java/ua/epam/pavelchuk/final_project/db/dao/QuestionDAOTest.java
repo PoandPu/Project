@@ -2,9 +2,11 @@ package ua.epam.pavelchuk.final_project.db.dao;
 
 
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -43,7 +45,7 @@ public class QuestionDAOTest {
 	
 	@Test
 	public void findQuestionsById() throws DBException {
-		assertFalse(question.equals(questionDAO.findQuestionById(question.getId())));
+		assertNotEquals(question, questionDAO.findQuestionById(question.getId()));
 	}
 	
 	@Test

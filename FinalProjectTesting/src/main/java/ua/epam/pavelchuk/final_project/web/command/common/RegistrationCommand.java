@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException;  
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.password_encryption.PasswordUtils;
 
 public class RegistrationCommand extends Command {
-	
+
 	/**
 	 * 
 	 */
@@ -56,7 +56,7 @@ public class RegistrationCommand extends Command {
 		String firstName = request.getParameter(Fields.USER_FIRST_NAME);
 		String lastName = request.getParameter(Fields.USER_LAST_NAME);
 		String language = request.getParameter(Fields.USER_LANGUAGE);
-		
+
 		User user = new User();
 
 		if (!UserValidation.validationLogin(login)) {
@@ -69,7 +69,7 @@ public class RegistrationCommand extends Command {
 		}
 		String passwordKey = PasswordUtils.getSalt(30);
 		String mySecurePassword = PasswordUtils.generateSecurePassword(password, passwordKey);
-		
+
 		user.setLogin(login);
 		user.setPassword(mySecurePassword);
 		user.setPasswordKey(passwordKey);
@@ -78,10 +78,10 @@ public class RegistrationCommand extends Command {
 		user.setLastName(lastName);
 		user.setLanguage(language);
 		user.setRoleId(Role.CLIENT.ordinal());
-		
+
 		try {
-		UserDAO userDAO = UserDAO.getInstance();
-		userDAO.insert(user); 
+			UserDAO userDAO = UserDAO.getInstance();
+			userDAO.insert(user);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
 			throw new AppException("registration_command.error.post", e);
