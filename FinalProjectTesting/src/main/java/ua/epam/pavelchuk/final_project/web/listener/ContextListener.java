@@ -25,6 +25,7 @@ public class ContextListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		log("Servlet context initialization starts");
+		
 		ServletContext servletContext = event.getServletContext();
 		initLog4J(servletContext);
 	
@@ -48,13 +49,6 @@ public class ContextListener implements ServletContextListener {
 		}		
 		log("Log4J initialization finished");
 	}
-	
-	/**
-	 * Initializes CommandContainer.
-	 * 
-	 * @param servletContext
-	 */
-	
 	
 	private void log(String msg) {
 		System.out.println("[ContextListener] " + msg);

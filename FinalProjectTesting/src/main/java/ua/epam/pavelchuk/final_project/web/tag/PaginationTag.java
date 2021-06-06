@@ -106,6 +106,5 @@ public class PaginationTag extends SimpleTagSupport {
 		out.println("\" class=\"bot1g\">&gt;</a>");
 		
 		out.println("</div>");
-		
 	}
 }

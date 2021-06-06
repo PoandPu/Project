@@ -12,9 +12,8 @@ import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 
 public class SubjectValidation extends LocalizationValidation {
-	
-	private SubjectValidation() {
-	}
+
+	private SubjectValidation() {}
 
 	private static final Logger LOG = Logger.getLogger(SubjectValidation.class);
 
@@ -42,25 +41,27 @@ public class SubjectValidation extends LocalizationValidation {
 		}
 		if (subject.getNameRu() != null && subject.getNameEn() != null) {
 			if (!subject.getNameRu().equals(nameRu) && !checkUniquenessName(nameRu)) {
-				request.getSession().setAttribute(AttributeNames.SUBJECT_ERROR_MESSAGE, "subject_validation.error.name_ru_not_unique");
+				request.getSession().setAttribute(AttributeNames.SUBJECT_ERROR_MESSAGE,
+						"subject_validation.error.name_ru_not_unique");
 				return false;
 			}
 			if (!subject.getNameEn().equals(nameEn) && !checkUniquenessName(nameEn)) {
-				request.getSession().setAttribute(AttributeNames.SUBJECT_ERROR_MESSAGE, "subject_validation.error.name_en_not_unique");
+				request.getSession().setAttribute(AttributeNames.SUBJECT_ERROR_MESSAGE,
+						"subject_validation.error.name_en_not_unique");
 				return false;
 			}
 		} else {
 			if (!checkUniquenessName(nameRu)) {
-				request.getSession().setAttribute(AttributeNames.SUBJECT_ERROR_MESSAGE, "subject_validation.error.name_ru_not_unique");
+				request.getSession().setAttribute(AttributeNames.SUBJECT_ERROR_MESSAGE,
+						"subject_validation.error.name_ru_not_unique");
 				return false;
 			}
 			if (!checkUniquenessName(nameEn)) {
-				request.getSession().setAttribute(AttributeNames.SUBJECT_ERROR_MESSAGE, "subject_validation.error.name_en_not_unique");
+				request.getSession().setAttribute(AttributeNames.SUBJECT_ERROR_MESSAGE,
+						"subject_validation.error.name_en_not_unique");
 				return false;
 			}
 		}
 		return true;
-
 	}
-
 }

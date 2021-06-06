@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web;
 
-import java.io.IOException;  
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,12 +47,12 @@ public class Controller extends HttpServlet {
 	private String process(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws IOException, ServletException {
 		LOG.debug("Controller starts");
-	
+
 		// extract command name from the request
 		String commandName = request.getParameter(ParameterNames.COMMAND);
 		LOG.trace("Request parameter: command --> " + commandName);
 		LOG.trace(commandName);
-		
+
 		// obtain command object by its name
 		Command command = CommandContainer.get(commandName);
 		LOG.trace("Obtained command --> " + command);
@@ -74,7 +74,7 @@ public class Controller extends HttpServlet {
 		LOG.trace("Forward address --> " + forward);
 
 		LOG.debug("Controller finished, now go to forward address --> " + forward);
-	
+
 		return forward;
 	}
 }

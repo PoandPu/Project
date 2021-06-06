@@ -94,9 +94,11 @@ public class TestDAO extends AbstractDAO {
 		test.setNameRu(rs.getString(Fields.TEST_NAME_RU));
 		test.setNameEn(rs.getString(Fields.TEST_NAME_EN));
 		test.setDifficultyLevel(rs.getInt(Fields.DIFFICULTY_LEVEL_ID));
+		
 		List<String> difficultyNames = findDifficultyForTest(test.getDifficultyLevel());
 		test.setDifficultyNameEn(difficultyNames.get(0));
 		test.setDifficultyNameRu(difficultyNames.get(1));
+		
 		test.setTime(rs.getInt(Fields.TEST_TIME_MINUTES));
 		test.setSubjectId(rs.getInt(Fields.SUBJECT_ID));
 		test.setRequests(rs.getInt(Fields.TEST_REQ_NUMB));

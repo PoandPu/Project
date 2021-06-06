@@ -36,8 +36,10 @@ public class CommandAccessFilter implements Filter {
 		access.put(Role.ADMIN, Arrays.asList(filterConfig.getInitParameter("admin").split("\\s+")));
 		access.put(Role.CLIENT, Arrays.asList(filterConfig.getInitParameter("client").split("\\s+")));
 		LOG.debug("Access map = " + access);
+		
 		commons.addAll(Arrays.asList(filterConfig.getInitParameter("common").split("\\s+")));
 		LOG.debug("Commons commands = " + commons);
+		
 		noControl.addAll(Arrays.asList(filterConfig.getInitParameter("no_control").split("\\s+")));
 		LOG.debug("Without control commands = " + noControl);
 		LOG.trace("AccessFilter has been initialized");
@@ -59,7 +61,6 @@ public class CommandAccessFilter implements Filter {
 					"command_access.error.log_in");
 			request.getRequestDispatcher(Path.PAGE_LOGIN).forward(request, response);
 		}
-
 	}
 
 	private boolean checkAccess(ServletRequest req) {

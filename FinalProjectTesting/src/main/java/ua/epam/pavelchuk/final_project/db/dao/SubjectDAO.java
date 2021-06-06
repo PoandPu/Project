@@ -90,7 +90,7 @@ public class SubjectDAO extends AbstractDAO {
 	 */
 	private Subject extract(ResultSet resultSet) throws SQLException {
 		Subject subject = new Subject();
-		subject.setId(resultSet.getInt(Fields.ENTITY_ID));
+		subject.setId(resultSet.getInt(Fields.ID));
 		subject.setNameEn(resultSet.getString(Fields.SUBJECTS_NAME_EN));
 		subject.setNameRu(resultSet.getString(Fields.SUBJECTS_NAME_RU));
 		return subject;

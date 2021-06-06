@@ -2,17 +2,18 @@ package ua.epam.pavelchuk.final_project.db.exception;
 
 /**
  * Application exception
- * @author 
+ * 
+ * @author
  *
  */
-public class AppException  extends Exception{
+public class AppException extends Exception {
 
-	private static final long serialVersionUID = -5733037831413544616L;
+	private static final long serialVersionUID = 7300669526208901741L;
 
 	public AppException() {
 		super();
 	}
-	
+
 	public AppException(String message, Throwable cause) {
 		super(message, cause);
 	}

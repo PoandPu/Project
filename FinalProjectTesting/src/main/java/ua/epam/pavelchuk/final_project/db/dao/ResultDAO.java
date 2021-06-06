@@ -91,8 +91,8 @@ public class ResultDAO extends AbstractDAO {
 		String pattern = "dd.MM.YYYY HH:mm:ss";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String date = simpleDateFormat.format(rs.getTimestamp(Fields.RESULT_TEST_DATE));
-		
 		result.setTestDate(date);
+		
 		result.setTestNameRu(rs.getString(Fields.TEST_NAME_RU));
 		result.setTestNameEn(rs.getString(Fields.TEST_NAME_EN));
 		result.setSubjectNameRu(rs.getString(Fields.SUBJECTS_NAME_RU));

@@ -9,7 +9,7 @@ package ua.epam.pavelchuk.final_project.db.entity;
 public class User extends Entity {
 
 	private static final long serialVersionUID = -8402369682289356425L;
-	
+
 	private String login;
 	private String password;
 	private String passwordKey;
@@ -20,8 +20,9 @@ public class User extends Entity {
 	private boolean isBlocked;
 	private int roleId;
 
-	public User() {}
-	
+	public User() {
+	}
+
 	public String getPasswordKey() {
 		return passwordKey;
 	}
@@ -29,6 +30,7 @@ public class User extends Entity {
 	public void setPasswordKey(String password_key) {
 		this.passwordKey = password_key;
 	}
+
 	public String getLogin() {
 		return login;
 	}

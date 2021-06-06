@@ -1,8 +1,7 @@
 package ua.epam.pavelchuk.final_project.db.entity;
 
-
 public class Test extends Entity {
-	
+
 	/**
 	 * 
 	 */
@@ -15,22 +14,26 @@ public class Test extends Entity {
 	private int difficultyLevel;
 	private String difficultyNameEn;
 	private String difficultyNameRu;
-	
-	public Test() {}
-	
+
+	public Test() {
+	}
+
 	public String getNameRu() {
 		return nameRu;
 	}
+
 	public void setNameRu(String nameRu) {
 		this.nameRu = nameRu;
 	}
+
 	public String getNameEn() {
 		return nameEn;
 	}
+
 	public void setNameEn(String nameEn) {
 		this.nameEn = nameEn;
 	}
-	
+
 	public int getTime() {
 		return time;
 	}
@@ -46,7 +49,7 @@ public class Test extends Entity {
 	public void setRequests(int request) {
 		this.requests = request;
 	}
-	
+
 	public int getSubjectId() {
 		return subjectId;
 	}
@@ -62,7 +65,7 @@ public class Test extends Entity {
 	public void setDifficultyLevel(int id) {
 		difficultyLevel = id;
 	}
-	
+
 	public String getDifficultyNameEn() {
 		return difficultyNameEn;
 	}
@@ -70,7 +73,7 @@ public class Test extends Entity {
 	public void setDifficultyNameEn(String name) {
 		difficultyNameEn = name;
 	}
-	
+
 	public String getDifficultyNameRu() {
 		return difficultyNameRu;
 	}
@@ -78,31 +81,31 @@ public class Test extends Entity {
 	public void setDifficultyNameRu(String name) {
 		difficultyNameRu = name;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-	if (this == obj)
-		return true;
-	if (obj == null)
-		return false;
-	if (getClass() != obj.getClass())
-		return false;
-	Test test = (Test) obj;
-	if(id != test.getId()) 
-		return false;
-	if (!nameRu.equals(test.getNameRu()))
-		return false;
-	if (!nameEn.equals(test.getNameEn()))
-		return false;
-	if (difficultyLevel != test.getDifficultyLevel())
-		return false;
-	if (subjectId != test.getSubjectId())
-		return false;
-	if (time != test.getTime())
-		return false;
-	else {
-		return true;
-	}
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Test test = (Test) obj;
+		if (id != test.getId())
+			return false;
+		if (!nameRu.equals(test.getNameRu()))
+			return false;
+		if (!nameEn.equals(test.getNameEn()))
+			return false;
+		if (difficultyLevel != test.getDifficultyLevel())
+			return false;
+		if (subjectId != test.getSubjectId())
+			return false;
+		if (time != test.getTime())
+			return false;
+		else {
+			return true;
+		}
 	}
 
 }

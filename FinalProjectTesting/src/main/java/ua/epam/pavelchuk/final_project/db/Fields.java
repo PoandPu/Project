@@ -12,8 +12,7 @@ public final class Fields {
 	 */
 	private Fields() {}
 	
-	public static final String ENTITY_ID ="id";
-	public static final String ID ="id"; // correct it!
+	public static final String ID ="id";
 	
 	public static final String USER_LOGIN ="login";
 	public static final String USER_PASSWORD ="password";

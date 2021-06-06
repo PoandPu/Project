@@ -7,7 +7,7 @@ package ua.epam.pavelchuk.final_project.db.exception;
  */
 public class DBException extends AppException {
 
-	private static final long serialVersionUID = -3550446897536410392L;
+	private static final long serialVersionUID = 8485907141633582613L;
 
 	public DBException() {
 		super();

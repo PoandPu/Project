@@ -2,8 +2,7 @@ package ua.epam.pavelchuk.final_project.db.validation;
 
 public class LocalizationValidation {
 	
-	protected LocalizationValidation() {
-	}
+	protected LocalizationValidation() {}
 	
 	public static final String REGULAR_EXPRESSION_NAME_EN = "[A-Za-z][A-Za-z0-9\\s,-\\.;?]+";
 	public static final String REGULAR_EXPRESSION_NAME_RU = "[[\\p{IsCyrillic}]A-Za-z][[\\p{IsCyrillic}]A-Za-z0-9\\s,-\\.;?]+";

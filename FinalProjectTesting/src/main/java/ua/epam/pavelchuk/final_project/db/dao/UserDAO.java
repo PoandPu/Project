@@ -107,7 +107,7 @@ public class UserDAO extends AbstractDAO {
 	 */
 	private User extract(ResultSet rs) throws SQLException {
 		User user = new User();
-		user.setId(rs.getInt(Fields.ENTITY_ID));
+		user.setId(rs.getInt(Fields.ID));
 		user.setLanguage(rs.getString(Fields.USER_LANGUAGE));
 		user.setLogin(rs.getString(Fields.USER_LOGIN));
 		user.setPassword(rs.getString(Fields.USER_PASSWORD));
@@ -142,7 +142,7 @@ public class UserDAO extends AbstractDAO {
 
 			resultSet = pstmt.executeQuery();
 			if (resultSet.next()) {
-				result = resultSet.getInt(Fields.ENTITY_ID);
+				result = resultSet.getInt(Fields.ID);
 			}
 		} catch (SQLException e) {
 			LOG.error("cannot get user ID by login");

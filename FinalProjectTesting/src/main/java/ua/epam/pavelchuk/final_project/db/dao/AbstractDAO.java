@@ -22,113 +22,104 @@ import ua.epam.pavelchuk.final_project.db.exception.Messages;
 /**
  * Abstract DAO with only common methods
  * 
- * @author 
+ * @author O.Pavelchuk 
  *
  */
 public abstract class AbstractDAO {
 	
 	// Use JNDI flag
 	protected boolean useJNDI;
-	
 	private static final Logger LOG = Logger.getLogger(AbstractDAO.class);
 	
 	protected DataSource ds;
 	
 	/**
-	 * Constructor without parameters use JNDI
+	 * Default constructor with using JNDI
 	 */
 	protected AbstractDAO() throws DBException {
 		this(true);
 	}
+	
 	/**
 	 * Constructor with the ability to disable JNDI for Junit
 	 * @param isUseJNDI
 	 */
 	protected AbstractDAO(boolean isUseJNDI) throws DBException {
-		// ST4DB - the name of data source
 		this.useJNDI = isUseJNDI;
 		if(isUseJNDI) {
 			try {
 				Context initContext = new InitialContext();
 				Context envContext = (Context) initContext.lookup("java:/comp/env");
-				// ST4DB - the name of data source
 				ds = (DataSource) envContext.lookup("jdbc/ST4DB");
 				LOG.trace("Data source ==> " + ds);
 			} catch (NamingException ex) {
-				LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE, ex);
+				LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE);
 				throw new DBException(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE, ex);
 			}
 		}else {
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 			} catch (ClassNotFoundException e) {
-				LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE, e);
+				LOG.error(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE);
 				throw new DBException(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE, e);
 			}
 			MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
 			dataSource
-			.setURL("jdbc:mysql://localhost:3306/TestScreeningDB?useUnicode=true&serverTimezone=UTC");
+			.setURL("jdbc:mysql://localhost:3306/TestScreeningDB?useUnicode=true&serverTimezone=GMT+3");
 			dataSource.setUser("root");
 			dataSource.setPassword("Alexei2000Semen");
 			ds = dataSource;
 		}
 		LOG.trace("Data source ==> " + ds);
 	}
-	
-	public boolean isUseJNDI() {
-		return useJNDI;
-	}
 
-	public void setUseJNDI(boolean isUseJNDI) {
-		this.useJNDI = isUseJNDI;
-	}
 	/**
-	 * Connection to BD
+	 * Get connection to a DB
 	 */
 	public Connection getConnection() throws DBException{
 		Connection conn = null;
 			try {
 				conn = ds.getConnection();
 			} catch (SQLException e) {
-				LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION,e);
+				LOG.error(Messages.ERR_CANNOT_OBTAIN_CONNECTION);
 				throw new DBException(Messages.ERR_CANNOT_OBTAIN_CONNECTION, e);
 			}
 		return conn;
 	}
 	
 	/**
-	 * Close a connection object
+	 * Closes a connection
 	 */
 	protected void close(Connection conn) {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			LOG.error(Messages.ERR_CANNOT_CLOSE_CONNECTION, e);
+			LOG.error(Messages.ERR_CANNOT_CLOSE_CONNECTION);
 		}
 	}
 
 	/**
-	 * Closes a statement object.
+	 * Closes a statement
 	 */
 	protected void close(Statement stmt) {
 		if (stmt != null) {
 			try {
 				stmt.close();
 			} catch (SQLException ex) {
-				LOG.error(Messages.ERR_CANNOT_CLOSE_STATEMENT, ex);
+				LOG.error(Messages.ERR_CANNOT_CLOSE_STATEMENT);
 			}
 		}
 	}
 
 	/**
-	 * Closes a result set object.
+	 * Closes a result set
 	 */
 	protected void close(ResultSet rs) {
 		if (rs != null) {
 			try {
 				rs.close();
 			} catch (SQLException ex) {
-				LOG.error(Messages.ERR_CANNOT_CLOSE_RESULTSET, ex);
+				LOG.error(Messages.ERR_CANNOT_CLOSE_RESULTSET);
 			}
 		}
 	}
@@ -159,7 +150,7 @@ public abstract class AbstractDAO {
 			try {
 				con.rollback();
 			} catch (SQLException ex) {
-				LOG.error("Cannot rollback transaction", ex);
+				LOG.error(Messages.ERR_CANNOT_ROLLBACK_TRANSACTION);
 			}
 		}
 	}

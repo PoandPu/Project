@@ -42,28 +42,21 @@ public class CheckTestCommand extends Command {
 		LOG.debug("Command starts");
 		String result = null;
 
-//		if (method == HttpMethod.POST) {
-			result = doPost(request);
-//		} else {
-//			result = doGet();
-//		}
+		result = doPost(request);
+
 		LOG.debug("Command finished");
 		return result;
 	}
-//
-//	private String doGet() {
-//		return Path.PAGE_LIST_ALL_SUBJECTS;
-//	}
 
 	private String doPost(HttpServletRequest request) throws AppException {
 		int testId = 0;
 		try {
-		testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
 		} catch (NumberFormatException ex) {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
-		
+
 		HttpSession session = request.getSession();
 		long endTime = (long) session.getAttribute(AttributeNames.TEST_END_TIME);
 		int currentUserId = (int) session.getAttribute(AttributeNames.ID);
@@ -93,18 +86,18 @@ public class CheckTestCommand extends Command {
 		return Path.COMMAND_VIEW_LIST_SUBJECTS;
 	}
 
-	// This method was created to get all Answers_id marked by user
-	private List<Integer> getUserAnswersId(HttpServletRequest request, String parameter) {
-		List<Integer> userAnswersId = new ArrayList<>();
+	// This method was created to get all ID of the user's answers
+	private List<Integer> getUserAnswers(HttpServletRequest request, String parameter) {
+		List<Integer> userAnswers = new ArrayList<>();
 		Enumeration<String> enumeration = request.getParameterNames();
 		while (enumeration.hasMoreElements()) {
 			String parameterName = enumeration.nextElement();
 			if (parameterName.matches(parameter + "\\d+")) {
 				parameterName = parameterName.replaceAll("\\D", "");
-				userAnswersId.add(Integer.parseInt(parameterName));
+				userAnswers.add(Integer.parseInt(parameterName));
 			}
 		}
-		return userAnswersId;
+		return userAnswers;
 	}
 
 	private double checkTest(HttpServletRequest request, int testId) throws DBException {
@@ -112,44 +105,33 @@ public class CheckTestCommand extends Command {
 		AnswerDAO answerDAO = AnswerDAO.getInstance();
 
 		List<Question> questions = questionDAO.findQuestionsByTest(testId);
-		List<Integer> userAnswersId = getUserAnswersId(request, "answerNumb");
+		List<Integer> userAnswers = getUserAnswers(request, "answerNumb");
 		double amountOfCorrectAnswers = 0;
 
-//		one: for (Question q : questions) {
-//			List<Answer> answers = answerDAO.findAnswersByQuestion(q.getId());
-//			for (Answer a : answers) {
-//				// answer is correct, but the user didn't mark it OR answer isn't correct and
-//				// user marked it
-//				// go to the other question!
-//				if (a.getIsCorrect() && userAnswersId.indexOf(a.getId()) == -1
-//						|| !a.getIsCorrect() && userAnswersId.indexOf(a.getId()) != -1) {
-//					continue one;
-//				}
-//			}
-//			amountOfCorrectAnswers++;
-//		}
 		for (Question q : questions) {
-			boolean isCorrect = true;
 			List<Answer> answers = answerDAO.findAnswersByQuestion(q.getId());
-			for (Answer a : answers) {
-				// answer is correct, but the user didn't mark it OR answer isn't correct and
-				// user marked it
-				// go to the other question!
-				if (a.getIsCorrect() && userAnswersId.indexOf(a.getId()) == -1
-						|| !a.getIsCorrect() && userAnswersId.indexOf(a.getId()) != -1) {
-					isCorrect = false;
-				}
-			}
-			if (isCorrect) {
+			if (checkIsCorrect(answers, userAnswers)) {
 				amountOfCorrectAnswers++;
 			}
 		}
-		LOG.debug("Questions amount : " + questions.size());
-		LOG.debug("Amount of correct answers : " + amountOfCorrectAnswers);
+		LOG.debug("Questions: " + questions.size() + " / Correct answers : " + amountOfCorrectAnswers);
 		double mark = 0;
 		if (!questions.isEmpty()) {
 			mark = amountOfCorrectAnswers / (double) questions.size() * 100;
 		}
 		return mark;
+	}
+	
+	private boolean checkIsCorrect(List<Answer> answers, List<Integer> userAnswers) {
+		for (Answer a : answers) {
+			// answer is correct, but the user didn't mark it OR answer isn't correct and
+			// user marked it
+			// go to the other question!
+			if (a.getIsCorrect() && userAnswers.indexOf(a.getId()) == -1
+					|| !a.getIsCorrect() && userAnswers.indexOf(a.getId()) != -1) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -49,6 +49,7 @@ public class ViewProfileCommand extends Command {
 
 		// to prohibit viewing other people's profiles through URL
 		if (session.getAttribute(AttributeNames.USER_ROLE) != Role.ADMIN && userId != currentUserId) {
+			LOG.warn("User with id[" + currentUserId + "] has tried to acces profile with id :" + userId);
 			throw new AppException("command_access.error.no_root");
 		}
 
