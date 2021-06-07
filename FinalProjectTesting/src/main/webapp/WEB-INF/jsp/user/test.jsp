@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
 <html>
-<title><fmt:message key="test_jsp.title"/></title>
+<title><fmt:message key="test_jsp.title" /></title>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
 
 <script type="text/javascript">
@@ -25,7 +25,7 @@
 	window.onload = function() {
 		var time = 60 * ${minutes} + ${seconds}, display = document
 				.querySelector('#time');
-		startTimer(time, display);
+		startTimer(time < 0 ? 0 : time, display);
 	};
 </script>
 
@@ -34,9 +34,10 @@
 		<%@ include file="/WEB-INF/jspf/header.jspf"%>
 		<tr>
 			<td class="content">
-				<div class = "timer">
-					Timer : <span id="time">
-					<c:if test="${minutes < 10}">0${minutes}</c:if><c:if test="${minutes > 10}">${minutes}</c:if>:<c:if test="${seconds < 10}">0${seconds}</c:if><c:if test="${seconds > 10}">${seconds}</c:if>
+				<div class="timer">
+					Timer : <span id="time"> <c:choose><c:when test="${minutes < 0}">00</c:when><c:when test="${minutes < 10}">0${minutes}</c:when><c:when test="${minutes > 10}">${minutes}</c:when></c:choose>:<c:choose><c:when test="${seconds < 0}">00</c:when><c:when test="${seconds < 10}">0${seconds}</c:when><c:when test="${seconds > 10}">${seconds}</c:when>
+						</c:choose>
+
 					</span>
 				</div>
 				<div align="center">
@@ -54,7 +55,7 @@
 
 							</div>
 							<div align="left">
-								<ol> 
+								<ol>
 									<c:forEach var="question" items="${questions}" varStatus="ctr">
 										<li>
 											<div class="row">
@@ -62,17 +63,19 @@
 													<c:out
 														value="${language eq 'ru' ? question.nameRu : question.nameEn}" />
 												</div>
-											</div><ol class = "latin"> <c:forEach var="answer"
-												items="${answersList.get(ctr.index)}">
-												<li>
-												<div class="row">
+											</div>
+											<ol class="latin">
+												<c:forEach var="answer"
+													items="${answersList.get(ctr.index)}">
+													<li>
+														<div class="row">
 
-													<input type="checkbox" id="coding${answer.id}"
-														name="answerNumb${answer.id}"> <label
-														for="coding${answer.id}">${language eq 'ru' ? answer.nameRu : answer.nameEn}</label>
-												</div>
-												</li>
-											</c:forEach>
+															<input type="checkbox" id="coding${answer.id}"
+																name="answerNumb${answer.id}"> <label
+																for="coding${answer.id}">${language eq 'ru' ? answer.nameRu : answer.nameEn}</label>
+														</div>
+													</li>
+												</c:forEach>
 											</ol>
 										</li>
 									</c:forEach>

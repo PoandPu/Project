@@ -74,9 +74,27 @@
 						<th colspan="5"><ex:pagination
 								command="viewTestsList&subjectId=${subjectId}" page="${page}"
 								lines="${lines}" orderBy="${orderBy}" direction="${direction}"></ex:pagination>
-
 						</th>
 					</tr>
+					<c:if test="${not empty testErrorMessage}">
+						<tr>
+							<td colspan="2" style="border: none"><label
+								class="validation" style = "width:100%"><fmt:message
+										key="${testErrorMessage}" /> ${language eq 'ru' ? sessionScope.subject.nameRu : sessionScope.subject.nameEn}
+									--> ${language eq 'ru' ? sessionScope.test.nameRu : sessionScope.test.nameEn}
+							</label> <c:remove var="testErrorMessage" /></td>
+							<td colspan="3" style="border: none">
+							
+								<form action="controller" method="post">
+									<input type="hidden" name="command" value="viewTest" /> <input
+										type="hidden" name="testId" value="${test.id}" /><input
+										type="hidden" name="subjectId" value="${subjectId}" /> <input
+										class="edit" style = "float: left" type="submit" name="submit"
+										value="<fmt:message key="tests_list_jsp.take_test"/>">
+								</form>
+							</td>
+						</tr>
+					</c:if>
 				</table>
 			</td>
 		</tr>

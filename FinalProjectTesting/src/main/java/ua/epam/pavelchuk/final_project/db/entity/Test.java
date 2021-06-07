@@ -15,8 +15,7 @@ public class Test extends Entity {
 	private String difficultyNameEn;
 	private String difficultyNameRu;
 
-	public Test() {
-	}
+	public Test() {}
 
 	public String getNameRu() {
 		return nameRu;
@@ -80,6 +79,11 @@ public class Test extends Entity {
 
 	public void setDifficultyNameRu(String name) {
 		difficultyNameRu = name;
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 	@Override

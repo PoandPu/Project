@@ -16,9 +16,11 @@ import ua.epam.pavelchuk.final_project.Path;
 import ua.epam.pavelchuk.final_project.db.Role;
 import ua.epam.pavelchuk.final_project.db.dao.AnswerDAO;
 import ua.epam.pavelchuk.final_project.db.dao.QuestionDAO;
+import ua.epam.pavelchuk.final_project.db.dao.SubjectDAO;
 import ua.epam.pavelchuk.final_project.db.dao.TestDAO;
 import ua.epam.pavelchuk.final_project.db.entity.Answer;
 import ua.epam.pavelchuk.final_project.db.entity.Question;
+import ua.epam.pavelchuk.final_project.db.entity.Subject;
 import ua.epam.pavelchuk.final_project.db.entity.Test;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
@@ -70,6 +72,20 @@ public class ViewTestCommand extends Command {
 			answerDAO = AnswerDAO.getInstance();
 			testDAO = TestDAO.getInstance();
 			test = testDAO.findTestById(testId);
+			LOG.debug(test);
+			LOG.debug(session.getAttribute(AttributeNames.TEST));
+			
+			// Error page
+			if (session.getAttribute(AttributeNames.TEST_END_TIME) == null || session.getAttribute(AttributeNames.TEST) == null) {
+				LOG.warn("No \"test_end_time\" or \"test\" attribute found in session");
+				throw new AppException("view_test_command.error.get.incorrect_way");
+			}
+			
+			if (!test.equals(session.getAttribute(AttributeNames.TEST))) {
+				LOG.warn("The user tried to open another test, different from the one stored in his session");
+				throw new AppException("You have already started another test");
+			}
+			
 			List<Question> questions = questionDAO.findQuestionsByTest(testId);
 			List<List<Answer>> answers = new ArrayList<>();
 			for (Question q : questions) {
@@ -91,15 +107,12 @@ public class ViewTestCommand extends Command {
 		if (session.getAttribute(AttributeNames.USER_ROLE) == Role.ADMIN) {
 			return Path.ADMIN_PAGE_TEST;
 		}
-		// Error page
-		if (session.getAttribute(AttributeNames.TEST_END_TIME) == null) {
-			throw new AppException("view_test_command.error.get.incorrect_way");
-		}
-
+		
 		long currentTime = System.currentTimeMillis();
 		long endTime = (long) session.getAttribute(AttributeNames.TEST_END_TIME);
 		int minutes = (int) ((endTime - currentTime) / 60000);
 		int seconds = (int) ((endTime - currentTime) / 1000) % 60;
+		
 		LOG.debug("Time left : " + minutes + ":" + seconds);
 
 		request.setAttribute(AttributeNames.MINUTES, minutes);
@@ -109,26 +122,46 @@ public class ViewTestCommand extends Command {
 	}
 	
 	private String doPost(HttpServletRequest request) throws AppException {
+		HttpSession session = request.getSession();
 		int testId = 0;
+		int subjectId = 0;
 		try {
 			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
 		} catch (NumberFormatException ex) {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
 		
-		HttpSession session = request.getSession();
-		// increase the number of requests of the current test
 		TestDAO testDAO = null;
+		SubjectDAO subjectDAO = null;
+		Test test = null;
+		Subject subject = null;
 		try {
 			testDAO = TestDAO.getInstance();
+			subjectDAO = SubjectDAO.getInstance();
 			
+			test = testDAO.findTestById(testId);
+			subject = subjectDAO.findSubjectById(subjectId);
+			
+			if (session.getAttribute(AttributeNames.TEST)!= null) {
+				if (test.equals(session.getAttribute(AttributeNames.TEST))) {
+					return Path.COMMAND_VIEW_TEST + "&testId=" + testId;
+				} else {
+					session.setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "tests_list_jsp.error.test_was_started");
+					return Path.COMMAND_VIEW_TESTS_LIST + "&subjectId=" + subjectId;
+				}
+			}
+			
+			// increase the number of requests of the current test
 			testDAO.increaseRequests(testId);
 			
-			int timeForTest = testDAO.findTimeByTestId(testId);
+			int timeForTest = testDAO.findTimeByTestId(testId);// useless method
 			long startTime = System.currentTimeMillis();
 			long endTime = startTime + timeForTest * 60000;
 			
+			session.setAttribute(AttributeNames.SUBJECT, subject);// to write at what subject test is 
+			session.setAttribute(AttributeNames.TEST, test);
 			session.setAttribute(AttributeNames.TEST_END_TIME, endTime);
 			LOG.debug("Test start time: " +  DateFormat.getDateTimeInstance().format(startTime));
 		} catch (DBException e) {

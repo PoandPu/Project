@@ -58,7 +58,7 @@ public class CheckTestCommand extends Command {
 		}
 
 		HttpSession session = request.getSession();
-		long endTime = (long) session.getAttribute(AttributeNames.TEST_END_TIME);
+		long endTime = session.getAttribute(AttributeNames.TEST_END_TIME) !=null ? (long) session.getAttribute(AttributeNames.TEST_END_TIME) : 0;
 		int currentUserId = (int) session.getAttribute(AttributeNames.ID);
 		long currentTime = System.currentTimeMillis();
 
@@ -70,7 +70,8 @@ public class CheckTestCommand extends Command {
 				mark = BigDecimal.valueOf(0);
 				Result testResult = new Result(mark, currentUserId, testId);
 				resultDAO.insert(testResult);
-				throw new AppException("check_test_error.time_is_over");
+				LOG.warn("Time for test [id: " + testId + " ] was over!");
+				throw new AppException("check_test_command.error.time_is_over");
 			}
 
 			mark = BigDecimal.valueOf(checkTest(request, testId));
@@ -82,6 +83,8 @@ public class CheckTestCommand extends Command {
 			throw new AppException("check_test_error", ex);
 		} finally {
 			session.removeAttribute(AttributeNames.TEST_END_TIME);
+			session.removeAttribute(AttributeNames.TEST);
+			session.removeAttribute(AttributeNames.SUBJECT);
 		}
 		return Path.COMMAND_VIEW_LIST_SUBJECTS;
 	}
