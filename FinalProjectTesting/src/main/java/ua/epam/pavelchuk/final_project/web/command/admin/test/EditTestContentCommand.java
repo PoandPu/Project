@@ -66,6 +66,15 @@ public class EditTestContentCommand extends Command {
 			Question question = questionDAO.findQuestionById(questionId);
 			List<Answer> answers = answerDAO.findAnswersByQuestion(questionId);
 
+			if (question == null) {
+				LOG.warn("No question with ID = [" + questionId + "] found");
+				throw new AppException("edit_test_content_command.error.no_question_found");
+			}
+			if (question.getTestId() != testId) {
+				LOG.warn("No question with ID = [" + questionId + "] in Test ID = ["+ testId + "] found");
+				throw new AppException("edit_test_content_command.error.no_question_found");
+			}
+			
 			request.setAttribute(AttributeNames.TEST_ID, testId);
 			request.setAttribute(AttributeNames.ANSWERS, answers);
 			request.setAttribute(AttributeNames.QUESTION, question);
@@ -103,12 +112,12 @@ public class EditTestContentCommand extends Command {
 			String titleEn = request.getParameter(ParameterNames.TITLE_EN);
 
 			// question validation
-			if (!LocalizationValidation.validationNameRu(titleRu)) {
+			if (!LocalizationValidation.validationNameRu(titleRu) || titleRu.length() > 1024) {
 				request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 						"admin.edit_test_content_jsp.error.question_title_ru");
 				return pathEdit;
 			}
-			if (!LocalizationValidation.validationNameEn(titleEn)) {
+			if (!LocalizationValidation.validationNameEn(titleEn) || titleEn.length() > 1024) {
 				request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 						"admin.edit_test_content_jsp.error.question_title_en");
 				return pathEdit;
@@ -125,12 +134,12 @@ public class EditTestContentCommand extends Command {
 				String optionEn = request.getParameter(ParameterNames.OPTION_EN + a.getId());
 
 				// answer validation
-				if (!LocalizationValidation.validationNameRu(optionRu)) {
+				if (!LocalizationValidation.validationNameRu(optionRu) || optionRu.length() > 128) {
 					request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 							"admin.edit_test_content_jsp.error.answer_option_ru");
 					return pathEdit;
 				}
-				if (!LocalizationValidation.validationNameEn(optionEn)) {
+				if (!LocalizationValidation.validationNameEn(optionEn) || optionEn.length() > 128) {
 					request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 							"admin.edit_test_content_jsp.error.answer_option_en");
 					return pathEdit;

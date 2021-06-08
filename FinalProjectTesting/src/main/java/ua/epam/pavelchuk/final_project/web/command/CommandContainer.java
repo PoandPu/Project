@@ -18,6 +18,7 @@ import ua.epam.pavelchuk.final_project.web.command.admin.user.EditUserCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.FindUserCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.ViewUsersListCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.CheckTestCommand;
+import ua.epam.pavelchuk.final_project.web.command.common.FailTestCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.PasswordRecoveryCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.GeneratePasswordCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.LoginCommand;
@@ -67,6 +68,7 @@ public class CommandContainer {
 		
 //		// client commands
 		commands.put("checkTest", new CheckTestCommand());
+		commands.put("failTest", new FailTestCommand());
 		
 		// common commands
 		commands.put("viewAllSubjects", new ViewAllSubjectsCommand());

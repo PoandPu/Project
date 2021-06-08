@@ -83,14 +83,23 @@
 										key="${testErrorMessage}" /> ${language eq 'ru' ? sessionScope.subject.nameRu : sessionScope.subject.nameEn}
 									--> ${language eq 'ru' ? sessionScope.test.nameRu : sessionScope.test.nameEn}
 							</label> <c:remove var="testErrorMessage" /></td>
-							<td colspan="3" style="border: none">
+							<td colspan="1" style="border: none">
 							
 								<form action="controller" method="post">
 									<input type="hidden" name="command" value="viewTest" /> <input
 										type="hidden" name="testId" value="${test.id}" /><input
 										type="hidden" name="subjectId" value="${subjectId}" /> <input
-										class="edit" style = "float: left" type="submit" name="submit"
+										class="form" style = "float: left" type="submit" name="submit"
 										value="<fmt:message key="tests_list_jsp.take_test"/>">
+								</form>
+							</td>
+							<td colspan="2" style="border: none">
+								<form action="controller" method="post">
+									<input type="hidden" name="command" value="failTest" /> <input
+										type="hidden" name="testId" value="${test.id}" /><input
+										type="hidden" name="subjectId" value="${subjectId}" /> <input
+										class="delete" style = "float: left" type="submit" name="submit"
+										value="<fmt:message key="tests_list_jsp.fail_test"/>">
 								</form>
 							</td>
 						</tr>

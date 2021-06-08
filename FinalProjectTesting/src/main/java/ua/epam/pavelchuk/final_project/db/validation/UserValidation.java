@@ -17,7 +17,7 @@ public class UserValidation {
 	}
 
 	private static final String EMAIL_PATTERN = "^[\\w\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-	private static final String LOGIN_PATTERN = "[A-Za-z][A-Za-z\\d]{0,19}";
+	private static final String LOGIN_PATTERN = "[A-Za-z][A-Za-z\\d]{2,19}";
 	private static final String NAME_PATTERN = "[a-zA-Z\\p{IsCyrillic}]{2,45}";
 
 	private static final Logger LOG = Logger.getLogger(UserValidation.class);

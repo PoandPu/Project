@@ -47,7 +47,7 @@ public class ViewTestsListCommand extends Command {
 		int lines = 10;
 		try {
 			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
-
+			LOG.trace("Subject ID: "+subjectId);
 			if (request.getParameter(ParameterNames.PAGINATION_PAGE) != null) {
 				page = Integer.parseInt(request.getParameter(ParameterNames.PAGINATION_PAGE));
 			}
@@ -74,16 +74,20 @@ public class ViewTestsListCommand extends Command {
 		try {
 			TestDAO testDAO = TestDAO.getInstance();
 			tests = testDAO.findTestBySubjectIdAllOrderBy(subjectId, orderBy, direction, (page - 1) * lines, lines);
-
+			
 			while (tests.isEmpty() && page > 1) {
 				page--;
 				tests = testDAO.findTestBySubjectIdAllOrderBy(subjectId, orderBy, direction, (page - 1) * lines, lines);
+			}
+			// if tests is still empty -> errorPage
+			if (tests.isEmpty()) {
+				LOG.warn("No tests with subjectId[" + subjectId + "] found");
+				throw new AppException("view_tests_list_command.error.no_tests_found");
 			}
 		} catch (DBException ex) {
 			LOG.error(ex.getMessage());
 			throw new AppException("view_tests_list_command.error.get", ex);
 		}
-
 		request.setAttribute(AttributeNames.TESTS, tests);
 		request.setAttribute(ParameterNames.SUBJECT_ID, subjectId);
 		request.setAttribute(AttributeNames.PAGINATION_LINES, lines);

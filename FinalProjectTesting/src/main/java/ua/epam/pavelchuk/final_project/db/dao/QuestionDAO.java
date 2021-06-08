@@ -88,6 +88,7 @@ public class QuestionDAO extends AbstractDAO {
 		question.setId(rs.getInt(Fields.ID));
 		question.setNameRu(rs.getString(Fields.QUESTION_TITLE_RU));
 		question.setNameEn(rs.getString(Fields.QUESTION_TITLE_EN));
+		question.setTestId(rs.getInt(Fields.QUESTION_TEST_ID));
 		return question;
 	}
 

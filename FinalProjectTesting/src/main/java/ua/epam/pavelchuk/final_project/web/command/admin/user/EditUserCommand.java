@@ -57,6 +57,10 @@ public class EditUserCommand extends Command {
 		try {
 			UserDAO userDAO = UserDAO.getInstance();
 			User user = userDAO.findById(userId);
+			if (user == null) {
+				LOG.error("No user with id[" + userId + "] found");
+				throw new AppException("view_profile_command.error.no_user_found");
+			}
 			if (Role.getRole(user) == Role.ADMIN) {
 				throw new AppException("error_page_jsp.edit_admin.error");
 			}

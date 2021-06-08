@@ -34,6 +34,7 @@ public final class Fields {
 	public static final String QUESTION_TITLE_RU ="title_ru";
 	public static final String QUESTION_TITLE_EN ="title_en";
 	public static final String QUESTION_ID="question_id";
+	public static final String QUESTION_TEST_ID="test_id";
 	
 	public static final String ANSWER_OPTION_RU ="option_ru";
 	public static final String ANSWER_OPTION_EN ="option_en";

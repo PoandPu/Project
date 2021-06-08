@@ -18,7 +18,6 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 /**
  * Servlet implementation class Controller
  */
-
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 2423353715955164816L;
 
@@ -43,9 +42,11 @@ public class Controller extends HttpServlet {
 
 	/**
 	 * Main method of this controller.
+	 * @throws ServletException 
+	 * @throws IOException 
 	 */
-	private String process(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException {
+	private String process(HttpServletRequest request, HttpServletResponse response, HttpMethod method) throws IOException, ServletException
+			{
 		LOG.debug("Controller starts");
 
 		// extract command name from the request

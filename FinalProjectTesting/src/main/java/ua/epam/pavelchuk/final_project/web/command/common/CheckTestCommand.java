@@ -30,9 +30,6 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
 public class CheckTestCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8541535961380321564L;
 	private static final Logger LOG = Logger.getLogger(CheckTestCommand.class);
 
@@ -86,10 +83,17 @@ public class CheckTestCommand extends Command {
 			session.removeAttribute(AttributeNames.TEST);
 			session.removeAttribute(AttributeNames.SUBJECT);
 		}
-		return Path.COMMAND_VIEW_LIST_SUBJECTS;
+		return Path.COMMAND_VIEW_PROFILE + "&userId=" + currentUserId;
 	}
 
-	// This method was created to get all ID of the user's answers
+	/**
+	 * Receives all IDs of the user's replies
+	 * 
+	 * @param request HttpServletRequest
+	 * @param parameter pattern of search
+	 * 
+	 * @return List of IDs
+	*/
 	private List<Integer> getUserAnswers(HttpServletRequest request, String parameter) {
 		List<Integer> userAnswers = new ArrayList<>();
 		Enumeration<String> enumeration = request.getParameterNames();
@@ -103,6 +107,14 @@ public class CheckTestCommand extends Command {
 		return userAnswers;
 	}
 
+	/**
+	 * Finds the number of correct answers in %
+	 * 
+	 * @param request HttpServletRequest
+	 * @param testId ID of the test
+	 * 
+	 * @return mark in %
+	*/
 	private double checkTest(HttpServletRequest request, int testId) throws DBException {
 		QuestionDAO questionDAO = QuestionDAO.getInstance();
 		AnswerDAO answerDAO = AnswerDAO.getInstance();
@@ -125,11 +137,16 @@ public class CheckTestCommand extends Command {
 		return mark;
 	}
 	
+	/**
+	 * Checking the discrepancy between user responses and responses from the database
+	 * 
+	 * @param answers list of answers from DB
+	 * @param userAnswers list of users answers
+	 * 
+	 * @return true if the answer to the question is correct
+	*/
 	private boolean checkIsCorrect(List<Answer> answers, List<Integer> userAnswers) {
 		for (Answer a : answers) {
-			// answer is correct, but the user didn't mark it OR answer isn't correct and
-			// user marked it
-			// go to the other question!
 			if (a.getIsCorrect() && userAnswers.indexOf(a.getId()) == -1
 					|| !a.getIsCorrect() && userAnswers.indexOf(a.getId()) != -1) {
 				return false;

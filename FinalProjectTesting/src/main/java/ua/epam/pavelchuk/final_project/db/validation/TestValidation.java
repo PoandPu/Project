@@ -32,11 +32,11 @@ public class TestValidation extends LocalizationValidation {
 
 	public static boolean validate(HttpServletRequest request, String nameRu, String nameEn, int time, Test test)
 			throws AppException {
-		if (!validationNameRu(nameRu)) {
+		if (!validationNameRu(nameRu) || nameRu.length() > 128) {
 			request.getSession().setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "test_validation.error.name_ru");
 			return false;
 		}
-		if (!validationNameEn(nameEn)) {
+		if (!validationNameEn(nameEn) || nameEn.length() > 128) {
 			request.getSession().setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "test_validation.error.name_en");
 			return false;
 		}

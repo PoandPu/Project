@@ -46,6 +46,8 @@ public class ViewProfileCommand extends Command {
 		HttpSession session = request.getSession();
 		int currentUserId = (int) session.getAttribute(AttributeNames.ID);
 		int userId = Integer.parseInt(request.getParameter(ParameterNames.USER_ID));
+		LOG.trace("UserId from url :" + userId);
+		LOG.trace("Current userId from url :" + currentUserId);
 
 		// to prohibit viewing other people's profiles through URL
 		if (session.getAttribute(AttributeNames.USER_ROLE) != Role.ADMIN && userId != currentUserId) {
@@ -88,6 +90,11 @@ public class ViewProfileCommand extends Command {
 			resultDAO = ResultDAO.getInstance();
 
 			user = userDAO.findById(userId);
+			LOG.debug("Founded user :" + user);
+			if (user == null) {
+				LOG.warn("No user with id[" + userId + "] found");
+				throw new AppException("view_profile_command.error.no_user_found");
+			}
 			results = resultDAO.findResultsByUserIdAllOrderedBy(userId, orderBy, direction, (page - 1) * lines, lines);
 
 			while (results.isEmpty() && page > 1) {
