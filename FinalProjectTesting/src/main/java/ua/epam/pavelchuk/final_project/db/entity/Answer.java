@@ -1,5 +1,11 @@
 package ua.epam.pavelchuk.final_project.db.entity;
 
+/**
+ * Stores information about Answer
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class Answer extends Entity {
 
 	/**

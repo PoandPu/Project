@@ -1,4 +1,5 @@
 package ua.epam.pavelchuk.final_project.db;
+
 /**
  * Fields holder (stores the name of the columns from the database).
  * 

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import ua.epam.pavelchuk.final_project.Path;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
+import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 
 
@@ -27,10 +28,10 @@ public class LogoutCommand extends Command{
 			throws IOException, ServletException, AppException {
 		
 		HttpSession session= request.getSession();
-//		session.removeAttribute(AttributeNames.ID);
-//		session.removeAttribute(AttributeNames.USER);
-//		session.removeAttribute(AttributeNames.USER_ROLE);
+		String error = (String) session.getAttribute(AttributeNames.LOGIN_ERROR_MESSAGE);
 		session.invalidate();
+		//session.setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, error);
+		request.setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, error);
 		return Path.PAGE_LOGIN;
 	}
 

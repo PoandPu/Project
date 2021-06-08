@@ -1,18 +1,18 @@
 package ua.epam.pavelchuk.final_project.db.entity;
 
 /**
- * Subject
+ * Stores information about a subject
  * 
- * @author
+ * @author O.Pavelchuk
  *
  */
 public class Subject extends Entity {
+	
 	private static final long serialVersionUID = 7478712165594836356L;
 	private String nameRu;
 	private String nameEn;
 
-	public Subject() {
-	}
+	public Subject() {}
 
 	public Subject(String nameRu, String nameEn) {
 		this.nameEn = nameEn;

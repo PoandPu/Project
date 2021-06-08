@@ -11,11 +11,11 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 
-public class SubjectValidation extends LocalizationValidation {
+public class SubjectValidator extends LocalizationValidator {
 
-	private SubjectValidation() {}
+	private SubjectValidator() {}
 
-	private static final Logger LOG = Logger.getLogger(SubjectValidation.class);
+	private static final Logger LOG = Logger.getLogger(SubjectValidator.class);
 
 	public static boolean checkUniquenessName(String name) throws AppException {
 		boolean result = false;

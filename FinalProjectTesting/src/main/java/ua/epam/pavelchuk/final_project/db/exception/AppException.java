@@ -3,7 +3,7 @@ package ua.epam.pavelchuk.final_project.db.exception;
 /**
  * Application exception
  * 
- * @author
+ * @author O.Pavelchuk
  *
  */
 public class AppException extends Exception {

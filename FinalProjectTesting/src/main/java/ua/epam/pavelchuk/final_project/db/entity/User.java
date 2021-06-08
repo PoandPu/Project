@@ -1,9 +1,9 @@
 package ua.epam.pavelchuk.final_project.db.entity;
 
 /**
- * Application user has basic fields, such as password, login, email, full name.
+ * Stores information about the User
  * 
- * @author
+ * @author O.Pavelchuk
  *
  */
 public class User extends Entity {

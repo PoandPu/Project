@@ -1,10 +1,13 @@
 package ua.epam.pavelchuk.final_project.db.entity;
 
+/**
+ * Stores information about a test Result
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class Test extends Entity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8627134466051125032L;
 	private String nameRu;
 	private String nameEn;

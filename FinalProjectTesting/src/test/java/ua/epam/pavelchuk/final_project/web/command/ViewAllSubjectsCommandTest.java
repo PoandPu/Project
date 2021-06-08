@@ -25,13 +25,14 @@ import ua.epam.pavelchuk.final_project.db.Role;
 import ua.epam.pavelchuk.final_project.db.dao.SubjectDAO;
 import ua.epam.pavelchuk.final_project.db.entity.Subject;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
+import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.common.ViewAllSubjectsCommand;
 
 public class ViewAllSubjectsCommandTest {
 
 	@Test
-	public void doPost() throws IOException, ServletException, AppException {
+	public void doPost() throws IOException, ServletException, AppException, DBException {
 		ViewAllSubjectsCommand testCommand = new ViewAllSubjectsCommand();
 		HttpServletRequest request = mock(HttpServletRequest.class);
 		HttpServletResponse response = mock(HttpServletResponse.class);

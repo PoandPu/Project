@@ -15,7 +15,7 @@ import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
 import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
-import ua.epam.pavelchuk.final_project.db.validation.UserValidation;
+import ua.epam.pavelchuk.final_project.db.validation.UserValidator;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
@@ -58,28 +58,27 @@ public class RegistrationCommand extends Command {
 		String language = request.getParameter(Fields.USER_LANGUAGE);
 
 		User user = new User();
-
-		if (!UserValidation.validationLogin(login)) {
-			request.getSession().setAttribute(AttributeNames.USER_SETTINGS_ERROR_MESSAGE,
-					"registration_jsp.error.login_not_unique");
-			return Path.COMMAND_VIEW_REGISTRATION_PAGE;
-		}
-		if (!UserValidation.validate(request, firstName, lastName, email, user, password, confirmPassword)) {
-			return Path.COMMAND_VIEW_REGISTRATION_PAGE;
-		}
-		String passwordKey = PasswordUtils.getSalt(30);
-		String mySecurePassword = PasswordUtils.generateSecurePassword(password, passwordKey);
-
-		user.setLogin(login);
-		user.setPassword(mySecurePassword);
-		user.setPasswordKey(passwordKey);
-		user.setEmail(email);
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setLanguage(language);
-		user.setRoleId(Role.CLIENT.ordinal());
-
 		try {
+			if (!UserValidator.validationLogin(login)) {
+				request.getSession().setAttribute(AttributeNames.USER_SETTINGS_ERROR_MESSAGE,
+						"registration_jsp.error.login_not_unique");
+				return Path.COMMAND_VIEW_REGISTRATION_PAGE;
+			}
+			if (!UserValidator.validate(request, firstName, lastName, email, user, password, confirmPassword)) {
+				return Path.COMMAND_VIEW_REGISTRATION_PAGE;
+			}
+			String passwordKey = PasswordUtils.getSalt(30);
+			String mySecurePassword = PasswordUtils.generateSecurePassword(password, passwordKey);
+
+			user.setLogin(login);
+			user.setPassword(mySecurePassword);
+			user.setPasswordKey(passwordKey);
+			user.setEmail(email);
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setLanguage(language);
+			user.setRoleId(Role.CLIENT.ordinal());
+
 			UserDAO userDAO = UserDAO.getInstance();
 			userDAO.insert(user);
 		} catch (DBException e) {

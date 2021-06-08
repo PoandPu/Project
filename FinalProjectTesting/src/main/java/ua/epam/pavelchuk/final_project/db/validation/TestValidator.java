@@ -11,12 +11,12 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 
-public class TestValidation extends LocalizationValidation {
+public class TestValidator extends LocalizationValidator {
 	
-	private TestValidation() {
+	private TestValidator() {
 	}
 
-	private static final Logger LOG = Logger.getLogger(TestValidation.class);
+	private static final Logger LOG = Logger.getLogger(TestValidator.class);
 
 	public static boolean checkUniquenessName(String name) throws AppException {
 		boolean result = false;
@@ -66,5 +66,4 @@ public class TestValidation extends LocalizationValidation {
 			return true;
 		}
 	}
-
 }

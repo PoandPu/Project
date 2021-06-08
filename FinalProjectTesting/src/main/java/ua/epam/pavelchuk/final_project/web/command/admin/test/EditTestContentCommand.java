@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.test;
 
-import java.io.IOException;
+import java.io.IOException; 
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,7 +17,6 @@ import ua.epam.pavelchuk.final_project.db.entity.Question;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
-import ua.epam.pavelchuk.final_project.db.validation.LocalizationValidation;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
@@ -66,15 +65,11 @@ public class EditTestContentCommand extends Command {
 			Question question = questionDAO.findQuestionById(questionId);
 			List<Answer> answers = answerDAO.findAnswersByQuestion(questionId);
 
-			if (question == null) {
-				LOG.warn("No question with ID = [" + questionId + "] found");
+			if (question == null || question.getTestId() != testId) {
+				LOG.warn("No question with ID = [" + questionId + "] in Test ID = [" + testId + "] found");
 				throw new AppException("edit_test_content_command.error.no_question_found");
 			}
-			if (question.getTestId() != testId) {
-				LOG.warn("No question with ID = [" + questionId + "] in Test ID = ["+ testId + "] found");
-				throw new AppException("edit_test_content_command.error.no_question_found");
-			}
-			
+
 			request.setAttribute(AttributeNames.TEST_ID, testId);
 			request.setAttribute(AttributeNames.ANSWERS, answers);
 			request.setAttribute(AttributeNames.QUESTION, question);
@@ -107,17 +102,22 @@ public class EditTestContentCommand extends Command {
 		try {
 			questionDAO = QuestionDAO.getInstance();
 			answerDAO = AnswerDAO.getInstance();
-			Question question = questionDAO.findQuestionById(questionId);
 			String titleRu = request.getParameter(ParameterNames.TITLE_RU);
 			String titleEn = request.getParameter(ParameterNames.TITLE_EN);
+			Question question = questionDAO.findQuestionById(questionId);
+
+			if (question == null) {
+				LOG.warn("No question with ID = [" + questionId + "] found");
+				throw new AppException("edit_test_content_command.error.no_question_found");
+			}
 
 			// question validation
-			if (!LocalizationValidation.validationNameRu(titleRu) || titleRu.length() > 1024) {
+			if (titleRu.length() > 1024 || titleRu.length() < 2) {
 				request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 						"admin.edit_test_content_jsp.error.question_title_ru");
 				return pathEdit;
 			}
-			if (!LocalizationValidation.validationNameEn(titleEn) || titleEn.length() > 1024) {
+			if (titleEn.length() > 1024 || titleEn.length() < 2) {
 				request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 						"admin.edit_test_content_jsp.error.question_title_en");
 				return pathEdit;
@@ -132,19 +132,19 @@ public class EditTestContentCommand extends Command {
 			for (Answer a : answers) {
 				String optionRu = request.getParameter(ParameterNames.OPTION_RU + a.getId());
 				String optionEn = request.getParameter(ParameterNames.OPTION_EN + a.getId());
-
+				
 				// answer validation
-				if (!LocalizationValidation.validationNameRu(optionRu) || optionRu.length() > 128) {
+				if (optionRu.length() > 1024 || optionRu.length() < 1) {
 					request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 							"admin.edit_test_content_jsp.error.answer_option_ru");
 					return pathEdit;
 				}
-				if (!LocalizationValidation.validationNameEn(optionEn) || optionEn.length() > 128) {
+				if (optionEn.length() > 1024 || optionEn.length() < 1) {
 					request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
 							"admin.edit_test_content_jsp.error.answer_option_en");
 					return pathEdit;
 				}
-
+				
 				a.setNameRu(optionRu);
 				a.setNameEn(optionEn);
 
@@ -162,4 +162,6 @@ public class EditTestContentCommand extends Command {
 		}
 		return pathEdit;
 	}
+	
+	
 }

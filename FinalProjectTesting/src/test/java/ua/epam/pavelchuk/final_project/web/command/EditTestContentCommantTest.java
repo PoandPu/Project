@@ -28,7 +28,8 @@ import ua.epam.pavelchuk.final_project.db.dao.QuestionDAO;
 import ua.epam.pavelchuk.final_project.db.entity.Answer;
 import ua.epam.pavelchuk.final_project.db.entity.Question;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
-import ua.epam.pavelchuk.final_project.db.validation.LocalizationValidation;
+import ua.epam.pavelchuk.final_project.db.exception.DBException;
+import ua.epam.pavelchuk.final_project.db.validation.LocalizationValidator;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.admin.test.EditTestContentCommand;
 
@@ -53,7 +54,7 @@ public class EditTestContentCommantTest {
 	}
 
 	@Test
-	void doGet() throws IOException, ServletException, AppException {
+	void doGet() throws IOException, ServletException, AppException, DBException {
 		try (MockedStatic<AnswerDAO> answerDAOMockedStatic = mockStatic(AnswerDAO.class);
 				MockedStatic<QuestionDAO> questionDAOMockedStatic = mockStatic(QuestionDAO.class)) {
 			when(AnswerDAO.getInstance()).thenReturn(answerDAO);
@@ -70,12 +71,12 @@ public class EditTestContentCommantTest {
 	}
 
 	@Test
-	void doPost() throws IOException, ServletException, AppException {
+	void doPost() throws IOException, ServletException, AppException, DBException {
 		Question question = mock(Question.class);
 		Answer answer = mock(Answer.class);
 		try (MockedStatic<AnswerDAO> answerDAOMockedStatic = mockStatic(AnswerDAO.class);
 				MockedStatic<QuestionDAO> questionDAOMockedStatic = mockStatic(QuestionDAO.class);
-				MockedStatic<LocalizationValidation> LocalizationValidationMockedStatic = mockStatic(LocalizationValidation.class)) {
+				MockedStatic<LocalizationValidator> LocalizationValidationMockedStatic = mockStatic(LocalizationValidator.class)) {
 			when(AnswerDAO.getInstance()).thenReturn(answerDAO);
 			when(QuestionDAO.getInstance()).thenReturn(questionDAO);
 			when(questionDAO.findQuestionById(anyInt())).thenReturn(question);
@@ -83,8 +84,8 @@ public class EditTestContentCommantTest {
 			answers.add(answer);
 			answers.add(answer);
 			when(answerDAO.findAnswersByQuestion(anyInt())).thenReturn(answers);
-			when(LocalizationValidation.validationNameEn(anyString())).thenReturn(true);
-			when(LocalizationValidation.validationNameRu(anyString())).thenReturn(true);
+			when(LocalizationValidator.validationNameEn(anyString())).thenReturn(true);
+			when(LocalizationValidator.validationNameRu(anyString())).thenReturn(true);
 			when(request.getParameter(anyString())).thenReturn("1");
 			
 			testCommand.execute(request, response, HttpMethod.POST);	

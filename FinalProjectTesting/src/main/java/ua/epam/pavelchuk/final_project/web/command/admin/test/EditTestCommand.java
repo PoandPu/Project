@@ -14,7 +14,7 @@ import ua.epam.pavelchuk.final_project.db.entity.Test;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
-import ua.epam.pavelchuk.final_project.db.validation.TestValidation;
+import ua.epam.pavelchuk.final_project.db.validation.TestValidator;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
@@ -58,6 +58,12 @@ public class EditTestCommand extends Command {
 		try {
 			TestDAO testDAO = TestDAO.getInstance();
 			Test test = testDAO.findTestById(testId);
+			
+			if (test == null) {
+				LOG.warn("No test with ID = [" + testId + "] found");
+				throw new AppException("view_test_command.error.no_test_found");
+			}
+			
 			request.setAttribute(AttributeNames.TEST, test);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
@@ -97,12 +103,17 @@ public class EditTestCommand extends Command {
 		try {
 			TestDAO testDAO = TestDAO.getInstance();
 			Test test = testDAO.findTestById(testId);
+			
+			if (test == null) {
+				LOG.warn("No test with ID = [" + testId + "] found");
+				throw new AppException("view_test_command.error.no_test_found");
+			}
 
 			if (request.getParameter(ParameterNames.DELETE) != null) {
 				testDAO.delete(testId);
 			}
 			
-			if (!TestValidation.validate(request, nameRu, nameEn, time, test)) {
+			if (!TestValidator.validate(request, nameRu, nameEn, time, test)) {
 				return Path.COMMAND_EDIT_TEST + "&subjectId=" + subjectId + "&testId=" + testId;
 			}
 

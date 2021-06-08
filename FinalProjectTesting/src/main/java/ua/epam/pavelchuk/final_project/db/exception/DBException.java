@@ -1,11 +1,14 @@
 package ua.epam.pavelchuk.final_project.db.exception;
 
+import java.sql.SQLException;
+
 /**
- * DBException
- * @author 
+ * Data Base exception
+ * 
+ * @author O.Pavelchuk
  *
  */
-public class DBException extends AppException {
+public class DBException extends SQLException {
 
 	private static final long serialVersionUID = 8485907141633582613L;
 

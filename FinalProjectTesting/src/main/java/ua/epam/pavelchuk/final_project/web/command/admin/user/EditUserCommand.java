@@ -15,7 +15,7 @@ import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
-import ua.epam.pavelchuk.final_project.db.validation.UserValidation;
+import ua.epam.pavelchuk.final_project.db.validation.UserValidator;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
@@ -89,13 +89,13 @@ public class EditUserCommand extends Command {
 			String lastName = request.getParameter(ParameterNames.USER_LAST_NAME);
 			String email = request.getParameter(ParameterNames.USER_EMAIL);
 
-			if (!UserValidation.validate(request, firstName, lastName, email, user, null, null)) {
+			if (!UserValidator.validate(request, firstName, lastName, email, user, null, null)) {
 				return Path.COMMAND_EDIT_USER + "&userId=" + userId;
 			}
 
-			user.setFirstName(request.getParameter(ParameterNames.USER_FIRST_NAME));
-			user.setLastName(request.getParameter(ParameterNames.USER_LAST_NAME));
-			user.setEmail(request.getParameter(ParameterNames.USER_EMAIL));
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setEmail(email);
 			userDAO.update(user);
 			if (request.getParameter(ParameterNames.RADIO_BUTTON).equals(ParameterNames.BLOCK)) {
 				userDAO.blockById(userId);

@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException; 
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
 import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
-import ua.epam.pavelchuk.final_project.db.validation.UserValidation;
+import ua.epam.pavelchuk.final_project.db.validation.UserValidator;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
@@ -56,20 +56,20 @@ public class UserSettingsCommand extends Command {
 		String email = request.getParameter(ParameterNames.USER_EMAIL);
 		String newPassword = request.getParameter(ParameterNames.NEW_PASSWORD);
 		String confirmPassword = request.getParameter(ParameterNames.CONFIRM_NEW_PASSWORD);
-		
-		if (!UserValidation.validate(request, firstName, lastName, email, user, newPassword, confirmPassword)) {
-			return Path.COMMAND_SETTINGS_USER;
-		}
-
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setEmail(email);
-		if (!newPassword.isEmpty()) {
-			String passwordKey = user.getPasswordKey();	
-			String securePassword = PasswordUtils.generateSecurePassword(newPassword, passwordKey);	
-			user.setPassword(securePassword);
-		}
 		try {
+			if (!UserValidator.validate(request, firstName, lastName, email,user, newPassword, confirmPassword)) {
+				return Path.COMMAND_SETTINGS_USER;
+			}
+
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setEmail(email);
+			if (!newPassword.isEmpty()) {
+				String passwordKey = user.getPasswordKey();
+				String securePassword = PasswordUtils.generateSecurePassword(newPassword, passwordKey);
+				user.setPassword(securePassword);
+			}
+
 			UserDAO userDAO = UserDAO.getInstance();
 			userDAO.update(user);
 		} catch (DBException e) {

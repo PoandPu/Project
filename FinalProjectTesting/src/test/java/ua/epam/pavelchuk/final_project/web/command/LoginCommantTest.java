@@ -22,6 +22,7 @@ import org.mockito.MockedStatic;
 import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
 import ua.epam.pavelchuk.final_project.db.entity.User;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
+import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.captcha.VerifyUtils;
 import ua.epam.pavelchuk.final_project.web.command.common.LoginCommand;
@@ -45,7 +46,7 @@ public class LoginCommantTest {
 	
 	
 	@Test
-	public void doPost() throws IOException, ServletException, AppException {
+	public void doPost() throws IOException, ServletException, AppException, DBException {
 		User user = mock(User.class);
 		when(user.getPassword()).thenReturn("test");
 		when(user.getPasswordKey()).thenReturn("test");

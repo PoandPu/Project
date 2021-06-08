@@ -1,11 +1,11 @@
 package ua.epam.pavelchuk.final_project.db.validation;
 
-public class LocalizationValidation {
+public class LocalizationValidator {
 	
-	protected LocalizationValidation() {}
+	protected LocalizationValidator() {}
 	
-	public static final String REGULAR_EXPRESSION_NAME_EN = "[A-Za-z][A-Za-z0-9\\s,-\\.;?]+";
-	public static final String REGULAR_EXPRESSION_NAME_RU = "[[\\p{IsCyrillic}]A-Za-z][[\\p{IsCyrillic}]A-Za-z0-9\\s,-\\.;?]+";
+	public static final String REGULAR_EXPRESSION_NAME_EN = "[A-Za-z0-9][A-Za-z0-9\\s,-\\.;?|=+()]+";
+	public static final String REGULAR_EXPRESSION_NAME_RU = "[[\\p{IsCyrillic}]A-Za-z0-9][[\\p{IsCyrillic}]A-Za-z0-9\\s,-\\.;?|=+()]+";
 	
 	
 	public static boolean validationNameRu(String nameRu) {

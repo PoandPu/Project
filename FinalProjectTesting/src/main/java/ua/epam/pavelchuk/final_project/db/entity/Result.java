@@ -2,11 +2,14 @@ package ua.epam.pavelchuk.final_project.db.entity;
 
 import java.math.BigDecimal;
 
+/**
+ * Stores information about a test Result
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class Result extends Entity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2345675637639324893L;
 
 	private BigDecimal mark;

@@ -13,7 +13,7 @@ import ua.epam.pavelchuk.final_project.db.dao.SubjectDAO;
 import ua.epam.pavelchuk.final_project.db.entity.Subject;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
-import ua.epam.pavelchuk.final_project.db.validation.SubjectValidation;
+import ua.epam.pavelchuk.final_project.db.validation.SubjectValidator;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
@@ -52,7 +52,7 @@ public class AddSubjectCommand extends Command {
 		String nameEn = request.getParameter(ParameterNames.NAME_EN);
 		Subject subject = new Subject();
 
-		if (!SubjectValidation.validate(request, nameRu, nameEn, subject)) {
+		if (!SubjectValidator.validate(request, nameRu, nameEn, subject)) {
 			return Path.COMMAND_ADD_SUBJECT;
 		}
 	

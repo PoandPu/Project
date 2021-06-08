@@ -14,7 +14,7 @@ import ua.epam.pavelchuk.final_project.db.entity.Test;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
-import ua.epam.pavelchuk.final_project.db.validation.TestValidation;
+import ua.epam.pavelchuk.final_project.db.validation.TestValidator;
 import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
@@ -89,7 +89,7 @@ public class AddTestCommand extends Command {
 			testDAO = TestDAO.getInstance();
 			Test test = new Test();
 
-			if (!TestValidation.validate(request, nameRu, nameEn, time, test)) {
+			if (!TestValidator.validate(request, nameRu, nameEn, time, test)) {
 				return Path.COMMAND_ADD_TEST + "&subjectId=" + subjectId;
 			}
 
