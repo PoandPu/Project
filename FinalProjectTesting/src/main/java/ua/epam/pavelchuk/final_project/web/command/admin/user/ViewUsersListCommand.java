@@ -1,9 +1,7 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.user;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,7 +17,7 @@ import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
-
+ 
 public class ViewUsersListCommand extends Command {
 
 	/**
@@ -30,7 +28,7 @@ public class ViewUsersListCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Command starts");
 		String result = doGet(request);
 		LOG.debug("Command finished");

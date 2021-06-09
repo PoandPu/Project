@@ -11,8 +11,17 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 
+/**
+ * Validator for the fields associated with the Subject
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class SubjectValidator extends LocalizationValidator {
 
+	/**
+	 * Private utility class constructor
+	 */
 	private SubjectValidator() {}
 
 	private static final Logger LOG = Logger.getLogger(SubjectValidator.class);

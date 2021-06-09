@@ -1,11 +1,9 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -40,7 +38,7 @@ public class ViewTestCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Command starts");
 		String result = null;
 
@@ -74,7 +72,7 @@ public class ViewTestCommand extends Command {
 			test = testDAO.findTestById(testId);
 			LOG.debug(test);
 			LOG.debug(session.getAttribute(AttributeNames.TEST));
-			
+
 			if (test == null) {
 				LOG.warn("No test with ID = [" + testId + "] found");
 				throw new AppException("view_test_command.error.no_test_found");

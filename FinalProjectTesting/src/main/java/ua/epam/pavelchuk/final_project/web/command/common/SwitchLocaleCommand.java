@@ -1,8 +1,5 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException; 
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -30,7 +27,7 @@ public class SwitchLocaleCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Start executing Command");
 		String result = null;
 		result = doPost(request);
@@ -42,7 +39,7 @@ public class SwitchLocaleCommand extends Command {
 		HttpSession session = request.getSession();
 		String lang = request.getParameter(ParameterNames.LANGUAGE);
 		User user = (User) session.getAttribute(AttributeNames.USER);
-		
+
 		LOG.debug("Users language BEFORE " + user.getLanguage());
 		LOG.debug("Users password" + user.getPassword());
 		LOG.debug("Users password key" + user.getPasswordKey());
@@ -52,8 +49,8 @@ public class SwitchLocaleCommand extends Command {
 			user.setLanguage(Fields.RU);
 		}
 		try {
-		UserDAO userDAO = UserDAO.getInstance();
-		userDAO.update(user);
+			UserDAO userDAO = UserDAO.getInstance();
+			userDAO.update(user);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
 			throw new AppException("switch_locale_command.error", e);
@@ -62,6 +59,6 @@ public class SwitchLocaleCommand extends Command {
 
 		session.setAttribute(AttributeNames.USER, user);
 
-		return Path.COMMAND_VIEW_LIST_SUBJECTS;	
+		return Path.COMMAND_VIEW_LIST_SUBJECTS;
 	}
 }

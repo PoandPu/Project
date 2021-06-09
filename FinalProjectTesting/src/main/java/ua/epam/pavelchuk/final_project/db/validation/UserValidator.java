@@ -11,10 +11,18 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 
+/**
+ * Validator for the fields associated with the User
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class UserValidator {
 
-	private UserValidator() {
-	}
+	/**
+	 * Private utility class constructor
+	 */
+	private UserValidator() {}
 
 	private static final String EMAIL_PATTERN = "^[\\w\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
 	private static final String LOGIN_PATTERN = "[A-Za-z][A-Za-z\\d]{2,19}";

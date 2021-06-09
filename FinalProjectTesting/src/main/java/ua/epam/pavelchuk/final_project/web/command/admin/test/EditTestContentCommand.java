@@ -1,9 +1,7 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.test;
 
-import java.io.IOException; 
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,7 +30,7 @@ public class EditTestContentCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Command starts");
 		String result = null;
 
@@ -132,7 +130,7 @@ public class EditTestContentCommand extends Command {
 			for (Answer a : answers) {
 				String optionRu = request.getParameter(ParameterNames.OPTION_RU + a.getId());
 				String optionEn = request.getParameter(ParameterNames.OPTION_EN + a.getId());
-				
+
 				// answer validation
 				if (optionRu.length() > 1024 || optionRu.length() < 1) {
 					request.getSession().setAttribute(AttributeNames.TEST_CONTENT_ERROR_MESSAGE,
@@ -144,7 +142,7 @@ public class EditTestContentCommand extends Command {
 							"admin.edit_test_content_jsp.error.answer_option_en");
 					return pathEdit;
 				}
-				
+
 				a.setNameRu(optionRu);
 				a.setNameEn(optionEn);
 
@@ -162,6 +160,5 @@ public class EditTestContentCommand extends Command {
 		}
 		return pathEdit;
 	}
-	
-	
+
 }

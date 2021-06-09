@@ -11,10 +11,18 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 
+/**
+ * Validator for test-related  fields 
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class TestValidator extends LocalizationValidator {
 	
-	private TestValidator() {
-	}
+	/**
+	 * Private utility class constructor
+	 */
+	private TestValidator() {}
 
 	private static final Logger LOG = Logger.getLogger(TestValidator.class);
 

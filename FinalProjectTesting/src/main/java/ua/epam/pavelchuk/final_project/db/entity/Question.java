@@ -1,10 +1,13 @@
 package ua.epam.pavelchuk.final_project.db.entity;
 
+/**
+ * Stores information about Question
+ * 
+ * @author O.Pavelchuk
+ *
+ */
 public class Question extends Entity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3585931730186945841L;
 
 	private String nameRu;

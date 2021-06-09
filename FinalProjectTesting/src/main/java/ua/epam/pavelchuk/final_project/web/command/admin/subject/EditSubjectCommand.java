@@ -1,8 +1,5 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.subject;
 
-import java.io.IOException; 
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,7 +27,7 @@ public class EditSubjectCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 
 		LOG.debug("Command starts");
 		String result = null;
@@ -47,23 +44,23 @@ public class EditSubjectCommand extends Command {
 	private String doGet(HttpServletRequest request) throws AppException {
 		int subjectId = 0;
 		try {
-		subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
 		} catch (NumberFormatException ex) {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
-		try {	
+		try {
 			SubjectDAO subjectDAO = SubjectDAO.getInstance();
 			Subject subject = subjectDAO.findSubjectById(subjectId);
-			
+
 			if (subject == null) {
 				LOG.warn("No subject with ID = [" + subjectId + "] found");
 				throw new AppException("edit_subject_command.error.no_subject_found");
 			}
-			
+
 			LOG.trace(subject);
 			request.setAttribute(AttributeNames.SUBJECT, subject);
-			
+
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
 			throw new AppException("edit_subject_command.error.get", e);
@@ -77,7 +74,7 @@ public class EditSubjectCommand extends Command {
 	private String doPost(HttpServletRequest request) throws AppException {
 		int subjectId = 0;
 		try {
-		subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
 		} catch (NumberFormatException ex) {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
@@ -88,7 +85,7 @@ public class EditSubjectCommand extends Command {
 			subjectDAO = SubjectDAO.getInstance();
 
 			Subject subject = subjectDAO.findSubjectById(subjectId);
-			
+
 			if (subject == null) {
 				LOG.warn("No subject with ID = [" + subjectId + "] found");
 				throw new AppException("edit_subject_command.error.no_subject_found");

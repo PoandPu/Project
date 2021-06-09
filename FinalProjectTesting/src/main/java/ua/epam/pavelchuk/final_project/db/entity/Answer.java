@@ -8,9 +8,6 @@ package ua.epam.pavelchuk.final_project.db.entity;
  */
 public class Answer extends Entity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -319232265967113628L;
 
 	private String nameRu;

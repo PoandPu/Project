@@ -1,12 +1,10 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -35,7 +33,7 @@ public class CheckTestCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Command starts");
 		String result = null;
 
@@ -55,7 +53,9 @@ public class CheckTestCommand extends Command {
 		}
 
 		HttpSession session = request.getSession();
-		long endTime = session.getAttribute(AttributeNames.TEST_END_TIME) !=null ? (long) session.getAttribute(AttributeNames.TEST_END_TIME) : 0;
+		long endTime = session.getAttribute(AttributeNames.TEST_END_TIME) != null
+				? (long) session.getAttribute(AttributeNames.TEST_END_TIME)
+				: 0;
 		int currentUserId = (int) session.getAttribute(AttributeNames.ID);
 		long currentTime = System.currentTimeMillis();
 
@@ -89,11 +89,11 @@ public class CheckTestCommand extends Command {
 	/**
 	 * Receives all IDs of the user's replies
 	 * 
-	 * @param request HttpServletRequest
+	 * @param request   HttpServletRequest
 	 * @param parameter pattern of search
 	 * 
 	 * @return List of IDs
-	*/
+	 */
 	private List<Integer> getUserAnswers(HttpServletRequest request, String parameter) {
 		List<Integer> userAnswers = new ArrayList<>();
 		Enumeration<String> enumeration = request.getParameterNames();
@@ -111,10 +111,10 @@ public class CheckTestCommand extends Command {
 	 * Finds the number of correct answers in %
 	 * 
 	 * @param request HttpServletRequest
-	 * @param testId ID of the test
+	 * @param testId  ID of the test
 	 * 
 	 * @return mark in %
-	*/
+	 */
 	private double checkTest(HttpServletRequest request, int testId) throws DBException {
 		QuestionDAO questionDAO = QuestionDAO.getInstance();
 		AnswerDAO answerDAO = AnswerDAO.getInstance();
@@ -136,15 +136,16 @@ public class CheckTestCommand extends Command {
 		}
 		return mark;
 	}
-	
+
 	/**
-	 * Checking the discrepancy between user responses and responses from the database
+	 * Checking the discrepancy between user responses and responses from the
+	 * database
 	 * 
-	 * @param answers list of answers from DB
+	 * @param answers     list of answers from DB
 	 * @param userAnswers list of users answers
 	 * 
 	 * @return true if the answer to the question is correct
-	*/
+	 */
 	private boolean checkIsCorrect(List<Answer> answers, List<Integer> userAnswers) {
 		for (Answer a : answers) {
 			if (a.getIsCorrect() && userAnswers.indexOf(a.getId()) == -1

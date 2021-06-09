@@ -1,9 +1,7 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import ua.epam.pavelchuk.final_project.Path;
 import ua.epam.pavelchuk.final_project.db.Role;
+import ua.epam.pavelchuk.final_project.db.dao.SubjectDAO;
 import ua.epam.pavelchuk.final_project.db.dao.TestDAO;
 import ua.epam.pavelchuk.final_project.db.entity.Test;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
@@ -31,7 +30,7 @@ public class ViewTestsListCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Start executing Command");
 		String result = null;
 		result = doGet(request);
@@ -72,17 +71,18 @@ public class ViewTestsListCommand extends Command {
 				: request.getParameter(ParameterNames.DIRECTION);
 
 		try {
+			SubjectDAO subjectDAO = SubjectDAO.getInstance();
+			if (subjectDAO.findSubjectById(subjectId) == null) {
+				LOG.warn("No subject with ID = [" + subjectId + "] found");
+				throw new AppException("edit_subject_command.error.no_subject_found");
+			}
+			
 			TestDAO testDAO = TestDAO.getInstance();
 			tests = testDAO.findTestBySubjectIdAllOrderBy(subjectId, orderBy, direction, (page - 1) * lines, lines);
-			
+		
 			while (tests.isEmpty() && page > 1) {
 				page--;
 				tests = testDAO.findTestBySubjectIdAllOrderBy(subjectId, orderBy, direction, (page - 1) * lines, lines);
-			}
-			// if tests is still empty -> errorPage
-			if (tests.isEmpty()) {
-				LOG.warn("No tests with subjectId[" + subjectId + "] found");
-				throw new AppException("view_tests_list_command.error.no_tests_found");
 			}
 		} catch (DBException ex) {
 			LOG.error(ex.getMessage());

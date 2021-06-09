@@ -17,6 +17,8 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
 /**
  * Servlet implementation class Controller
+ * 
+ * @author O.Pavelchuk
  */
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 2423353715955164816L;

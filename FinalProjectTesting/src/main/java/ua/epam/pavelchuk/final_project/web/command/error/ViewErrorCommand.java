@@ -1,8 +1,5 @@
 package ua.epam.pavelchuk.final_project.web.command.error;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,7 +21,7 @@ public class ViewErrorCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		request.setAttribute(AttributeNames.ERROR_MESSAGE, request.getParameter(AttributeNames.ERROR_MESSAGE));
 		return Path.PAGE_ERROR;
 	}

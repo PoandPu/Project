@@ -65,7 +65,7 @@ public abstract class AbstractDAO {
 			}
 			MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
 			dataSource
-			.setURL("jdbc:mysql://localhost:3306/TestScreeningDB?useUnicode=true&serverTimezone=GMT+3");
+			.setURL("jdbc:mysql://localhost:3306/TestScreeningDB?useUnicode=true&serverTimezone=UTC");
 			dataSource.setUser("root");
 			dataSource.setPassword("Alexei2000Semen");
 			ds = dataSource;

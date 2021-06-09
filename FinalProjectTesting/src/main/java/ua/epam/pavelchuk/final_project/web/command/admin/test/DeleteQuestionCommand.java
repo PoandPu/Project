@@ -1,8 +1,5 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.test;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,7 +14,7 @@ import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
-public class DeleteQuestionCommand extends Command{
+public class DeleteQuestionCommand extends Command {
 	/**
 	 * 
 	 */
@@ -26,7 +23,7 @@ public class DeleteQuestionCommand extends Command{
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Command starts");
 
 		String result = doPost(request);
@@ -40,10 +37,10 @@ public class DeleteQuestionCommand extends Command{
 		int subjectId = 0;
 		int questionId = 0;
 		try {
-		testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
-		subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
-		questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
-		}catch (NumberFormatException ex) {
+			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
+			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
+			questionId = Integer.parseInt(request.getParameter(ParameterNames.QUESTION_ID));
+		} catch (NumberFormatException ex) {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}

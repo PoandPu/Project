@@ -1,7 +1,7 @@
 package ua.epam.pavelchuk.final_project.db.entity;
 
 /**
- * Stores information about the User
+ * Stores information about a User
  * 
  * @author O.Pavelchuk
  *

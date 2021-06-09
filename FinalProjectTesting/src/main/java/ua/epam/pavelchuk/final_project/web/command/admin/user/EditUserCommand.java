@@ -1,8 +1,5 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.user;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,7 +28,7 @@ public class EditUserCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 
 		LOG.debug("Command starts");
 		String result = null;

@@ -1,8 +1,5 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.test;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,7 +27,7 @@ public class AddTestCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Command starts");
 
 		String result = null;
@@ -52,8 +49,6 @@ public class AddTestCommand extends Command {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
 			throw new AppException(Messages.ERR_PARSING_PARAMETERS, ex);
 		}
-
-		// it was made to return to the page tests_list page of current subject
 		request.setAttribute(AttributeNames.SUBJECT_ID, subjectId);
 		LOG.trace(subjectId);
 		return Path.ADMIN_ADD_TEST;

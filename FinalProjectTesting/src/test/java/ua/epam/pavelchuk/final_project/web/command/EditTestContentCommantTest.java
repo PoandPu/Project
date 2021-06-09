@@ -55,11 +55,14 @@ public class EditTestContentCommantTest {
 
 	@Test
 	void doGet() throws IOException, ServletException, AppException, DBException {
+		Question question = mock(Question.class);
 		try (MockedStatic<AnswerDAO> answerDAOMockedStatic = mockStatic(AnswerDAO.class);
 				MockedStatic<QuestionDAO> questionDAOMockedStatic = mockStatic(QuestionDAO.class)) {
 			when(AnswerDAO.getInstance()).thenReturn(answerDAO);
 			when(QuestionDAO.getInstance()).thenReturn(questionDAO);
-			when(request.getParameter(anyString())).thenReturn("1");
+			when(request.getParameter(anyString())).thenReturn("111");
+			when(questionDAO.findQuestionById(anyInt())).thenReturn(question);
+			when(question.getTestId()).thenReturn(111);
 
 			//testCommand.execute(request, response, HttpMethod.GET);
 			testCommand.execute(request, response, HttpMethod.GET);
@@ -86,7 +89,7 @@ public class EditTestContentCommantTest {
 			when(answerDAO.findAnswersByQuestion(anyInt())).thenReturn(answers);
 			when(LocalizationValidator.validationNameEn(anyString())).thenReturn(true);
 			when(LocalizationValidator.validationNameRu(anyString())).thenReturn(true);
-			when(request.getParameter(anyString())).thenReturn("1");
+			when(request.getParameter(anyString())).thenReturn("111");
 			
 			testCommand.execute(request, response, HttpMethod.POST);	
 			

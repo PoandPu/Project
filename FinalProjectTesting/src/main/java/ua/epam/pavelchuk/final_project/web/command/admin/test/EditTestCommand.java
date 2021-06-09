@@ -1,8 +1,5 @@
 package ua.epam.pavelchuk.final_project.web.command.admin.test;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,7 +27,7 @@ public class EditTestCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Command starts");
 		String result = null;
 
@@ -58,12 +55,12 @@ public class EditTestCommand extends Command {
 		try {
 			TestDAO testDAO = TestDAO.getInstance();
 			Test test = testDAO.findTestById(testId);
-			
+
 			if (test == null) {
 				LOG.warn("No test with ID = [" + testId + "] found");
 				throw new AppException("view_test_command.error.no_test_found");
 			}
-			
+
 			request.setAttribute(AttributeNames.TEST, test);
 		} catch (DBException e) {
 			LOG.error(e.getMessage());
@@ -78,7 +75,7 @@ public class EditTestCommand extends Command {
 		int subjectId = 0;
 		int time = 0;
 		int difficultyLevel = 0;
-		
+
 		try {
 			testId = Integer.parseInt(request.getParameter(ParameterNames.TEST_ID));
 			subjectId = Integer.parseInt(request.getParameter(ParameterNames.SUBJECT_ID));
@@ -90,20 +87,21 @@ public class EditTestCommand extends Command {
 
 		String nameRu = request.getParameter(ParameterNames.NAME_RU);
 		String nameEn = request.getParameter(ParameterNames.NAME_EN);
-		
-		//time field validation 
+
+		// time field validation
 		try {
 			time = Integer.parseInt(request.getParameter(ParameterNames.TEST_TIME));
 		} catch (NumberFormatException ex) {
 			LOG.error(Messages.ERR_PARSING_PARAMETERS_LOG);
-			request.getSession().setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "test_validation.error.time_not_number");
+			request.getSession().setAttribute(AttributeNames.TEST_ERROR_MESSAGE,
+					"test_validation.error.time_not_number");
 			return Path.COMMAND_EDIT_TEST + "&subjectId=" + subjectId + "&testId=" + testId;
 		}
 
 		try {
 			TestDAO testDAO = TestDAO.getInstance();
 			Test test = testDAO.findTestById(testId);
-			
+
 			if (test == null) {
 				LOG.warn("No test with ID = [" + testId + "] found");
 				throw new AppException("view_test_command.error.no_test_found");
@@ -112,7 +110,7 @@ public class EditTestCommand extends Command {
 			if (request.getParameter(ParameterNames.DELETE) != null) {
 				testDAO.delete(testId);
 			}
-			
+
 			if (!TestValidator.validate(request, nameRu, nameEn, time, test)) {
 				return Path.COMMAND_EDIT_TEST + "&subjectId=" + subjectId + "&testId=" + testId;
 			}

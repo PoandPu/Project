@@ -1,8 +1,5 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -31,7 +28,7 @@ public class UserSettingsCommand extends Command {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
-			throws IOException, ServletException, AppException {
+			throws AppException {
 		LOG.debug("Command starts");
 		String result = null;
 
@@ -57,7 +54,7 @@ public class UserSettingsCommand extends Command {
 		String newPassword = request.getParameter(ParameterNames.NEW_PASSWORD);
 		String confirmPassword = request.getParameter(ParameterNames.CONFIRM_NEW_PASSWORD);
 		try {
-			if (!UserValidator.validate(request, firstName, lastName, email,user, newPassword, confirmPassword)) {
+			if (!UserValidator.validate(request, firstName, lastName, email, user, newPassword, confirmPassword)) {
 				return Path.COMMAND_SETTINGS_USER;
 			}
 
