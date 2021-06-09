@@ -16,11 +16,13 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 import ua.epam.pavelchuk.final_project.web.mail.SendMail;
 import ua.epam.pavelchuk.final_project.web.password_encryption.PasswordUtils;
 
+/**
+ * Generates a new password for a user
+ * 
+ * @author O.Pavelchuk
+ */
 public class GeneratePasswordCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4819639561973518537L;
 	private static final Logger LOG = Logger.getLogger(GeneratePasswordCommand.class);
 

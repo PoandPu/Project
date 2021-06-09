@@ -2,6 +2,7 @@ package ua.epam.pavelchuk.final_project.web.command;
 
 /**
  * Utility class that contains attribute names
+ * 
  * @author O.Pavelchuk
  *
  */

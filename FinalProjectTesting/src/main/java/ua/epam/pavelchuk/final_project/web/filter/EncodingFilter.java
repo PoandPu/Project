@@ -11,10 +11,11 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+
 /**
- * Encoding filter.
+ * Encoding filter
  * 
- * @author A.Pavelchuk
+ * @author O.Pavelchuk
  *
  */
 public class EncodingFilter implements Filter{

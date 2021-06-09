@@ -17,11 +17,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Finds users by pattern
+ * 
+ * @author O.Pavelchuk
+ */
 public class FindUserCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4433959992038742752L;
 	private static final Logger LOG = Logger.getLogger(FindUserCommand.class);
 

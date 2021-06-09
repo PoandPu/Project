@@ -20,10 +20,9 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 import ua.epam.pavelchuk.final_project.web.password_encryption.PasswordUtils;
 
 /**
- * Login command.
+ * Login command
  * 
- * @author
- * 
+ * @author O.Pavelchuk
  */
 public class LoginCommand extends Command {
 

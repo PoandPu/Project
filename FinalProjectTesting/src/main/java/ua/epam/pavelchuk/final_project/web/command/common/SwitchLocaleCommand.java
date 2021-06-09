@@ -17,11 +17,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Switches locale for a user in DB and update it in his session
+ * 
+ * @author O.Pavelchuk
+ */
 public class SwitchLocaleCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -948407284117005741L;
 	private static final Logger LOG = Logger.getLogger(SwitchLocaleCommand.class);
 

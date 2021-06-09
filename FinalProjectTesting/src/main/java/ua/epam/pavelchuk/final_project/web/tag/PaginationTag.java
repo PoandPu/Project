@@ -6,7 +6,11 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
-
+/**
+ * Pagination tag for jsp pages
+ * 
+ * @author O.Pavelchuk
+ */
 public class PaginationTag extends SimpleTagSupport {
 
 	private String command;

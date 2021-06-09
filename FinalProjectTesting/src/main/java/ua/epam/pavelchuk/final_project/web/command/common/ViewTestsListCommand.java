@@ -20,11 +20,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * View of all tests from current subject
+ * 
+ * @author O.Pavelchuk
+ */
 public class ViewTestsListCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4529481474754261462L;
 	private static final Logger LOG = Logger.getLogger(ViewTestsListCommand.class);
 

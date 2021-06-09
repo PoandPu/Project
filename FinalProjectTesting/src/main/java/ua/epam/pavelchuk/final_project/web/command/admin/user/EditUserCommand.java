@@ -18,11 +18,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Edits a users email, name, status Blocked/Unblocked
+ * 
+ * @author O.Pavelchuk
+ */
 public class EditUserCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4433959992038742752L;
 	private static final Logger LOG = Logger.getLogger(EditUserCommand.class);
 

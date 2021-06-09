@@ -11,10 +11,9 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 
 /**
- * Logout
+ * Logout command
  * 
- * @author
- *
+ * @author O.Pavelchuk
  */
 public class LogoutCommand extends Command {
 

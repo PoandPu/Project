@@ -18,11 +18,13 @@ import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 import ua.epam.pavelchuk.final_project.web.password_encryption.PasswordUtils;
 
+/**
+ * User settings command
+ * 
+ * @author O.Pavelchuk
+ */
 public class UserSettingsCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1060523174517623317L;
 	private static final Logger LOG = Logger.getLogger(UserSettingsCommand.class);
 

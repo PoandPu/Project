@@ -18,11 +18,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
  
+/**
+ * Finds all users for the view_users_list page
+ * 
+ * @author O.Pavelchuk
+ */
 public class ViewUsersListCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1346821585808172634L;
 	private static final Logger LOG = Logger.getLogger(ViewUsersListCommand.class);
 

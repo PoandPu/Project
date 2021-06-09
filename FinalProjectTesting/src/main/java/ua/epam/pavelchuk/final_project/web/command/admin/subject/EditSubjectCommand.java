@@ -17,11 +17,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Edits a subject
+ * 
+ * @author O.Pavelchuk
+ */
 public class EditSubjectCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -9120726057195419542L;
 	private static final Logger LOG = Logger.getLogger(EditSubjectCommand.class);
 

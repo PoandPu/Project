@@ -15,8 +15,16 @@ import org.apache.log4j.Logger;
 import ua.epam.pavelchuk.final_project.db.exception.AppException;
 import ua.epam.pavelchuk.final_project.db.exception.Messages;
 
+/**
+ * Sends email to user
+ * 
+ * @author O.Pavelchuk
+ */
 public class SendMail {
 
+	/**
+	 * Private utility class constructor
+	 */
 	private SendMail() {
 	}
 
@@ -43,7 +51,7 @@ public class SendMail {
 		});
 	}
 
-	public static void sendRefence(String toEmail, String login, String hash) throws AppException {
+	public static void sendPasswordRecoveryLink(String toEmail, String login, String hash) throws AppException {
 		// Sender's email ID needs to be mentioned
 		Session session = authentification();
 		try {

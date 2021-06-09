@@ -20,11 +20,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Edits a test content (answers and questions)
+ * 
+ * @author O.Pavelchuk
+ */
 public class EditTestContentCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2684928586891220013L;
 	private static final Logger LOG = Logger.getLogger(EditTestContentCommand.class);
 

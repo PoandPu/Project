@@ -101,7 +101,7 @@ public class CommandContainer {
 		LOG.trace(commands);
 		if (commandName == null || !commands.containsKey(commandName)) {
 			LOG.trace("Command not found, name --> " + commandName);
-			return commands.get("noCommand"); 
+			return commands.get("viewErrorPage"); 
 		}
 		
 		return commands.get(commandName);

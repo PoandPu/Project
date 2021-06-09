@@ -11,6 +11,11 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Google captcha implementation
+ * 
+ * @author O.Pavelchuk
+ */
 public class VerifyUtils {
 	
 	private VerifyUtils() {

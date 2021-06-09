@@ -18,11 +18,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.password_encryption.PasswordUtils;
 
+/**
+ * Registration command
+ * 
+ * @author O.Pavelchuk
+ */
 public class RegistrationCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6940385928019345652L;
 	private static final Logger LOG = Logger.getLogger(RegistrationCommand.class);
 

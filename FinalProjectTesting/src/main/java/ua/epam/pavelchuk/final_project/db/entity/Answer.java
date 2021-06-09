@@ -15,8 +15,7 @@ public class Answer extends Entity {
 	private boolean isCorrect;
 	private int questionId;
 
-	public Answer() {
-	}
+	public Answer() {}
 
 	public Answer(String nameRu, String nameEn) {
 		this.nameEn = nameEn;

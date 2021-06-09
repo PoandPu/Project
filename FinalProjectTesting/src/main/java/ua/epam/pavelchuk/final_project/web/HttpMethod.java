@@ -1,7 +1,8 @@
 package ua.epam.pavelchuk.final_project.web;
 /**
  * Enumerations of HTTP request methods
- * @author 
+ * 
+ * @author O.Pavelchuk
  *
  */
 public enum HttpMethod {

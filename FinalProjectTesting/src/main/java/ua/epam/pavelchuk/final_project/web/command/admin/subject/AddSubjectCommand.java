@@ -15,13 +15,14 @@ import ua.epam.pavelchuk.final_project.web.HttpMethod;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Adds a subject
+ * 
+ * @author O.Pavelchuk
+ */
 public class AddSubjectCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5625321633039361639L;
-
 	private static final Logger LOG = Logger.getLogger(AddSubjectCommand.class);
 
 	@Override

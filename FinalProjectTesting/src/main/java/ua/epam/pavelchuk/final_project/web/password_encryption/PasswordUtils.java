@@ -10,6 +10,11 @@ import java.util.Random;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+/**
+ * Password encryption Base64
+ * 
+ * @author O.Pavelchuk
+ */
 public class PasswordUtils {
 
 	private PasswordUtils() {

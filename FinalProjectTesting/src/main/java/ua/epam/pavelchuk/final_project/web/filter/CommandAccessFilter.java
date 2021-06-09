@@ -22,6 +22,11 @@ import ua.epam.pavelchuk.final_project.db.Role;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Command access filter
+ * 
+ * @author O.Pavelchuk
+ */
 public class CommandAccessFilter implements Filter {
 
 	private static final Logger LOG = Logger.getLogger(CommandAccessFilter.class);

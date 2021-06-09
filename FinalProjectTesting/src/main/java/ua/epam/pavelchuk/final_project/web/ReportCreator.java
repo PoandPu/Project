@@ -41,6 +41,11 @@ import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Creates reports in PDF format
+ * 
+ * @author O.Pavelchuk
+ */
 public class ReportCreator extends HttpServlet {
 	/**
 	 * 

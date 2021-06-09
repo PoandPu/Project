@@ -16,11 +16,13 @@ import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 import ua.epam.pavelchuk.final_project.web.mail.SendMail;
 
+/**
+ * Manages the password recovery process for a user
+ * 
+ * @author O.Pavelchuk
+ */
 public class PasswordRecoveryCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5734516718078837289L;
 	private static final Logger LOG = Logger.getLogger(PasswordRecoveryCommand.class);
 
@@ -75,15 +77,11 @@ public class PasswordRecoveryCommand extends Command {
 
 			String hash = userDAO.createHash(user);
 			LOG.trace("Sending a message to : " + user.getEmail());
-			SendMail.sendRefence(user.getEmail(), user.getLogin(), hash);
+			SendMail.sendPasswordRecoveryLink(user.getEmail(), user.getLogin(), hash);
 
 			email = user.getEmail().replaceFirst("[\\S]{2,5}@[\\S]{2,3}", "******");
 			message = "script1";
-			// message = "A letter will now come to the mail "+ ", specified during
-			// registration. It will contain a link that should be followed so that we can
-			// create a temporary password. It is very important not to forget to check the
-			// \"SPAM\" folder in your mailbox if the letter does not arrive for a long
-			// time!";
+			
 		} catch (DBException ex) {
 			LOG.error(ex.getMessage());
 			throw new AppException("password_recovery_command.error", ex);

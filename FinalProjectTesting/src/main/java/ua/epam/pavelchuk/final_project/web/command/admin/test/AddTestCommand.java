@@ -17,11 +17,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Adds a test
+ * 
+ * @author O.Pavelchuk
+ */
 public class AddTestCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6240621831935572912L;
 	private static final Logger LOG = Logger.getLogger(AddTestCommand.class);
 

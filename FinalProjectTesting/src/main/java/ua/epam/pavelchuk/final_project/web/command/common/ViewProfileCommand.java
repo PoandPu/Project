@@ -22,11 +22,13 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * View profile command with results and information about the user
+ * 
+ * @author O.Pavelchuk
+ */
 public class ViewProfileCommand extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8555076149696805379L;
 	private static final Logger LOG = Logger.getLogger(ViewProfileCommand.class);
 

@@ -19,10 +19,15 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Deletes and put 0 mark by test
+ * 
+ * @author O.Pavelchuk
+ */
 public class FailTestCommand extends Command {
 
 	private static final long serialVersionUID = -1722277704315934800L;
-	private static final Logger LOG = Logger.getLogger(CheckTestCommand.class);
+	private static final Logger LOG = Logger.getLogger(FailTestCommand.class);
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)

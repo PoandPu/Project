@@ -26,6 +26,11 @@ import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.Command;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
+/**
+ * Checks a test
+ * 
+ * @author O.Pavelchuk
+ */
 public class CheckTestCommand extends Command {
 
 	private static final long serialVersionUID = -8541535961380321564L;

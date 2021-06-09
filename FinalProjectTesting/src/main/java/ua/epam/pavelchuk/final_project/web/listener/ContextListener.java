@@ -9,9 +9,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
- * Context listener. Initialize log4j.
- * @author 
- *
+ * Initializes log4j
+ * 
+ * @author O.Pavelchuk
  */
 public class ContextListener implements ServletContextListener {
 
