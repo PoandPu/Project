@@ -56,7 +56,7 @@ public class LoginCommand extends Command {
 		String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 
 		if (!VerifyUtils.verify(gRecaptchaResponse)) {
-			request.getSession().setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, "CAPTHCA INVALID");
+			request.getSession().setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, "login_jsp.error.captcha_invalid");
 			return Path.COMMAND_VIEW_LOGIN_PAGE;
 		}
 

@@ -75,23 +75,28 @@ This way we define the menu located at the right of header.
 						<button class="dropbtn" onclick="myFunction()">
 							Localization <i class="fa fa-caret-down"></i>
 						</button>
-						<div class="dropdown-content" id="myDropdown">	
-							<form action="controller" method="post" >
+						<div class="dropdown-content" id="myDropdown">
+							<form action="controller" method="post">
 								<input type="hidden" name="command" value="switchLocale" /><input
-									type="hidden" name="language" value="ru" /> <input class = "edit" style = "border-radius: 0;"
+									type="hidden" name="language" value="ru" /> <input
+									class="edit"
+									style="border-radius: 0; background-image: url(http://localhost:8080/FinalProjectTesting/images/russian.png); background-size: 100% 100%;"
 									type="submit" name="submit" value="Russian">
 							</form>
 							<form action="controller" method="post">
 								<input type="hidden" name="command" value="switchLocale" /><input
-									type="hidden" name="language" value="en" /> <input class = "edit" style = "padding: 12px 42.2px; border-radius: 0;"
+									type="hidden" name="language" value="en" /> <input
+									class="edit"
+									style="padding: 12px 42.2px; border-radius: 0; background-image: url(http://localhost:8080/FinalProjectTesting/images/english.png); background-size: 100% 100%;"
 									type="submit" name="submit" value="English">
-									
+
 							</form>
-							
+
 						</div>
 					</div>
-				</div>&nbsp;
-				
+				</div>
+				&nbsp;
+
 
 
 				<%--=======
