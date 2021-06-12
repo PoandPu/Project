@@ -41,8 +41,6 @@ public class SwitchLocaleCommand extends Command {
 		String lang = request.getParameter(ParameterNames.LANGUAGE);
 		User user = (User) session.getAttribute(AttributeNames.USER);
 		LOG.debug("Users language BEFORE " + user.getLanguage());
-		LOG.debug("Users password" + user.getPassword());
-		LOG.debug("Users password key" + user.getPasswordKey());
 		if (lang.equals(Fields.EN)) {
 			user.setLanguage(Fields.EN);
 		} else {

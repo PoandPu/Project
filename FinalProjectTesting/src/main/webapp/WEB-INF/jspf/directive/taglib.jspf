@@ -15,12 +15,6 @@ JSTL format tag library.
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <fmt:setBundle basename="resource"/>
 
-<%--=========================================================================== 
-<c:set var="language" scope="session" 
-	value="${not empty user.language ? user.language : pageContext.request.locale.language}"/>
-<fmt:setLocale value="${language}" />
-===========================================================================--%> 
-
 
 <c:set var="language" scope="session" 
 	value="${not empty sessionScope.user.language ? sessionScope.user.language : pageContext.request.locale.language}"/>
