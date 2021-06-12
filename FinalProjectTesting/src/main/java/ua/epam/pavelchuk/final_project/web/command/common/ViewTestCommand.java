@@ -87,7 +87,7 @@ public class ViewTestCommand extends Command {
 					LOG.warn("No \"test_end_time\" or \"test\" attribute found in session");
 					throw new AppException("view_test_command.error.get.incorrect_way");
 				}
-				if (!test.equals(session.getAttribute(AttributeNames.TEST))) {
+				if (test.getId() != ((Test) session.getAttribute(AttributeNames.TEST)).getId()) {
 					LOG.warn("The user tried to open another test, different from the one stored in his session");
 					throw new AppException("view_test_command.error.get.incorrect_way");
 				}
@@ -151,7 +151,7 @@ public class ViewTestCommand extends Command {
 			subject = subjectDAO.findSubjectById(subjectId);
 
 			if (session.getAttribute(AttributeNames.TEST) != null) {
-				if (test.equals(session.getAttribute(AttributeNames.TEST))) {
+				if (test.getId() == ((Test) session.getAttribute(AttributeNames.TEST)).getId()) {
 					return Path.COMMAND_VIEW_TEST + "&testId=" + testId;
 				} else {
 					session.setAttribute(AttributeNames.TEST_ERROR_MESSAGE, "tests_list_jsp.error.test_was_started");

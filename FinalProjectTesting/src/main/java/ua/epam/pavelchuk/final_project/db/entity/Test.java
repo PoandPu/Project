@@ -108,8 +108,6 @@ public class Test extends Entity {
 			return false;
 		if (subjectId != test.getSubjectId())
 			return false;
-		if (time != test.getTime())
-			return false;
 		else {
 			return true;
 		}
