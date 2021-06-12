@@ -39,12 +39,7 @@ public class TestDAOTest {
 	public void getTestById() throws DBException {
 		assertEquals(test, testDAO.findTestById(test.getId()));
 	}
-	
-//	@org.junit.Test
-//	public void findTestsBySubject() throws DBException {
-//		assertFalse(testDAO.findTestsBySubject(test.getSubjectId()).isEmpty());
-//	}
-	
+		
 	@org.junit.Test
 	public void findAllOrderBy() throws DBException {
 		assertFalse(testDAO.findTestBySubjectIdAllOrderBy(test.getSubjectId(), "id", "ASC", 1, 10).isEmpty());
