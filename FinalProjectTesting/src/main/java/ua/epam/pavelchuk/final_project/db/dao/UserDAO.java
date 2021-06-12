@@ -69,6 +69,7 @@ public class UserDAO extends AbstractDAO {
 	
 	private static final String SQL_FIND_USER_BY_HASH = "SELECT users.* FROM pass_recovery JOIN users ON users.id = pass_recovery.user_id WHERE pass_recovery.hash = ?";		
 	private static final String SQL_DELETE_HASH = "DELETE FROM pass_recovery WHERE `hash` = ?";
+	private static final String SQL_DELETE_HASH_BY_USER_ID = "DELETE FROM pass_recovery WHERE `user_id` = ?";
 	
 	/**
 	 * singleton pattern
@@ -555,7 +556,7 @@ public class UserDAO extends AbstractDAO {
 	
 	
 	/**
-	 * Creates a password recovery link
+	 * Creates a password recovery link and event that deletes in some period of time
 	 * 
 	 * @param User
 	 * @return String hash
@@ -571,8 +572,15 @@ public class UserDAO extends AbstractDAO {
 			con = getConnection();
 			con.setAutoCommit(false);
 			con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-			pstmt = con.prepareStatement(SQL_INSERT_HASH);
+			
+			pstmt = con.prepareStatement(SQL_DELETE_HASH_BY_USER_ID);
 			int k = 1;
+			pstmt.setInt(k++, user.getId());
+			pstmt.executeUpdate();
+			close(pstmt);
+			
+			pstmt = con.prepareStatement(SQL_INSERT_HASH);
+			k = 1;
 			pstmt.setString(k++, hash);
 			pstmt.setInt(k++, user.getId());
 			pstmt.executeUpdate();

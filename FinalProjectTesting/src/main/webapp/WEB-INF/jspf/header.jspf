@@ -26,13 +26,13 @@ Header (top area).
 
 <tr>
 	<td id="header"><c:if test="${not empty user}">
-			<%--=========================================================================== 
+<%--=========================================================================== 
 This is the user menu.  
 ===========================================================================--%>
 
 			<div id="leftHeader">
 
-				<%--=========================================================================== 
+<%--=========================================================================== 
 This way we define the settings anchor.
 ===========================================================================--%>
 				<a href="controller?command=viewAllSubjects" class="bot1"><fmt:message
@@ -45,7 +45,7 @@ This way we define the settings anchor.
 
 				<c:choose>
 
-					<%--=========================================================================== 
+<%--=========================================================================== 
 This way we define the ADMIN MENU. 
 ===========================================================================--%>
 					<c:when test="${sessionScope.userRole.name == 'admin' }">
@@ -54,7 +54,7 @@ This way we define the ADMIN MENU.
 					</c:when>
 
 
-					<%--=========================================================================== 
+<%--=========================================================================== 
 This way we define the USER MENU.
 ===========================================================================--%>
 					<c:when test="${sessionScope.userRole.name == 'client'}">
@@ -64,7 +64,7 @@ This way we define the USER MENU.
 
 			</div>
 
-			<%--=========================================================================== 
+<%--=========================================================================== 
 This way we define the menu located at the right of header. 
 ===========================================================================--%>
 
@@ -77,45 +77,36 @@ This way we define the menu located at the right of header.
 						</button>
 						<div class="dropdown-content" id="myDropdown">
 							<form action="controller" method="post">
-								<input type="hidden" name="command" value="switchLocale" /><input
+								<input type="hidden" name="command" value="switchLocale" />
+								<input type="hidden" name="path" value="${pageContext.request.queryString}"/>
+								<input
 									type="hidden" name="language" value="ru" /> <input
 									class="edit"
 									style="border-radius: 0; background-image: url(http://localhost:8080/FinalProjectTesting/images/russian.png); background-size: 100% 100%;"
 									type="submit" name="submit" value="Russian">
 							</form>
 							<form action="controller" method="post">
-								<input type="hidden" name="command" value="switchLocale" /><input
+								<input type="hidden" name="command" value="switchLocale" />
+								<input type="hidden" name="path" value="${pageContext.request.queryString}"/>
+								<input
 									type="hidden" name="language" value="en" /> <input
 									class="edit"
 									style="padding: 12px 42.2px; border-radius: 0; background-image: url(http://localhost:8080/FinalProjectTesting/images/english.png); background-size: 100% 100%;"
 									type="submit" name="submit" value="English">
 
 							</form>
-
 						</div>
 					</div>
 				</div>
 				&nbsp;
 
-
-
-				<%--=======
-
-<form  action="controller" method="post">
-									<input type="hidden" name="command" value="switchLocale" />  <input
-										 type="submit" name="submit"
-										value="Switch locale">
-								</form>
-
-=====--%>
-
-				<%--=========================================================================== 
+<%--=========================================================================== 
 Type user name if the user object is presented in the current session.  
 ===========================================================================--%>
 				<label><c:out
 						value="${sessionScope.user.firstName} ${sessionScope.user.lastName}" /></label>
 
-				<%--=========================================================================== 
+<%--=========================================================================== 
 Type user role name if the user object is presented in the current session.  
 ===========================================================================--%>
 				<c:if test="${not empty sessionScope.userRole}">
@@ -123,7 +114,7 @@ Type user role name if the user object is presented in the current session.
 				</c:if>
 
 
-				<%--=========================================================================== 
+<%--=========================================================================== 
 Type link to logout  
 ===========================================================================--%>
 				<a href="controller?command=logout" class="bot1"><fmt:message

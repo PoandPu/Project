@@ -1,12 +1,11 @@
 package ua.epam.pavelchuk.final_project.web.command.common;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest; 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import ua.epam.pavelchuk.final_project.Path;
 import ua.epam.pavelchuk.final_project.db.Fields;
 import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
 import ua.epam.pavelchuk.final_project.db.entity.User;
@@ -41,7 +40,6 @@ public class SwitchLocaleCommand extends Command {
 		HttpSession session = request.getSession();
 		String lang = request.getParameter(ParameterNames.LANGUAGE);
 		User user = (User) session.getAttribute(AttributeNames.USER);
-
 		LOG.debug("Users language BEFORE " + user.getLanguage());
 		LOG.debug("Users password" + user.getPassword());
 		LOG.debug("Users password key" + user.getPasswordKey());
@@ -60,7 +58,6 @@ public class SwitchLocaleCommand extends Command {
 		LOG.debug("Users language AFTER " + user.getLanguage());
 
 		session.setAttribute(AttributeNames.USER, user);
-
-		return Path.COMMAND_VIEW_LIST_SUBJECTS;
+		return request.getContextPath() + request.getServletPath() + "?" + request.getParameter("path");
 	}
 }
