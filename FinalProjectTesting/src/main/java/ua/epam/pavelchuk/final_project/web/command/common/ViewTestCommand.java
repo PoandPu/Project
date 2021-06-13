@@ -162,7 +162,7 @@ public class ViewTestCommand extends Command {
 			// increase the number of requests of the current test
 			testDAO.increaseRequests(testId);
 
-			int timeForTest = testDAO.findTimeByTestId(testId);// useless method
+			int timeForTest = testDAO.findTimeByTestId(testId);
 			long startTime = System.currentTimeMillis();
 			long endTime = startTime + timeForTest * 60000;
 

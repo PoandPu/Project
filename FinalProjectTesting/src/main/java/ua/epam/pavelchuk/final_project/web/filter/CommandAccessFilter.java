@@ -45,10 +45,10 @@ public class CommandAccessFilter implements Filter {
 		access.put(Role.ADMIN, Arrays.asList(filterConfig.getInitParameter("admin").split("\\s+")));
 		access.put(Role.CLIENT, Arrays.asList(filterConfig.getInitParameter("client").split("\\s+")));
 		LOG.debug("Access map = " + access);
-		
+
 		commons.addAll(Arrays.asList(filterConfig.getInitParameter("common").split("\\s+")));
 		LOG.debug("Commons commands = " + commons);
-		
+
 		noControl.addAll(Arrays.asList(filterConfig.getInitParameter("no_control").split("\\s+")));
 		LOG.debug("Without control commands = " + noControl);
 		LOG.trace("AccessFilter has been initialized");
@@ -62,19 +62,19 @@ public class CommandAccessFilter implements Filter {
 		if (checkAccess(request)) {
 			LOG.trace("Filter finished");
 			chain.doFilter(request, response);
-		} else if (session.getAttribute(AttributeNames.USER) != null && ((User) session.getAttribute(AttributeNames.USER)).getIsBlocked()) {
-			LOG.debug("!!!!!!!!!!!!!!!!!!! Logout command");
-			((HttpServletResponse) response).sendRedirect(Path.COMMAND_LOGOUT);
-		} else if (session.getAttribute(AttributeNames.USER) != null) {
-			((HttpServletRequest) request).setAttribute(AttributeNames.ERROR_MESSAGE,
-					"command_access.error.no_root");
-			request.getRequestDispatcher(Path.PAGE_ERROR).forward(request, response);
-		}else {
-			session.setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE,
-					"command_access.error.log_in");
+		} else if (session.getAttribute(AttributeNames.USER) == null) {
+			LOG.trace("No user found in session, access denied");
+			session.setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, "command_access.error.log_in");
 			request.getRequestDispatcher(Path.PAGE_LOGIN).forward(request, response);
+		} else if (((User) session.getAttribute(AttributeNames.USER)).getIsBlocked()) {
+			LOG.trace("User with id[" + ((User) session.getAttribute(AttributeNames.USER)).getId() + "] is blocked!");
+			((HttpServletResponse) response).sendRedirect(Path.COMMAND_LOGOUT);
+		} else {
+			LOG.trace("User " + session.getAttribute(AttributeNames.USER) + " don't have access to this resource!");
+			((HttpServletRequest) request).setAttribute(AttributeNames.ERROR_MESSAGE, "command_access.error.no_root");
+			request.getRequestDispatcher(Path.PAGE_ERROR).forward(request, response);
 		}
-		
+
 	}
 
 	private boolean checkAccess(ServletRequest req) {
@@ -98,9 +98,9 @@ public class CommandAccessFilter implements Filter {
 			return false;
 		}
 
+		// updates user in session and check user status
 		try {
-			User currentUser = (User) session.getAttribute(AttributeNames.USER);
-			currentUser = UserDAO.getInstance().findById(currentUser.getId());
+			User currentUser = UserDAO.getInstance().findById((int) session.getAttribute(AttributeNames.ID));
 			session.setAttribute(AttributeNames.USER, currentUser);
 			if (currentUser.getIsBlocked()) {
 				return false;
@@ -108,8 +108,6 @@ public class CommandAccessFilter implements Filter {
 		} catch (DBException e) {
 			LOG.error(e);
 		}
-		
-		
 		return access.get(userRole).contains(command) || commons.contains(command);
 	}
 }
