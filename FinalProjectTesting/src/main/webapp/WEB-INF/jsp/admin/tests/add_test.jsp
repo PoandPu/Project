@@ -65,7 +65,7 @@
 								</div>
 							</div>
 							<div class="row">
-							<a href ="?command=viewTestsList&subjectId=${subjectId}" class = "bot1"><fmt:message
+							<a href ="controller?command=viewTestsList&subjectId=${subjectId}" class = "bot1"><fmt:message
 									key="test_jsp.behind" /></a>
 								<input class="form" type="submit" name="submit"
 									value=<fmt:message key="save" />>

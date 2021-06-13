@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
-<%@ taglib prefix="ex" uri="/WEB-INF/tag/pagination.tld"%>
+<%@ taglib prefix="ex" uri="/WEB-INF/custom/pagination.tld"%>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
 <html>
 <c:set var = "title" value ="subjects_list_jsp.subjects_list"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
@@ -13,27 +14,16 @@
 					<tr>
 						<th><fmt:message key="subjects_list_jsp.subject_name" /> <c:if
 								test="${language == 'ru'}">
-								<a
-									href="controller?command=viewAllSubjects&orderBy=name_ru&direction=ASC&page=${page}&lines=${lines}"
-									class="bot1g">\/</a>
-								<a
-									href="controller?command=viewAllSubjects&orderBy=name_ru&direction=DESC&page=${page}&lines=${lines}"
-									class="bot1g">/\</a>
+								<tag:sort command="viewAllSubjects" orderBy="name_ru" page="${page}" lines="${lines}"></tag:sort>
+							
 							</c:if> <c:if test="${language == 'en'}">
-								<a
-									href="controller?command=viewAllSubjects&orderBy=name_en&direction=ASC&page=${page}&lines=${lines}"
-									class="bot1g">\/</a>
-								<a
-									href="controller?command=viewAllSubjects&orderBy=name_en&direction=DESC&page=${page}&lines=${lines}"
-									class="bot1g">/\</a>
+								<tag:sort command="viewAllSubjects" orderBy="name_en" page="${page}" lines="${lines}"></tag:sort>
 							</c:if></th>
 					</tr>
 					<c:forEach var="subject" items="${subjects}">
 						<tr>
-							<td><a
-								href="controller?command=viewTestsList&subjectId=${subject.id}">
-									<c:out
-										value="${language eq 'ru' ? subject.nameRu : subject.nameEn}" />
+							<td><a href="controller?command=viewTestsList&subjectId=${subject.id}">
+									<c:out value="${language eq 'ru' ? subject.nameRu : subject.nameEn}" />
 							</a></td>
 						</tr>
 					</c:forEach>

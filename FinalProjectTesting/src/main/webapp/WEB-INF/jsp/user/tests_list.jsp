@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
-<%@ taglib prefix="ex" uri="/WEB-INF/tag/pagination.tld"%>
+<%@ taglib prefix="ex" uri="/WEB-INF/custom/pagination.tld"%>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
 <html>
 <c:set var = "title" value ="tests_list_jsp.title"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
@@ -14,38 +15,20 @@
 					<tr>
 						<th><fmt:message key="tests_list_jsp.test_name" /> <c:if
 								test="${language == 'ru'}">
-								<a
-									href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=name_ru&direction=ASC&page=${page}&lines=${lines}"
-									class="bot1g">\/</a>
-								<a
-									href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=name_ru&direction=DESC&page=${page}&lines=${lines}"
-									class="bot1g">/\</a>
+								<tag:sort command="viewTestsList" parameter="&subjectId=${subjectId}" orderBy="name_ru" page="${page}" lines="${lines}"></tag:sort>
 							</c:if> <c:if test="${language == 'en'}">
-								<a
-									href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=name_en&direction=ASC&page=${page}&lines=${lines}"
-									class="bot1g">\/</a>
-								<a
-									href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=name_en&direction=DESC&page=${page}&lines=${lines}"
-									class="bot1g">/\</a>
+								<tag:sort command="viewTestsList" parameter="&subjectId=${subjectId}" orderBy="name_en" page="${page}" lines="${lines}"></tag:sort>
 							</c:if></th>
-						<th><fmt:message key="tests_list_jsp.duration" /> <a
-							href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=time_minutes&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=time_minutes&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
+						<th><fmt:message key="tests_list_jsp.duration" />
+							<tag:sort command="viewTestsList" parameter="&subjectId=${subjectId}" orderBy="time_minutes" page="${page}" lines="${lines}"></tag:sort>
+						</th>
 						<th><fmt:message key="tests_list_jsp.number_of_requests" />
-							<a
-							href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=numb_of_requests&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=numb_of_requests&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
-						<th><fmt:message key="tests_list_jsp.difficulty_level" /> <a
-							href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=difficulty_level_id&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewTestsList&subjectId=${subjectId}&orderBy=difficulty_level_id&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
+							<tag:sort command="viewTestsList" parameter="&subjectId=${subjectId}" orderBy="numb_of_requests" page="${page}" lines="${lines}"></tag:sort>
+						</th>
+						<th><fmt:message key="tests_list_jsp.difficulty_level" /> 
+							<tag:sort command="viewTestsList" parameter="&subjectId=${subjectId}" orderBy="difficulty_level_id" page="${page}" lines="${lines}"></tag:sort>
+						</th>
 						<th></th>
-
 					</tr>
 
 

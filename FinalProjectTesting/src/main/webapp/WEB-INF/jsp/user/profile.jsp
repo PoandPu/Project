@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
-<%@ taglib prefix="ex" uri="/WEB-INF/tag/pagination.tld"%>
+<%@ taglib prefix="ex" uri="/WEB-INF/custom/pagination.tld"%>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
 <html>
 <c:set var = "title" value ="profile_jsp.title"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
@@ -52,48 +53,23 @@
 							</th>
 						</tr>
 						<tr>
-							<th><fmt:message key="profile_jsp.subject_name" /> <c:if
-									test="${language == 'ru'}">
-									<a
-										href="controller?command=userProfile&userId=${user.id}&orderBy=subjects.name_ru&direction=ASC&page=${page}&lines=${lines}"
-										class="bot1g">\/</a>
-									<a
-										href="controller?command=userProfile&userId=${user.id}&orderBy=subjects.name_ru&direction=DESC&page=${page}&lines=${lines}"
-										class="bot1g">/\</a>
+							<th><fmt:message key="profile_jsp.subject_name" /> <c:if test="${language == 'ru'}">
+									<tag:sort command="userProfile" parameter="&userId=${user.id}" orderBy="subjects.name_ru" page="${page}" lines="${lines}"></tag:sort>
 								</c:if> <c:if test="${language == 'en'}">
-									<a
-										href="controller?command=userProfile&userId=${user.id}&orderBy=subjects.name_en&direction=ASC&page=${page}&lines=${lines}"
-										class="bot1g">\/</a>
-									<a
-										href="controller?command=userProfile&userId=${user.id}&orderBy=subjects.name_en&direction=DESC&page=${page}&lines=${lines}"
-										class="bot1g">/\</a>
+									<tag:sort command="userProfile" parameter="&userId=${user.id}" orderBy="subjects.name_en" page="${page}" lines="${lines}"></tag:sort>
 								</c:if></th>
 							<th><fmt:message key="profile_jsp.test_name" /> <c:if
 									test="${language == 'ru'}">
-									<a
-										href="controller?command=userProfile&userId=${user.id}&orderBy=tests.name_ru&direction=ASC&page=${page}&lines=${lines}"
-										class="bot1g">\/</a>
-									<a
-										href="controller?command=userProfile&userId=${user.id}&orderBy=tests.name_ru&direction=DESC&page=${page}&lines=${lines}"
-										class="bot1g">/\</a>
+									<tag:sort command="userProfile" parameter="&userId=${user.id}" orderBy="tests.name_ru" page="${page}" lines="${lines}"></tag:sort>	
 								</c:if> <c:if test="${language == 'en'}">
-									<a
-										href="controller?command=userProfile&userId=${user.id}&orderBy=tests.name_en&direction=ASC&page=${page}&lines=${lines}"
-										class="bot1g">\/</a>
-									<a
-										href="controller?command=userProfile&userId=${user.id}&orderBy=tests.name_en&direction=DESC&page=${page}&lines=${lines}"
-										class="bot1g">/\</a>
+									<tag:sort command="userProfile" parameter="&userId=${user.id}" orderBy="tests.name_en" page="${page}" lines="${lines}"></tag:sort>
 								</c:if></th>
-							<th><fmt:message key="profile_jsp.mark" /><a
-								href="controller?command=userProfile&userId=${user.id}&orderBy=mark&direction=ASC&page=${page}&lines=${lines}"
-								class="bot1g">\/</a> <a
-								href="controller?command=userProfile&userId=${user.id}&orderBy=mark&direction=DESC&page=${page}&lines=${lines}"
-								class="bot1g">/\</a></th>
-							<th><fmt:message key="profile_jsp.test_date" /><a
-								href="controller?command=userProfile&userId=${user.id}&orderBy=test_date&direction=ASC&page=${page}&lines=${lines}"
-								class="bot1g">\/</a> <a
-								href="controller?command=userProfile&userId=${user.id}&orderBy=test_date&direction=DESC&page=${page}&lines=${lines}"
-								class="bot1g">/\</a></th>
+							<th><fmt:message key="profile_jsp.mark" />
+								<tag:sort command="userProfile" parameter="&userId=${user.id}" orderBy="mark" page="${page}" lines="${lines}"></tag:sort>
+							</th>
+							<th><fmt:message key="profile_jsp.test_date" />
+								<tag:sort command="userProfile" parameter="&userId=${user.id}" orderBy="test_date" page="${page}" lines="${lines}"></tag:sort>
+							</th>
 						</tr>
 						<c:forEach var="result" items="${results}">
 							<tr>

@@ -26,7 +26,6 @@ public class LogoutCommand extends Command {
 		HttpSession session = request.getSession();
 		String error = (String) session.getAttribute(AttributeNames.LOGIN_ERROR_MESSAGE);
 		session.invalidate();
-		// session.setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, error);
 		request.setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, error);
 		return Path.PAGE_LOGIN;
 	}

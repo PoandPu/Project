@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
-<%@ taglib prefix="ex" uri="/WEB-INF/tag/pagination.tld"%>
+<%@ taglib prefix="ex" uri="/WEB-INF/custom/pagination.tld"%>
+<%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
 <html>
 <c:set var = "title" value ="admin.view_users_jsp.title"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
@@ -24,45 +25,28 @@
 						</th>
 					</tr>
 
-
 					<tr>
-						<th>Id &nbsp; <a
-							href="controller?command=viewUsersList&orderBy=id&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewUsersList&orderBy=id&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a>
-
+						<th>Id &nbsp; 
+							<tag:sort command="viewUsersList" orderBy="id" page="${page}" lines="${lines}"></tag:sort>
 						</th>
-						<th><fmt:message key="admin.view_users_jsp.login" />&nbsp;<a
-							href="controller?command=viewUsersList&orderBy=login&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewUsersList&orderBy=login&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
-						<th><fmt:message key="admin.view_users_jsp.first_name" />&nbsp;<a
-							href="controller?command=viewUsersList&orderBy=first_name&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewUsersList&orderBy=first_name&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
-						<th><fmt:message key="admin.view_users_jsp.last_name" />&nbsp;<a
-							href="controller?command=viewUsersList&orderBy=last_name&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewUsersList&orderBy=last_name&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
-						<th><fmt:message key="admin.view_users_jsp.email" />&nbsp;<a
-							href="controller?command=viewUsersList&orderBy=email&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewUsersList&orderBy=email&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
-						<th><fmt:message key="admin.view_users_jsp.role" /><a
-							href="controller?command=viewUsersList&orderBy=role_id&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewUsersList&orderBy=role_id&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
-						<th><fmt:message key="admin.view_users_jsp.status" />&nbsp;<a
-							href="controller?command=viewUsersList&orderBy=isBlocked&direction=ASC&page=${page}&lines=${lines}"
-							class="bot1g">\/</a> <a
-							href="controller?command=viewUsersList&orderBy=isBlocked&direction=DESC&page=${page}&lines=${lines}"
-							class="bot1g">/\</a></th>
+						<th><fmt:message key="admin.view_users_jsp.login"/>&nbsp;
+							<tag:sort command="viewUsersList" orderBy="login" page="${page}" lines="${lines}"></tag:sort>
+						</th>
+						<th><fmt:message key="admin.view_users_jsp.first_name"/>&nbsp;
+							<tag:sort command="viewUsersList" orderBy="first_name" page="${page}" lines="${lines}"></tag:sort>
+						</th>
+						<th><fmt:message key="admin.view_users_jsp.last_name"/>&nbsp;
+							<tag:sort command="viewUsersList" orderBy="last_name" page="${page}" lines="${lines}"></tag:sort>
+						</th>
+						<th><fmt:message key="admin.view_users_jsp.email"/>&nbsp;
+							<tag:sort command="viewUsersList" orderBy="email" page="${page}" lines="${lines}"></tag:sort>
+						</th>
+						<th><fmt:message key="admin.view_users_jsp.role"/>&nbsp;
+							<tag:sort command="viewUsersList" orderBy="role_id" page="${page}" lines="${lines}"></tag:sort>
+						</th>
+						<th><fmt:message key="admin.view_users_jsp.status"/>&nbsp;
+							<tag:sort command="viewUsersList" orderBy="isBlocked" page="${page}" lines="${lines}"></tag:sort>
+						</th>
 						<th></th>
 						<th></th>
 					</tr>
