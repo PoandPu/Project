@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
 <html>
-<title><fmt:message key="registration_jsp.form.registration" /></title>
+<c:set var = "title" value ="registration_jsp.form.registration"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
 <body>
 	<table id="main-container">

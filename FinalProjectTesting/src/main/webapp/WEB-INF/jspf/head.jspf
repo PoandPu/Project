@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
 <head>
 	<title>
-		${title}
+		<fmt:message key="${title}"/>
 	</title>
 <%--=========================================================================== 
 Bind CSS document.

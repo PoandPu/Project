@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
 <%@ taglib prefix="ex" uri="/WEB-INF/tag/pagination.tld"%>
 <html>
-<title><fmt:message key="tests_list_jsp.title" /></title>
+<c:set var = "title" value ="tests_list_jsp.title"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
 <body>
 	<table id="main-container">

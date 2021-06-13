@@ -149,8 +149,8 @@ public class ViewTestCommand extends Command {
 
 			test = testDAO.findTestById(testId);
 			subject = subjectDAO.findSubjectById(subjectId);
-
-			if (session.getAttribute(AttributeNames.TEST) != null) {
+			
+			if (session.getAttribute(AttributeNames.TEST) != null && test != null) {
 				if (test.getId() == ((Test) session.getAttribute(AttributeNames.TEST)).getId()) {
 					return Path.COMMAND_VIEW_TEST + "&testId=" + testId;
 				} else {

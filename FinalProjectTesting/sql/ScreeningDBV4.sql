@@ -65,12 +65,12 @@ CREATE TABLE IF NOT EXISTS `ScreeningDB`.`pass_recovery` (
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX `fk_pass_restore_users_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_pass_restore_users`
+	PRIMARY KEY (`user_id`),
+    UNIQUE INDEX `hash_UNIQUE` (`hash` ASC) VISIBLE,
     FOREIGN KEY (`user_id`)
     REFERENCES `ScreeningDB`.`users` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT);
-
-
 
 -- -----------------------------------------------------
 -- Table `ScreeningDB`.`subjects`
@@ -154,9 +154,7 @@ CREATE TABLE IF NOT EXISTS `ScreeningDB`.`answers` (
   `isCorrect` TINYINT(1) NULL DEFAULT NULL,
   `question_id` INT NOT NULL,
   PRIMARY KEY (`id`),
- -- UNIQUE INDEX `option_UNIQUE` (`option_ru` ASC) VISIBLE,
   INDEX `fk_answer_questions1_idx` (`question_id` ASC) VISIBLE,
- -- UNIQUE INDEX `option_en_UNIQUE` (`option_en` ASC) VISIBLE,
   CONSTRAINT `fk_answer_questions1`
     FOREIGN KEY (`question_id`)
     REFERENCES `ScreeningDB`.`questions` (`id`)
@@ -555,7 +553,7 @@ INSERT INTO answers (option_ru, option_en, question_id) VALUE ('квадратн
 
 -- SET GLOBAL event_scheduler = OFF;
 
--- SET SQL_SAFE_UPDATES = 0;
+-- SET SQL_SAFE_UPDATES = 1;
 -- DELETE FROM pass_recovery WHERE `hash` = 'blaBLA231312BLA';
 
 -- SELECT * FROM pass_recovery;

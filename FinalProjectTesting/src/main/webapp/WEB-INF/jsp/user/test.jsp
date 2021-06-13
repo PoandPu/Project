@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
 <html>
-<title><fmt:message key="test_jsp.title" /></title>
+<c:set var = "title" value ="test_jsp.title"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
 
 <script type="text/javascript">

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <html>
-<title><fmt:message key="login_jsp.form.authorization" /></title>
+<c:set var = "title" value ="login_jsp.form.authorization"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
 <body>
 	<table id="main-container">

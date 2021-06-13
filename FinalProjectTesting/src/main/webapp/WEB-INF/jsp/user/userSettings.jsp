@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
 
 <html>
-<title><fmt:message key="admin.user_settings_jsp.title"/></title>
+<c:set var = "title" value ="admin.user_settings_jsp.title"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
 <body>
 	<table id="main-container">

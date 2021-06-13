@@ -13,12 +13,16 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 import ua.epam.pavelchuk.final_project.Path;
 import ua.epam.pavelchuk.final_project.db.Role;
+import ua.epam.pavelchuk.final_project.db.dao.UserDAO;
+import ua.epam.pavelchuk.final_project.db.entity.User;
+import ua.epam.pavelchuk.final_project.db.exception.DBException;
 import ua.epam.pavelchuk.final_project.web.command.AttributeNames;
 import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
 
@@ -54,18 +58,23 @@ public class CommandAccessFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		LOG.trace("Filter starts");
+		HttpSession session = ((HttpServletRequest) request).getSession();
 		if (checkAccess(request)) {
 			LOG.trace("Filter finished");
 			chain.doFilter(request, response);
-		} else if (((HttpServletRequest) request).getSession().getAttribute(AttributeNames.USER) != null) {
+		} else if (session.getAttribute(AttributeNames.USER) != null && ((User) session.getAttribute(AttributeNames.USER)).getIsBlocked()) {
+			LOG.debug("!!!!!!!!!!!!!!!!!!! Logout command");
+			((HttpServletResponse) response).sendRedirect(Path.COMMAND_LOGOUT);
+		} else if (session.getAttribute(AttributeNames.USER) != null) {
 			((HttpServletRequest) request).setAttribute(AttributeNames.ERROR_MESSAGE,
 					"command_access.error.no_root");
 			request.getRequestDispatcher(Path.PAGE_ERROR).forward(request, response);
-		} else {
-			((HttpServletRequest) request).getSession().setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE,
+		}else {
+			session.setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE,
 					"command_access.error.log_in");
 			request.getRequestDispatcher(Path.PAGE_LOGIN).forward(request, response);
 		}
+		
 	}
 
 	private boolean checkAccess(ServletRequest req) {
@@ -88,6 +97,19 @@ public class CommandAccessFilter implements Filter {
 		if (userRole == null) {
 			return false;
 		}
+
+		try {
+			User currentUser = (User) session.getAttribute(AttributeNames.USER);
+			currentUser = UserDAO.getInstance().findById(currentUser.getId());
+			session.setAttribute(AttributeNames.USER, currentUser);
+			if (currentUser.getIsBlocked()) {
+				return false;
+			}
+		} catch (DBException e) {
+			LOG.error(e);
+		}
+		
+		
 		return access.get(userRole).contains(command) || commons.contains(command);
 	}
 }

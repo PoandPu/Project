@@ -22,7 +22,7 @@ public class LogoutCommand extends Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response, HttpMethod method)
 			throws AppException {
-
+		
 		HttpSession session = request.getSession();
 		String error = (String) session.getAttribute(AttributeNames.LOGIN_ERROR_MESSAGE);
 		session.invalidate();

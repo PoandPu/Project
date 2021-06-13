@@ -42,11 +42,11 @@
 		</init-param>
 		<init-param>
 			<param-name>common</param-name>
-			<param-value>viewAllSubjects viewTestsList viewTest logout userProfile switchLocale userSettings</param-value>
+			<param-value>viewAllSubjects viewTestsList viewTest userProfile switchLocale userSettings</param-value>
 		</init-param>
 		<init-param>
 			<param-name>no_control</param-name>
-			<param-value>login registration viewErrorPage passwordRecovery generatePassword</param-value>
+			<param-value>login registration viewErrorPage passwordRecovery generatePassword logout</param-value>
 		</init-param>
 	</filter>
 	
