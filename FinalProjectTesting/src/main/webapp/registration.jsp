@@ -1,5 +1,9 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
+<script>
+if (${not empty sessionScope.user}) {
+	  window.location.href = 'controller?command=viewAllSubjects';
+	}</script>
 <html>
 <c:set var = "title" value ="registration_jsp.form.registration"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>

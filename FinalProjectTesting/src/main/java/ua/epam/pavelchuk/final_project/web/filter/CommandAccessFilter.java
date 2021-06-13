@@ -67,7 +67,7 @@ public class CommandAccessFilter implements Filter {
 			session.setAttribute(AttributeNames.LOGIN_ERROR_MESSAGE, "command_access.error.log_in");
 			request.getRequestDispatcher(Path.PAGE_LOGIN).forward(request, response);
 		} else if (((User) session.getAttribute(AttributeNames.USER)).getIsBlocked()) {
-			LOG.trace("User with id[" + ((User) session.getAttribute(AttributeNames.USER)).getId() + "] is blocked!");
+			LOG.trace("User " + session.getAttribute(AttributeNames.USER) + " is blocked!");
 			((HttpServletResponse) response).sendRedirect(Path.COMMAND_LOGOUT);
 		} else {
 			LOG.trace("User " + session.getAttribute(AttributeNames.USER) + " don't have access to this resource!");

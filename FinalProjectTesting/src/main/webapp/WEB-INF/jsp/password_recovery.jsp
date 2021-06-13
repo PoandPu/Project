@@ -1,7 +1,10 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf"%>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-
+<script>
+if (${not empty sessionScope.user}) {
+	  window.location.href = 'controller?command=viewAllSubjects';
+	}</script>
 <html>
 <c:set var = "title" value ="login_jsp.form.authorization"></c:set>
 <%@ include file="/WEB-INF/jspf/head.jspf"%>
