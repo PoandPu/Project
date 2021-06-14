@@ -12,12 +12,25 @@
 			<td class="content">
 				<table id="customers">
 					<tr>
-						<th colspan="9">
+						<th colspan="10">
+						
 							<div style="float: right; width: 19%;">
 								<form action="controller">
 									<input type="hidden" name="command" value="findUser" /> <input
 										type="text" name="pattern"
 										placeholder="<fmt:message key="admin.view_users_jsp.login"/> / <fmt:message key="admin.view_users_jsp.first_name"/> / <fmt:message key="admin.view_users_jsp.last_name"/> / <fmt:message key="admin.view_users_jsp.email"/> / <fmt:message key="admin.view_users_jsp.role"/> / Id">
+									<input class="form" type="submit"
+										value="<fmt:message key="admin.view_users_jsp.search"/>" />
+								</form>
+							</div>
+							<div style="float: right; width: 5%;">
+								<form action="controller">
+									<input type="hidden" name="command" value="findBestUsers" /> 
+									<select name="period">
+										<option value="DAY">1 day</option>
+										<option value="WEEK">week</option>
+										<option value="MONTH" >month</option>
+									</select>
 									<input class="form" type="submit"
 										value="<fmt:message key="admin.view_users_jsp.search"/>" />
 								</form>
@@ -47,8 +60,13 @@
 						<th><fmt:message key="admin.view_users_jsp.status"/>&nbsp;
 							<tag:sort command="viewUsersList" orderBy="isBlocked" page="${page}" lines="${lines}"></tag:sort>
 						</th>
+						<c:if test="${user.averageMark ne null}">
+						<th></th>
+						</c:if>
 						<th></th>
 						<th></th>
+						<th></th>
+						
 					</tr>
 					<c:forEach var="user" items="${users}">
 						<tr>
@@ -60,6 +78,9 @@
 							<td><c:out value="${Role.getRole(user)}" /></td>
 							<td><c:out value="${user.isBlocked ? 'Blocked' : 'Free'}" />
 							</td>
+							<c:if test="${user.averageMark ne null}">
+							<td><c:out value="${user.averageMark}" /></td>
+							</c:if>
 							<td><a
 								href="controller?command=userProfile&userId=${user.id}"
 								class="bot1"><fmt:message
@@ -71,7 +92,7 @@
 						</tr>
 					</c:forEach>
 					<tr>
-						<th colspan="9"><ex:pagination command="viewUsersList"
+						<th colspan="10"><ex:pagination command="viewUsersList"
 								page="${page}" lines="${lines}" orderBy="${orderBy}"
 								direction="${direction}"></ex:pagination></th>
 					</tr>

@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `ScreeningDB`.`users` (
   `email` VARCHAR(128) NOT NULL,
   `role_id` INT NOT NULL,
   `isBlocked` TINYINT(1) NULL DEFAULT NULL,
+  `average_Mark` INT DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) VISIBLE,
   INDEX `fk_users_roles_idx` (`role_id` ASC) VISIBLE,
@@ -199,9 +200,9 @@ INSERT INTO subjects (name_ru, name_en) VALUE ('Математика','Mathemati
 INSERT INTO subjects (name_ru, name_en) VALUE ('Информатика','Computer science');
 INSERT INTO subjects (name_ru, name_en) VALUE ('Физика','Physics');
 INSERT INTO subjects (name_ru, name_en) VALUE ('Иностранный язык','Foreign language');
-INSERT INTO subjects (name_ru, name_en) VALUE ('Музыка','Music');
+-- INSERT INTO subjects (name_ru, name_en) VALUE ('Музыка','Music');
 INSERT INTO subjects (name_ru, name_en) VALUE ('Литература','Literature');
-INSERT INTO subjects (name_ru, name_en) VALUE ('Русский язык','Russian language');
+-- INSERT INTO subjects (name_ru, name_en) VALUE ('Русский язык','Russian language');
 INSERT INTO subjects (name_ru, name_en) VALUE ('География','Geography');
 
 -- INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('История Украины','History of Ukraine', '1', '3', '10');
@@ -511,16 +512,21 @@ INSERT INTO answers (option_ru, option_en, question_id, isCorrect) VALUE ('кр�
 INSERT INTO answers (option_ru, option_en, question_id) VALUE ('квадратных скобок', 'square brackets', 43);
 
 
--- 	INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест1','Empty test1', '2', '1', '3');
--- 	INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест2','Empty test2', '2', '2', '12');
---  INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест3','Empty test3', '2', '3', '5');
--- 	INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест4','Empty test4', '2', '4', '15');
--- 	INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест5','Empty test5', '2', '5', '10');
+-- 	INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Java основы','Java basic', '3', '2', '10');
+
+
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест1','Empty test1', '4', '1', '3');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест2','Empty test2', '4', '2', '12');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест3','Empty test3', '4', '3', '5');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест4','Empty test4', '4', '4', '15');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест5','Empty test5', '4', '5', '10');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест6','Empty test6', '4', '1', '60');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест7','Empty test7', '4', '2', '1');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест8','Empty test8', '4', '3', '15');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест9','Empty test9', '4', '4', '25');
+INSERT INTO tests (name_ru, name_en, subject_id, difficulty_level_id, time_minutes) VALUE ('Пустой тест10','Empty test10', '4', '5', '6');
 
 -- INSERT INTO `results` (`mark`, `entrant_id`, `test_id`) VALUES (33.33, 2, 1);
-
-
-
 
 
 

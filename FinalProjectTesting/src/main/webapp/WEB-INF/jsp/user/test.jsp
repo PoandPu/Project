@@ -60,8 +60,7 @@
 										<li>
 											<div class="row">
 												<div class="col-75">
-													<c:out
-														value="${language eq 'ru' ? question.nameRu : question.nameEn}" />
+												${language eq 'ru' ? question.nameRu : question.nameEn}
 												</div>
 											</div>
 											<ol class="latin">

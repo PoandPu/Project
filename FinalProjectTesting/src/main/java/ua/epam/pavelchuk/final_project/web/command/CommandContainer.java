@@ -15,6 +15,7 @@ import ua.epam.pavelchuk.final_project.web.command.admin.test.DeleteQuestionComm
 import ua.epam.pavelchuk.final_project.web.command.admin.test.EditTestCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.test.EditTestContentCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.EditUserCommand;
+import ua.epam.pavelchuk.final_project.web.command.admin.user.FindBestUsersCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.FindUserCommand;
 import ua.epam.pavelchuk.final_project.web.command.admin.user.ViewUsersListCommand;
 import ua.epam.pavelchuk.final_project.web.command.common.CheckTestCommand;
@@ -65,6 +66,7 @@ public class CommandContainer {
 		commands.put("deleteAnswer", new DeleteAnswerCommand());
 		commands.put("deleteQuestion", new DeleteQuestionCommand());
 		commands.put("findUser", new FindUserCommand());
+		commands.put("findBestUsers", new FindBestUsersCommand());
 		
 //		// client commands
 		commands.put("checkTest", new CheckTestCommand());

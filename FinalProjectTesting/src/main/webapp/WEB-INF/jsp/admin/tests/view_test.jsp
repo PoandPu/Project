@@ -24,8 +24,7 @@
 									<li>
 										<div class="row">
 											<div class="col-75">
-												<c:out
-													value="${language eq 'ru' ? question.nameRu : question.nameEn}" />
+											${language eq 'ru' ? question.nameRu : question.nameEn}
 											</div>
 											<div class="col-25">
 												<a class="bot2"

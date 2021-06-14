@@ -1,6 +1,6 @@
 package ua.epam.pavelchuk.final_project.web;
 
-import java.io.DataOutputStream; 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -47,11 +47,8 @@ import ua.epam.pavelchuk.final_project.web.command.ParameterNames;
  * @author O.Pavelchuk
  */
 public class ReportCreator extends HttpServlet {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -918638611392803447L;
 
+	private static final long serialVersionUID = -918638611392803447L;
 	private static final Logger LOG = Logger.getLogger(ReportCreator.class);
 
 	private Font bigFont = null;
@@ -77,31 +74,34 @@ public class ReportCreator extends HttpServlet {
 		}
 		super.init();
 	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		try {
-			HttpSession session = request.getSession(false);
-			if (session == null || session.getAttribute(AttributeNames.USER) == null) {
-				LOG.error("U don't have permision to do this!");
-				response.sendRedirect(Path.COMMAND_VIEW_ERROR_PAGE + "&errorMessage=ACHTUNG!");
-				return;
+		synchronized (ReportCreator.class) {
+			
+			try {
+				HttpSession session = request.getSession(false);
+				if (session == null || session.getAttribute(AttributeNames.USER) == null) {
+					LOG.error("You don't have permision to do this!");
+					response.sendRedirect(Path.COMMAND_VIEW_ERROR_PAGE + "&errorMessage=ACHTUNG!");
+					return;
+				}
+				createReport(request);
+
+				getReport(response);
+
+			} catch (AppException ex) {
+				LOG.error("Error in ReportCreator" + ex.getMessage());
+				response.sendRedirect(
+						ex.getMessage() != null ? Path.COMMAND_VIEW_ERROR_PAGE + "&errorMessage=" + ex.getMessage()
+								: Path.COMMAND_VIEW_ERROR_PAGE);
 			}
-			createReport(request);
-
-			getReport(response);
-
-		} catch (AppException ex) {
-			LOG.error("Err in ReportCreator" + ex.getMessage());
-			response.sendRedirect(
-					ex.getMessage() != null ? Path.COMMAND_VIEW_ERROR_PAGE + "&errorMessage=" + ex.getMessage()
-							: Path.COMMAND_VIEW_ERROR_PAGE);
 		}
 	}
 
@@ -130,11 +130,11 @@ public class ReportCreator extends HttpServlet {
 			document.close();
 		} catch (DocumentException | IOException ex) {
 			LOG.error(ex.getMessage());
-			throw new AppException();
+			throw new AppException(ex.getMessage());
 		}
 	}
 
-	public void getReport(HttpServletResponse response) {
+	public void getReport(HttpServletResponse response) throws AppException {
 		response.setContentType("application/pdf");
 		response.setHeader("Content-disposition", "attachment;filename=" + "testPDF.pdf");
 		FileInputStream fis = null;
@@ -149,13 +149,15 @@ public class ReportCreator extends HttpServlet {
 				os.write(buffer, 0, len);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error iccured while getting report!");
+			throw new AppException("Error iccured while getting report!");
 		} finally {
 			if (fis != null)
 				try {
 					fis.close();
 				} catch (IOException ex) {
-					LOG.error("Error!");
+					LOG.error("Cannot close FileInputStream");
+					throw new AppException("Cannot close FileInputStream");
 				}
 		}
 	}

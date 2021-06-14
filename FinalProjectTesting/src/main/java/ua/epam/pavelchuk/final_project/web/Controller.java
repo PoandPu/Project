@@ -39,7 +39,6 @@ public class Controller extends HttpServlet {
 		LOG.debug("Try to execute POST command (" + request.getParameter(ParameterNames.COMMAND) + ")");
 		String redirect = process(request, response, HttpMethod.POST);
 		response.sendRedirect(redirect);
-
 	}
 
 	/**

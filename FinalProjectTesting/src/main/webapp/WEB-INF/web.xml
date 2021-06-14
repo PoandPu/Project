@@ -34,7 +34,7 @@
 		<filter-class>ua.epam.pavelchuk.final_project.web.filter.CommandAccessFilter</filter-class>
 		<init-param>
 			<param-name>admin</param-name>
-			<param-value>editSubject addSubject editTest addTest editTestContent viewUsersList editUser addQuestion deleteQuestion addAnswer deleteAnswer findUser</param-value>
+			<param-value>editSubject addSubject editTest addTest editTestContent viewUsersList editUser addQuestion deleteQuestion addAnswer deleteAnswer findUser findBestUsers</param-value>
 		</init-param>
 		<init-param>
 			<param-name>client</param-name>

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -70,6 +71,11 @@ public class UserDAO extends AbstractDAO {
 	private static final String SQL_FIND_USER_BY_HASH = "SELECT users.* FROM pass_recovery JOIN users ON users.id = pass_recovery.user_id WHERE pass_recovery.hash = ?";		
 	private static final String SQL_DELETE_HASH = "DELETE FROM pass_recovery WHERE `hash` = ?";
 	private static final String SQL_DELETE_HASH_BY_USER_ID = "DELETE FROM pass_recovery WHERE `user_id` = ?";
+
+	private static final String SQL_FIND_BEST_USERS_BEFORE = "SELECT users.*,results.*, AVG(mark) AS MarkAvg, COUNT(mark) AS countMark FROM users JOIN results ON users.id=results.user_id WHERE ";
+	private static final String SQL_FIND_BEST_USERS_MIDDLE = "(`test_date`) = ";
+	private static final String SQL_FIND_BEST_USERS_AFTER = "(NOW()) AND YEAR(`test_date`) = YEAR(NOW()) group by users.id HAVING AVG(mark)>? order by markAvg DESC , count(mark)  DESC LIMIT ?";
+	
 	
 	/**
 	 * singleton pattern
@@ -641,4 +647,35 @@ public class UserDAO extends AbstractDAO {
 		}
 		return user;
 	}
+	
+	public List<User> findBestUsers(String period, int numbOfUsers, int fromPerc) throws DBException {
+		List<User> users = new ArrayList<>();
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		
+		try {
+			con = getConnection();
+			pstmt = con.prepareStatement(SQL_FIND_BEST_USERS_BEFORE + period + SQL_FIND_BEST_USERS_MIDDLE + period +  SQL_FIND_BEST_USERS_AFTER);
+			int k = 1;
+			pstmt.setInt(k++, fromPerc);
+			pstmt.setInt(k++, numbOfUsers);
+
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				User user = extract(resultSet);
+				user.setAverageMark(resultSet.getBigDecimal("MarkAvg"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			LOG.error(Arrays.toString(e.getStackTrace()));
+			LOG.error("Failed to find user by pattern");
+			throw new DBException("Failed to find user by pattern", e);
+		} finally {
+			close(con, pstmt, resultSet);
+		}
+		return users;
+	}
+	
 }

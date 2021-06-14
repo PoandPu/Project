@@ -1,5 +1,7 @@
 package ua.epam.pavelchuk.final_project.db.entity;
 
+import java.math.BigDecimal;
+
 /**
  * Stores information about a User
  * 
@@ -19,9 +21,19 @@ public class User extends Entity {
 	private String email;
 	private boolean isBlocked;
 	private int roleId;
+	private BigDecimal averageMark;
 
 	public User() {
 	}
+	
+	public BigDecimal getAverageMark() {
+		return averageMark;
+	}
+
+	public void setAverageMark(BigDecimal averageMark) {
+		this.averageMark = averageMark;
+	}
+
 
 	public String getPasswordKey() {
 		return passwordKey;
